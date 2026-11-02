@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>CloudCertPrep Ionic - Screen Templates</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root,.theme-light{
+  --color-brand:255 153 0;
+  --color-brand-hover:236 114 17;
+  --color-on-brand:22 25 31;
+  --color-bg:248 249 250;
+  --color-bg-card:255 255 255;
+  --color-bg-card-hover:250 251 252;
+  --color-header-bg:255 255 255;
+  --color-on-header:22 25 31;
+  --color-border:233 235 237;
+  --color-text:22 25 31;
+  --color-text-muted:84 91 100;
+  --color-success:22 101 52;
+  --color-danger:185 28 28;
+  --color-on-danger:255 255 255;
+  --color-warning:154 69 9;
+  --color-warning-fill:217 119 6;
+  --color-link:0 115 187;
+  --color-cta:22 29 38;
+  --color-on-cta:255 255 255;
+  --card-shadow:0 1px 3px rgb(15 25 35/0.06),0 1px 2px rgb(15 25 35/0.04);
+  --status-bar-bg:255 255 255;
+  --status-bar-text:22 25 31;
+  --tab-bar-bg:255 255 255;
+  --tab-bar-border:233 235 237;
+  color-scheme:light;
+}
+.theme-dark{
+  --color-brand:255 153 0;
+  --color-brand-hover:236 114 17;
+  --color-on-brand:22 25 31;
+  --color-bg:22 25 31;
+  --color-bg-card:28 35 47;
+  --color-bg-card-hover:35 47 62;
+  --color-header-bg:22 25 31;
+  --color-on-header:244 246 248;
+  --color-border:50 60 73;
+  --color-text:244 246 248;
+  --color-text-muted:141 153 168;
+  --color-success:74 222 128;
+  --color-danger:248 113 113;
+  --color-on-danger:22 25 31;
+  --color-warning:251 191 36;
+  --color-warning-fill:251 191 36;
+  --color-link:68 156 214;
+  --color-cta:244 246 248;
+  --color-on-cta:22 25 31;
+  --card-shadow:none;
+  --status-bar-bg:22 25 31;
+  --status-bar-text:244 246 248;
+  --tab-bar-bg:28 35 47;
+  --tab-bar-border:50 60 73;
+  color-scheme:dark;
+}
+
+html{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+body{background:#1a1a2e;min-height:100vh;display:flex;flex-direction:column;align-items:center;color:rgb(var(--color-text))}
+
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+.controls{position:sticky;top:0;z-index:100;width:100%;background:#0f0f1e;border-bottom:1px solid #333;padding:12px 16px;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap}
+.controls label{color:#aaa;font-size:13px;font-weight:500}
+.controls button,.controls select{background:#232F3E;color:#F4F6F8;border:1px solid #323C49;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit}
+.controls button:hover{background:#2d3a4d}
+.controls button.active{background:rgb(var(--color-brand));color:rgb(var(--color-on-brand))}
+
+.phone-frame{width:390px;height:844px;background:rgb(var(--color-bg));border-radius:44px;overflow:hidden;position:relative;margin:24px auto;box-shadow:0 0 0 3px #222,0 0 0 6px #111,0 24px 80px rgb(0 0 0/0.6);transition:background 0.2s;--ion-status-bar-offset:47px;--ion-safe-area-top:env(safe-area-inset-top,0px);--ion-safe-area-bottom:env(safe-area-inset-bottom,0px)}
+
+.status-bar{height:54px;background:rgb(var(--status-bar-bg));display:flex;align-items:flex-end;justify-content:space-between;padding:0 28px 8px;font-size:15px;font-weight:600;color:rgb(var(--status-bar-text));position:relative;z-index:10;padding-bottom:calc(8px + env(safe-area-inset-top))}
+.status-bar .notch{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:126px;height:34px;background:#000;border-radius:20px}
+
+.screen{display:none;flex-direction:column;height:calc(100% - 54px - 83px);overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:env(safe-area-inset-bottom)}
+.screen.active{display:flex}
+.screen::-webkit-scrollbar{display:none}
+
+.header-bar{background:rgb(var(--color-header-bg));padding:12px 16px;border-bottom:1px solid rgb(var(--color-border));display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5;min-height:56px}
+.header-bar h1{font-size:1.25rem;font-weight:600;letter-spacing:-0.01em;line-height:1.25;color:rgb(var(--color-text));flex:1;margin:0}
+.header-bar .cert-badge{font-size:0.75rem;font-weight:600;color:rgb(var(--color-brand));background:rgb(var(--color-brand)/0.12);padding:6px 12px;border-radius:999px;white-space:nowrap}
+.header-bar button.back{background:none;border:none;font-size:24px;color:rgb(var(--color-text));padding:8px;cursor:pointer;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;border-radius:8px;margin-left:-8px}
+.header-bar button.back:active{background:rgb(var(--color-border)/0.5)}
+
+.content{padding:16px;display:flex;flex-direction:column;gap:16px;flex:1}
+
+.kicker{display:flex;align-items:center;gap:10px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgb(var(--color-text-muted));margin-bottom:4px}
+.kicker::before{content:'';width:22px;height:2px;border-radius:1px;background:rgb(var(--color-brand))}
+
+.card{background:rgb(var(--color-bg-card));border:1px solid rgb(var(--color-border));border-radius:16px;padding:16px;box-shadow:var(--card-shadow);transition:box-shadow 250ms cubic-bezier(0.16,1,0.3,1),transform 250ms cubic-bezier(0.16,1,0.3,1)}
+.theme-dark .card{box-shadow:none}
+.card-title{font-size:1rem;font-weight:600;letter-spacing:-0.01em;line-height:1.3;color:rgb(var(--color-text));margin:0}
+.card-subtitle{font-size:0.875rem;color:rgb(var(--color-text-muted));margin-top:4px;line-height:1.4}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:999px;padding:12px 24px;font-size:1rem;font-weight:600;cursor:pointer;min-height:44px;min-width:44px;font-family:inherit;transition:transform 90ms cubic-bezier(0.2,0,0,1),background 200ms,box-shadow 200ms;text-decoration:none;line-height:1.2}
+.btn:active{transform:scale(0.97)}
+.btn:focus-visible{outline:2px solid rgb(var(--color-brand));outline-offset:2px}
+.btn-primary{background:rgb(var(--color-brand));color:rgb(var(--color-on-brand))}
+.btn-primary:hover{background:rgb(var(--color-brand-hover))}
+.btn-secondary{background:rgb(var(--color-cta));color:rgb(var(--color-on-cta))}
+.btn-outline{background:transparent;border:1.5px solid rgb(var(--color-border));color:rgb(var(--color-text))}
+.btn-outline:hover{background:rgb(var(--color-bg-card-hover))}
+.btn-danger{background:rgb(var(--color-danger));color:rgb(var(--color-on-danger))}
+.btn-ghost{background:transparent;color:rgb(var(--color-link));padding:8px 12px;min-height:44px}
+.btn-ghost:hover{background:rgb(var(--color-border)/0.3)}
+.btn-sm{padding:8px 16px;font-size:0.875rem;min-height:36px}
+.btn-block{width:100%}
+
+.progress-bar{height:8px;background:rgb(var(--color-border));border-radius:4px;overflow:hidden;position:relative}
+.progress-bar .fill{height:100%;border-radius:4px;transition:width 600ms cubic-bezier(0.16,1,0.3,1)}
+.progress-bar .fill.brand{background:rgb(var(--color-brand))}
+.progress-bar .fill.success{background:rgb(var(--color-success))}
+.progress-bar .fill.danger{background:rgb(var(--color-danger))}
+.progress-bar .fill.gradient-green{background:linear-gradient(90deg,#86efac,rgb(var(--color-success)))}
+.progress-bar .fill.gradient-red{background:linear-gradient(90deg,rgb(var(--color-warning-fill)),rgb(var(--color-danger)))}
+.progress-bar[role="progressbar"]{position:relative}
+
+.mastery-row{display:flex;align-items:center;gap:12px;padding:8px 0}
+.mastery-row .domain-name{font-size:0.875rem;font-weight:500;min-width:100px;color:rgb(var(--color-text))}
+.mastery-row .bar-wrap{flex:1}
+.mastery-row .pct{font-size:0.75rem;font-weight:600;min-width:36px;text-align:right;color:rgb(var(--color-text-muted))}
+
+.tab-bar{height:83px;background:rgb(var(--tab-bar-bg));border-top:1px solid rgb(var(--tab-bar-border));display:flex;align-items:center;justify-content:space-around;position:relative;padding-bottom:env(safe-area-inset-bottom)}
+.tab-item{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;font-weight:500;color:rgb(var(--color-text-muted));cursor:pointer;min-width:64px;min-height:44px;padding:6px 4px;background:none;border:none;font-family:inherit;justify-content:center}
+.tab-item.active{color:rgb(var(--color-brand))}
+.tab-item svg{width:24px;height:24px;flex-shrink:0}
+.tab-item .subtitle{font-size:9px;color:rgb(var(--color-text-muted));max-width:72px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.chip{display:inline-flex;align-items:center;justify-content:center;padding:8px 16px;border-radius:999px;font-size:0.8125rem;font-weight:500;border:1.5px solid rgb(var(--color-border));color:rgb(var(--color-text-muted));background:transparent;cursor:pointer;font-family:inherit;min-height:36px;transition:background 90ms,border-color 90ms,color 90ms;text-decoration:none;white-space:nowrap}
+.chip:hover{background:rgb(var(--color-bg-card-hover))}
+.chip:focus-visible{outline:2px solid rgb(var(--color-brand));outline-offset:2px}
+.chip.active{background:rgb(var(--color-brand));color:rgb(var(--color-on-brand));border-color:rgb(var(--color-brand))}
+
+.filter-row{display:flex;gap:8px;overflow-x:auto;padding:4px 0;-webkit-overflow-scrolling:touch}
+.filter-row::-webkit-scrollbar{display:none}
+
+.list-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgb(var(--color-border));min-height:56px;cursor:pointer;transition:background 90ms}
+.card .list-item:hover{background:rgb(var(--color-bg-card-hover)/0.5);margin:0;padding-left:0;padding-right:0;border-radius:0}
+.list-item:last-child{border-bottom:none}
+.list-item .icon-wrap{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.list-item .label{font-size:0.9375rem;font-weight:500;color:rgb(var(--color-text))}
+.list-item .desc{font-size:0.8125rem;color:rgb(var(--color-text-muted));margin-top:2px}
+.list-item .chevron{margin-left:auto;color:rgb(var(--color-text-muted));font-size:16px;flex-shrink:0}
+
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:0.6875rem;font-weight:600;letter-spacing:0.02em}
+.badge-pass{background:rgb(var(--color-success)/0.12);color:rgb(var(--color-success))}
+.badge-fail{background:rgb(var(--color-danger)/0.12);color:rgb(var(--color-danger))}
+.badge-kind{background:rgb(var(--color-brand)/0.12);color:rgb(var(--color-brand))}
+
+.resume-card{background:rgb(var(--color-bg-card));border:1px solid rgb(var(--color-border));border-radius:16px;padding:16px;box-shadow:var(--card-shadow);border-left:4px solid rgb(var(--color-brand))}
+.resume-card .kind{font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:rgb(var(--color-brand))}
+
+.modal-overlay{position:absolute;inset:0;background:rgb(0 0 0/0.5);display:flex;align-items:flex-end;justify-content:center;z-index:50;opacity:0;pointer-events:none;transition:opacity 200ms}
+.modal-overlay.show{opacity:1;pointer-events:auto}
+.modal-sheet{background:rgb(var(--color-bg-card));border-radius:16px 16px 0 0;padding:24px 20px 32px;width:100%;max-height:80%}
+.modal-sheet h2{font-size:1.125rem;font-weight:600;margin-bottom:8px;color:rgb(var(--color-text))}
+.modal-sheet p{font-size:0.9375rem;color:rgb(var(--color-text-muted));line-height:1.5;margin-bottom:20px}
+.modal-sheet .actions{display:flex;gap:10px}
+
+.exam-progress-bar{display:flex;align-items:center;gap:8px;padding:8px 16px;background:rgb(var(--color-header-bg));border-bottom:1px solid rgb(var(--color-border))}
+.exam-progress-bar .pos{font-size:0.8125rem;font-weight:600;color:rgb(var(--color-text));white-space:nowrap}
+.exam-progress-bar .bar-wrap{flex:1}
+.exam-progress-bar .timer{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:0.875rem;font-weight:500;color:rgb(var(--color-text))}
+.exam-progress-bar .timer.warn{color:rgb(var(--color-danger))}
+
+.question-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;padding:12px 16px}
+.q-dot{width:100%;aspect-ratio:1;border-radius:8px;border:1.5px solid rgb(var(--color-border));display:flex;align-items:center;justify-content:center;font-size:0.6875rem;font-weight:600;color:rgb(var(--color-text-muted));background:rgb(var(--color-bg-card));position:relative}
+.q-dot.answered{background:rgb(var(--color-success)/0.15);border-color:rgb(var(--color-success));color:rgb(var(--color-success))}
+.q-dot.current{background:rgb(var(--color-brand));border-color:rgb(var(--color-brand));color:rgb(var(--color-on-brand))}
+.q-dot.flagged{border-color:rgb(var(--color-warning-fill));background:rgb(var(--color-warning-fill)/0.15);color:rgb(var(--color-warning-fill))}
+.q-dot.flagged::after{content:'!';position:absolute;top:-4px;right:-4px;font-size:10px;width:14px;height:14px;border-radius:50%;background:rgb(var(--color-warning-fill));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1.5px solid rgb(var(--color-border));border-radius:12px;background:rgb(var(--color-bg-card));cursor:pointer;text-align:left;font-family:inherit;width:100%;transition:border-color 90ms,background 90ms,transform 90ms;min-height:48px;text-decoration:none;color:inherit}
+.option-btn:hover{background:rgb(var(--color-bg-card-hover))}
+.option-btn:active{transform:scale(0.99)}
+.option-btn:focus-visible{outline:2px solid rgb(var(--color-brand));outline-offset:2px}
+.option-btn .key{width:28px;height:28px;border-radius:8px;background:rgb(var(--color-border)/0.5);display:flex;align-items:center;justify-content:center;font-size:0.8125rem;font-weight:600;flex-shrink:0;color:rgb(var(--color-text))}
+.option-btn .text{font-size:0.9375rem;line-height:1.5;color:rgb(var(--color-text));padding-top:2px;flex:1}
+.option-btn.correct{border-color:rgb(var(--color-success));background:rgb(var(--color-success)/0.08)}
+.option-btn.correct .key{background:rgb(var(--color-success));color:#fff}
+.option-btn.incorrect{border-color:rgb(var(--color-danger));background:rgb(var(--color-danger)/0.08)}
+.option-btn.incorrect .key{background:rgb(var(--color-danger));color:#fff}
+.option-btn.selected{border-color:rgb(var(--color-brand));background:rgb(var(--color-brand)/0.06)}
+.option-btn.selected .key{background:rgb(var(--color-brand));color:rgb(var(--color-on-brand))}
+
+.feedback-card{border-radius:12px;padding:14px 16px;margin-top:8px}
+.feedback-card.correct{background:rgb(var(--color-success)/0.08);border-left:3px solid rgb(var(--color-success))}
+.feedback-card.incorrect{background:rgb(var(--color-danger)/0.08);border-left:3px solid rgb(var(--color-danger))}
+.feedback-card .fb-title{font-size:0.9375rem;font-weight:600;margin-bottom:6px}
+.feedback-card.correct .fb-title{color:rgb(var(--color-success))}
+.feedback-card.incorrect .fb-title{color:rgb(var(--color-danger))}
+.feedback-card .fb-text{font-size:0.875rem;line-height:1.5;color:rgb(var(--color-text-muted))}
+
+.score-display{text-align:center;padding:24px 16px}
+.score-display .score-value{font-size:3.5rem;font-weight:700;letter-spacing:-0.02em;line-height:1}
+.score-display .score-label{font-size:0.875rem;color:rgb(var(--color-text-muted));margin-top:8px}
+.score-display .pass-fail{font-size:1.25rem;font-weight:700;margin-top:12px}
+.score-display .pass-fail.pass{color:rgb(var(--color-success))}
+.score-display .pass-fail.fail{color:rgb(var(--color-danger))}
+
+.domain-score-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgb(var(--color-border))}
+.domain-score-row:last-child{border-bottom:none}
+.domain-score-row .name{flex:1;font-size:0.875rem;color:rgb(var(--color-text))}
+.domain-score-row .pct{font-size:0.875rem;font-weight:600;min-width:40px;text-align:right}
+
+.study-bars{display:flex;flex-direction:column;gap:10px;padding:12px 16px;background:rgb(var(--color-header-bg));border-bottom:1px solid rgb(var(--color-border))}
+.study-bar-row{display:flex;align-items:center;gap:10px}
+.study-bar-row .bar-label{font-size:0.75rem;font-weight:600;min-width:68px;color:rgb(var(--color-text-muted))}
+.study-bar-row .bar-wrap{flex:1}
+.study-bar-row .bar-value{font-size:0.75rem;font-weight:600;min-width:48px;text-align:right;color:rgb(var(--color-text))}
+
+.screen-label{position:absolute;top:0;left:50%;transform:translateX(-50%);background:rgb(var(--color-brand));color:rgb(var(--color-on-brand));padding:6px 16px;border-radius:0 0 12px 12px;font-size:11px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;z-index:100;white-space:nowrap;box-shadow:0 2px 8px rgb(0 0 0/0.15)}
+
+@media(max-width:420px){
+  .phone-frame{width:100vw;height:100vh;border-radius:0;margin:0;box-shadow:none}
+}
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <label>Screen:</label>
+  <select id="screenSelect">
+    <option value="dashboard">Home / Dashboard</option>
+    <option value="practice">Practice Tab</option>
+    <option value="mock-start">Mock Exam Start</option>
+    <option value="mock-exam">Mock Exam In Progress</option>
+    <option value="study-exam">Study Exam In Progress</option>
+    <option value="practice-session">Domain Practice</option>
+    <option value="results">Exam Results</option>
+    <option value="history">History</option>
+    <option value="settings">Settings</option>
+  </select>
+  <button id="themeToggle" onclick="toggleTheme()">Dark Mode</button>
+</div>
+
+<div class="phone-frame" id="phoneFrame">
+  <div class="screen-label" id="screenLabel">Home / Dashboard</div>
+
+  <div class="status-bar">
+    <div class="notch"></div>
+    <span>9:41</span>
+    <span style="display:flex;gap:4px;align-items:center">
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><rect x="0" y="6" width="3" height="6" rx="0.5"/><rect x="4.5" y="4" width="3" height="8" rx="0.5"/><rect x="9" y="2" width="3" height="10" rx="0.5"/><rect x="13.5" y="0" width="2.5" height="12" rx="0.5" opacity="0.3"/></svg>
+      <svg width="22" height="12" viewBox="0 0 22 12" fill="currentColor"><rect x="0" y="1" width="18" height="10" rx="2" stroke="currentColor" stroke-width="1" fill="none"/><rect x="19" y="4" width="2" height="4" rx="0.5"/><rect x="1.5" y="2.5" width="12" height="7" rx="1" fill="currentColor"/></svg>
+    </span>
+  </div>
+
+  <!-- ===== SCREEN: DASHBOARD ===== -->
+  <div class="screen active" id="screen-dashboard">
+    <div class="header-bar">
+      <h1>CloudCertPrep</h1>
+      <span class="cert-badge">CLF-C02</span>
+    </div>
+    <div class="content">
+      <div class="kicker">Your dashboard</div>
+      <div style="margin-bottom:-4px">
+        <div style="font-size:1.75rem;font-weight:600;letter-spacing:-0.02em;line-height:1.15;color:rgb(var(--color-text))">AWS Cloud Practitioner</div>
+        <div style="font-size:0.875rem;color:rgb(var(--color-text-muted));margin-top:4px">Foundational - 1,050 questions</div>
+      </div>
+
+      <div class="resume-card">
+        <div class="kind">Resume - Study Exam</div>
+        <div style="font-size:0.9375rem;font-weight:500;margin-top:6px;color:rgb(var(--color-text))">Question 34 of 65</div>
+        <div style="font-size:0.8125rem;color:rgb(var(--color-text-muted));margin-top:2px">Last activity: 2 hours ago</div>
+        <button class="btn btn-primary btn-sm btn-block" style="margin-top:12px">Resume</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Best score</div>
+        <div style="font-size:2rem;font-weight:700;letter-spacing:-0.02em;margin-top:4px;color:rgb(var(--color-text))">820 <span style="font-size:0.875rem;font-weight:400;color:rgb(var(--color-text-muted))">/ 1000</span></div>
+        <div style="font-size:0.8125rem;color:rgb(var(--color-text-muted));margin-top:2px">Pass: 700 - You passed</div>
+      </div>
+
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-primary" style="flex:1">Practice exam</button>
+        <button class="btn btn-secondary" style="flex:1">Study exam</button>
+      </div>
+
+      <div>
+        <div class="kicker">Domain mastery</div>
+        <div class="card" style="padding:12px 16px">
+          <div class="mastery-row">
+            <span class="domain-name">Cloud Concepts</span>
+            <div class="bar-wrap"><div class="progress-bar" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100" aria-label="Cloud Concepts mastery 78%"><div class="fill brand" style="width:78%"></div></div></div>
+            <span class="pct" aria-hidden="true">78%</span>
+          </div>
+          <div class="mastery-row">
+            <span class="domain-name">Security</span>
+            <div class="bar-wrap"><div class="progress-bar" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" aria-label="Security mastery 62%"><div class="fill brand" style="width:62%"></div></div></div>
+            <span class="pct" aria-hidden="true">62%</span>
+          </div>
+          <div class="mastery-row">
+            <span class="domain-name">Technology</span>
+            <div class="bar-wrap"><div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" aria-label="Technology mastery 45%"><div class="fill brand" style="width:45%"></div></div></div>
+            <span class="pct" aria-hidden="true">45%</span>
+          </div>
+          <div class="mastery-row">
+            <span class="domain-name">Billing</span>
+            <div class="bar-wrap"><div class="progress-bar" role="progressbar" aria-valuenow="31" aria-valuemin="0" aria-valuemax="100" aria-label="Billing mastery 31%"><div class="fill brand" style="width:31%"></div></div></div>
+            <span class="pct" aria-hidden="true">31%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="border-left:4px solid rgb(var(--color-brand))">
+        <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:rgb(var(--color-brand))">Next up</div>
+        <div style="font-size:0.9375rem;font-weight:500;margin-top:6px;color:rgb(var(--color-text))">Billing - Weakest domain (31%)</div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:4px;padding-left:0">Practice Billing</button>
+      </div>
+
+      <div>
+        <div class="kicker">Recent attempts</div>
+        <div class="card" style="padding:4px 16px">
+          <div class="list-item">
+            <div>
+              <div style="display:flex;gap:8px;align-items:center"><span class="badge badge-pass">Passed</span><span class="badge badge-kind">Mock</span></div>
+              <div style="font-size:0.9375rem;font-weight:500;margin-top:4px;color:rgb(var(--color-text))">820 - 88%</div>
+              <div style="font-size:0.8125rem;color:rgb(var(--color-text-muted))">Oct 28, 2026 - 72 min</div>
+            </div>
+            <span class="chevron">></span>
+          </div>
+          <div class="list-item">
+            <div>
+              <div style="display:flex;gap:8px;align-items:center"><span class="badge badge-fail">Failed</span><span class="badge badge-kind">Study</span></div>
+              <div style="font-size:0.9375rem;font-weight:500;margin-top:4px;color:rgb(var(--color-text))">640 - 62%</div>
+              <div style="font-size:0.8125rem;color:rgb(var(--color-text-muted))">Oct 25, 2026 - 55 min</div>
+            </div>
+            <span class="chevron">></span>
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-sm btn-block" style="margin-top:8px">View all history</button>
+      </div>
+    </div>
+    <div class="tab-bar" role="tablist" aria-label="Main navigation">
+      <button class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        <span>Home</span>
+      </button>
+      <button class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg><span>Practice</span></button>
+      <button class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>History</span></button>
+      <button class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span>Settings</span></button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: PRACTICE TAB ===== -->
+  <div class="screen" id="screen-practice">
+    <div class="header-bar">
+      <h1>Practice</h1>
+      <span class="cert-badge">CLF-C02</span>
+    </div>
+    <div class="content">
+      <div class="kicker">Choose a mode</div>
+
+      <div class="card" style="cursor:pointer">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div class="icon-wrap" style="background:rgb(var(--color-brand)/0.12);border-radius:14px;width:48px;height:48px">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-brand))" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div style="flex:1">
+            <div class="card-title">Mock exam</div>
+            <div class="card-subtitle">65 questions - 90 min - Timed</div>
+          </div>
+          <span class="chevron" style="font-size:18px;color:rgb(var(--color-text-muted))">></span>
+        </div>
+      </div>
+
+      <div class="card" style="cursor:pointer">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div class="icon-wrap" style="background:rgb(var(--color-link)/0.12);border-radius:14px;width:48px;height:48px">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-link))" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+          </div>
+          <div style="flex:1">
+            <div class="card-title">Study exam</div>
+            <div class="card-subtitle">65 questions - Untimed - Feedback</div>
+          </div>
+          <span class="chevron" style="font-size:18px;color:rgb(var(--color-text-muted))">></span>
+        </div>
+      </div>
+
+      <div class="card" style="cursor:pointer">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div class="icon-wrap" style="background:rgb(var(--color-success)/0.12);border-radius:14px;width:48px;height:48px">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-success))" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div style="flex:1">
+            <div class="card-title">Domain practice</div>
+            <div class="card-subtitle">Pick a domain - 10 to 50 questions</div>
+          </div>
+          <span class="chevron" style="font-size:18px;color:rgb(var(--color-text-muted))">></span>
+        </div>
+      </div>
+
+      <div>
+        <div class="kicker">Domains</div>
+        <div class="card" style="padding:4px 0">
+          <div class="list-item" style="padding:12px 16px;cursor:pointer">
+            <div style="flex:1">
+              <div class="label">Cloud Concepts</div>
+              <div class="desc">187 questions - 78% mastery</div>
+            </div>
+            <span class="chevron">></span>
+          </div>
+          <div class="list-item" style="padding:12px 16px;cursor:pointer">
+            <div style="flex:1">
+              <div class="label">Security</div>
+              <div class="desc">195 questions - 62% mastery</div>
+            </div>
+            <span class="chevron">></span>
+          </div>
+          <div class="list-item" style="padding:12px 16px;cursor:pointer">
+            <div style="flex:1">
+              <div class="label">Technology</div>
+              <div class="desc">221 questions - 45% mastery</div>
+            </div>
+            <span class="chevron">></span>
+          </div>
+          <div class="list-item" style="padding:12px 16px;cursor:pointer">
+            <div style="flex:1">
+              <div class="label">Billing and Pricing</div>
+              <div class="desc">147 questions - 31% mastery</div>
+            </div>
+            <span class="chevron">></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-bar" role="tablist" aria-label="Main navigation"
+      <button class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg><span>Home</span></button>
+      <button class="tab-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg><span>Practice</span></button>
+      <button class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>History</span></button>
+      <button class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span>Settings</span></button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: MOCK EXAM START ===== -->
+  <div class="screen" id="screen-mock-start">
+    <div class="header-bar">
+      <button class="back"><</button>
+      <h1>Mock exam</h1>
+    </div>
+    <div class="content">
+      <div class="kicker">CLF-C02</div>
+      <div style="font-size:1.75rem;font-weight:600;letter-spacing:-0.02em;line-height:1.15;color:rgb(var(--color-text))">AWS Cloud Practitioner</div>
+      <div style="font-size:0.9375rem;color:rgb(var(--color-text-muted));line-height:1.5">Test your readiness with a full-length timed exam. Questions are drawn from all domains.</div>
+
+      <div class="card">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div><div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:rgb(var(--color-text-muted))">Questions</div><div style="font-size:1.5rem;font-weight:700;margin-top:2px;color:rgb(var(--color-text))">65</div></div>
+          <div><div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:rgb(var(--color-text-muted))">Duration</div><div style="font-size:1.5rem;font-weight:700;margin-top:2px;color:rgb(var(--color-text))">90 min</div></div>
+          <div><div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:rgb(var(--color-text-muted))">Pass score</div><div style="font-size:1.5rem;font-weight:700;margin-top:2px;color:rgb(var(--color-text))">700</div></div>
+          <div><div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:rgb(var(--color-text-muted))">Scale</div><div style="font-size:1.5rem;font-weight:700;margin-top:2px;color:rgb(var(--color-text))">100-1000</div></div>
+        </div>
+      </div>
+
+      <div class="card" style="border-left:4px solid rgb(var(--color-brand))">
+        <div style="font-size:0.8125rem;font-weight:600;color:rgb(var(--color-brand));text-transform:uppercase;letter-spacing:0.06em">In progress</div>
+        <div style="font-size:0.9375rem;font-weight:500;margin-top:4px;color:rgb(var(--color-text))">Resume existing exam - Question 42 of 65</div>
+        <button class="btn btn-primary btn-sm btn-block" style="margin-top:12px">Resume exam</button>
+        <button class="btn btn-ghost btn-sm btn-block" style="margin-top:4px">Discard and start new</button>
+      </div>
+
+      <button class="btn btn-primary btn-block" style="margin-top:auto;padding:16px">Start new exam</button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: MOCK EXAM IN PROGRESS ===== -->
+  <div class="screen" id="screen-mock-exam">
+    <div class="exam-progress-bar">
+      <span class="pos">28/65</span>
+      <div class="bar-wrap"><div class="progress-bar" role="progressbar" aria-valuenow="43" aria-valuemin="0" aria-valuemax="100" aria-label="Question 28 of 65 (43%)"><div class="fill brand" style="width:43%"></div></div></div>
+      <span class="timer" aria-label="1 hour 12 minutes 34 seconds remaining">01:12:34</span>
+    </div>
+
+    <div class="question-grid">
+      <div class="q-dot answered">1</div><div class="q-dot answered">2</div><div class="q-dot answered">3</div><div class="q-dot answered">4</div><div class="q-dot answered">5</div><div class="q-dot answered">6</div><div class="q-dot answered">7</div><div class="q-dot answered">8</div>
+      <div class="q-dot answered">9</div><div class="q-dot answered">10</div><div class="q-dot answered">11</div><div class="q-dot answered">12</div><div class="q-dot flagged">13</div><div class="q-dot answered">14</div><div class="q-dot answered">15</div><div class="q-dot answered">16</div>
+      <div class="q-dot answered">17</div><div class="q-dot answered">18</div><div class="q-dot answered">19</div><div class="q-dot answered">20</div><div class="q-dot answered">21</div><div class="q-dot answered">22</div><div class="q-dot answered">23</div><div class="q-dot answered">24</div>
+      <div class="q-dot answered">25</div><div class="q-dot answered">26</div><div class="q-dot answered">27</div><div class="q-dot current">28</div><div class="q-dot">29</div><div class="q-dot">30</div><div class="q-dot">31</div><div class="q-dot">32</div>
+      <div class="q-dot">33</div><div class="q-dot">34</div><div class="q-dot">35</div><div class="q-dot">36</div><div class="q-dot">37</div><div class="q-dot">38</div><div class="q-dot">39</div><div class="q-dot">40</div>
+      <div class="q-dot">41</div><div class="q-dot">42</div><div class="q-dot">43</div><div class="q-dot">44</div><div class="q-dot">45</div><div class="q-dot">46</div><div class="q-dot">47</div><div class="q-dot">48</div>
+      <div class="q-dot">49</div><div class="q-dot">50</div><div class="q-dot">51</div><div class="q-dot">52</div><div class="q-dot">53</div><div class="q-dot">54</div><div class="q-dot">55</div><div class="q-dot">56</div>
+      <div class="q-dot">57</div><div class="q-dot">58</div><div class="q-dot">59</div><div class="q-dot">60</div><div class="q-dot">61</div><div class="q-dot">62</div><div class="q-dot">63</div><div class="q-dot">64</div>
+      <div class="q-dot">65</div>
+    </div>
+
+    <div style="padding:16px;flex:1;display:flex;flex-direction:column">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <span style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:rgb(var(--color-text-muted))">Question 28 of 65</span>
+        <button class="btn btn-ghost btn-sm" style="font-size:16px;padding:4px 8px">Flag</button>
+      </div>
+      <div style="font-size:1rem;line-height:1.5;color:rgb(var(--color-text));margin-bottom:20px;font-weight:400" class="cc-question-stem">Which AWS service is used to manage user identities and access to AWS resources?</div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <button class="option-btn selected"><span class="key">A</span><span class="text">AWS Identity and Access Management (IAM)</span></button>
+        <button class="option-btn"><span class="key">B</span><span class="text">Amazon GuardDuty</span></button>
+        <button class="option-btn"><span class="key">C</span><span class="text">Amazon Inspector</span></button>
+        <button class="option-btn"><span class="key">D</span><span class="text">AWS Artifact</span></button>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:auto;padding-top:16px">
+        <button class="btn btn-outline" style="flex:1">Previous</button>
+        <button class="btn btn-primary" style="flex:1">Next</button>
+      </div>
+    </div>
+
+    <div style="padding:12px 16px;border-top:1px solid rgb(var(--color-border));background:rgb(var(--color-header-bg))">
+      <button class="btn btn-secondary btn-block">Submit exam</button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: STUDY EXAM IN PROGRESS ===== -->
+  <div class="screen" id="screen-study-exam">
+    <div class="study-bars">
+      <div class="study-bar-row">
+        <span class="bar-label">Answered</span>
+        <div class="bar-wrap"><div class="progress-bar" role="progressbar" aria-valuenow="52" aria-valuemin="0" aria-valuemax="100" aria-label="Answered 34 of 65 questions (52%)"><div class="fill" style="width:52%;background:linear-gradient(90deg,rgb(var(--color-success)),rgb(var(--color-warning-fill)))"></div></div></div>
+        <span class="bar-value">34 / 65</span>
+      </div>
+      <div class="study-bar-row">
+        <span class="bar-label">Correct</span>
+        <div class="bar-wrap"><div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" aria-label="26 correct of 65 questions (40%)"><div class="fill gradient-green" style="width:40%"></div></div></div>
+        <span class="bar-value" style="color:rgb(var(--color-success))">26 / 65</span>
+      </div>
+      <div class="study-bar-row">
+        <span class="bar-label">Wrong</span>
+        <div class="bar-wrap"><div class="progress-bar" role="progressbar" aria-valuenow="12" aria-valuemin="0" aria-valuemax="100" aria-label="8 wrong of 65 questions (12%)"><div class="fill gradient-red" style="width:12%"></div></div></div>
+        <span class="bar-value" style="color:rgb(var(--color-danger))">8 / 65</span>
+      </div>
+    </div>
+
+    <div style="padding:16px;flex:1;display:flex;flex-direction:column">
+      <span style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:rgb(var(--color-text-muted));margin-bottom:8px">Question 35 of 65</span>
+      <div style="font-size:1rem;line-height:1.5;color:rgb(var(--color-text));margin-bottom:20px" class="cc-question-stem">Which of the following are benefits of using AWS Lambda?</div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+        <button class="option-btn correct"><span class="key">A</span><span class="text">No servers to manage</span></button>
+        <button class="option-btn incorrect"><span class="key">B</span><span class="text">Long-running compute tasks</span></button>
+        <button class="option-btn correct"><span class="key">C</span><span class="text">Pay for compute time consumed</span></button>
+        <button class="option-btn"><span class="key">D</span><span class="text">Included free with all AWS accounts</span></button>
+      </div>
+
+      <div class="feedback-card incorrect">
+        <div class="fb-title">Incorrect</div>
+        <div class="fb-text">
+          <strong>B is wrong:</strong> Lambda has a 15-minute maximum timeout. Long-running tasks need ECS, Fargate, or EC2.<br><br>
+          <strong>D is wrong:</strong> Lambda offers a free tier but is not free with all accounts. You pay per invocation after the free tier.<br><br>
+          <strong>A and C are correct:</strong> Lambda is serverless (no servers to manage) and you pay only for compute time consumed.
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:auto;padding-top:16px">
+        <button class="btn btn-outline" style="flex:1">Previous</button>
+        <button class="btn btn-primary" style="flex:1">Next question</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: DOMAIN PRACTICE ===== -->
+  <div class="screen" id="screen-practice-session">
+    <div class="header-bar">
+      <button class="back"><</button>
+      <h1>Cloud Concepts</h1>
+    </div>
+    <div style="padding:8px 16px;background:rgb(var(--color-header-bg));border-bottom:1px solid rgb(var(--color-border))">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:0.8125rem;font-weight:600;color:rgb(var(--color-text))">7 / 20</span>
+        <div class="bar-wrap" style="flex:1"><div class="progress-bar" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="Question 7 of 20 (35%)"><div class="fill brand" style="width:35%"></div></div></div>
+      </div>
+    </div>
+
+    <div style="padding:16px;flex:1;display:flex;flex-direction:column">
+      <div style="font-size:1rem;line-height:1.5;color:rgb(var(--color-text));margin-bottom:20px" class="cc-question-stem">What is the primary benefit of using Amazon CloudFront?</div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+        <button class="option-btn"><span class="key">A</span><span class="text">Automated database backups</span></button>
+        <button class="option-btn selected"><span class="key">B</span><span class="text">Reduced latency for global users</span></button>
+        <button class="option-btn"><span class="key">C</span><span class="text">Real-time threat detection</span></button>
+        <button class="option-btn"><span class="key">D</span><span class="text">Multi-region failover</span></button>
+      </div>
+
+      <div class="feedback-card correct">
+        <div class="fb-title">Correct</div>
+        <div class="fb-text">CloudFront is a content delivery network (CDN) that caches content at edge locations worldwide, reducing latency for end users by serving content from the location closest to them.</div>
+      </div>
+
+      <button class="btn btn-primary btn-block" style="margin-top:auto;padding:14px">Next question</button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: RESULTS ===== -->
+  <div class="screen" id="screen-results">
+    <div class="header-bar">
+      <h1>Results</h1>
+    </div>
+    <div class="content">
+      <div class="score-display">
+        <div class="pass-fail pass">Passed</div>
+        <div class="score-value" style="color:rgb(var(--color-text));margin-top:8px">820</div>
+        <div class="score-label">Scaled score (100 - 1000)</div>
+        <div style="display:flex;justify-content:center;gap:24px;margin-top:16px">
+          <div><div style="font-size:1.25rem;font-weight:700;color:rgb(var(--color-text))">88%</div><div style="font-size:0.75rem;color:rgb(var(--color-text-muted))">Percentage</div></div>
+          <div><div style="font-size:1.25rem;font-weight:700;color:rgb(var(--color-text))">57/65</div><div style="font-size:0.75rem;color:rgb(var(--color-text-muted))">Correct</div></div>
+          <div><div style="font-size:1.25rem;font-weight:700;color:rgb(var(--color-text))">72 min</div><div style="font-size:0.75rem;color:rgb(var(--color-text-muted))">Time taken</div></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="kicker">Per-domain scores</div>
+        <div class="card">
+          <div class="domain-score-row"><span class="name">Cloud Concepts</span><div style="width:80px"><div class="progress-bar" role="progressbar" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100" aria-label="Cloud Concepts 92%"><div class="fill success" style="width:92%"></div></div></div><span class="pct" style="color:rgb(var(--color-success))" aria-hidden="true">92%</span></div>
+          <div class="domain-score-row"><span class="name">Security</span><div style="width:80px"><div class="progress-bar" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" aria-label="Security 85%"><div class="fill success" style="width:85%"></div></div></div><span class="pct" style="color:rgb(var(--color-success))" aria-hidden="true">85%</span></div>
+          <div class="domain-score-row"><span class="name">Technology</span><div style="width:80px"><div class="progress-bar" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100" aria-label="Technology 78%"><div class="fill brand" style="width:78%"></div></div></div><span class="pct" aria-hidden="true">78%</span></div>
+          <div class="domain-score-row"><span class="name">Billing</span><div style="width:80px"><div class="progress-bar" role="progressbar" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100" aria-label="Billing 57%"><div class="fill danger" style="width:57%"></div></div></div><span class="pct" style="color:rgb(var(--color-danger))" aria-hidden="true">57%</span></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <button class="btn btn-primary btn-block">Practice weakest domain</button>
+        <button class="btn btn-secondary btn-block">Retake exam</button>
+        <button class="btn btn-outline btn-block">Review questions</button>
+        <button class="btn btn-ghost btn-block">Back to dashboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: HISTORY ===== -->
+  <div class="screen" id="screen-history">
+    <div class="header-bar">
+      <h1>History</h1>
+      <span class="cert-badge">CLF-C02</span>
+    </div>
+    <div class="content">
+      <div class="card" style="padding:12px 16px">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;text-align:center">
+          <div><div style="font-size:1.5rem;font-weight:700;color:rgb(var(--color-text))">12</div><div style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;color:rgb(var(--color-text-muted));letter-spacing:0.06em">Attempts</div></div>
+          <div><div style="font-size:1.5rem;font-weight:700;color:rgb(var(--color-text))">78%</div><div style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;color:rgb(var(--color-text-muted));letter-spacing:0.06em">Accuracy</div></div>
+          <div><div style="font-size:1.5rem;font-weight:700;color:rgb(var(--color-text))">820</div><div style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;color:rgb(var(--color-text-muted));letter-spacing:0.06em">Best</div></div>
+        </div>
+      </div>
+
+      <div class="filter-row" role="group" aria-label="Filter history">
+        <button class="chip active" aria-pressed="true">All</button>
+        <button class="chip" aria-pressed="false">Passed</button>
+        <button class="chip" aria-pressed="false">Failed</button>
+        <button class="chip" aria-pressed="false">Mock</button>
+        <button class="chip" aria-pressed="false">Study</button>
+        <button class="chip" aria-pressed="false">Practice</button>
+      </div>
+
+      <div class="card" style="padding:4px 16px">
+        <div class="list-item">
+          <div style="flex:1">
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px"><span class="badge badge-pass">Passed</span><span class="badge badge-kind">Mock</span></div>
+            <div style="font-size:0.9375rem;font-weight:600;color:rgb(var(--color-text))">820 - 88% (57/65)</div>
+            <div style="font-size:0.8125rem;color:rgb(var(--color-text-muted))">Oct 28, 2026 - 72 min</div>
+          </div>
+          <span class="chevron">></span>
+        </div>
+        <div class="list-item">
+          <div style="flex:1">
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px"><span class="badge badge-pass">Passed</span><span class="badge badge-kind">Study</span></div>
+            <div style="font-size:0.9375rem;font-weight:600;color:rgb(var(--color-text))">760 - 74% (48/65)</div>
+            <div style="font-size:0.8125rem;color:rgb(var(--color-text-muted))">Oct 26, 2026 - 55 min</div>
+          </div>
+          <span class="chevron">></span>
+        </div>
+        <div class="list-item">
+          <div style="flex:1">
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px"><span class="badge badge-fail">Failed</span><span class="badge badge-kind">Mock</span></div>
+            <div style="font-size:0.9375rem;font-weight:600;color:rgb(var(--color-text))">640 - 62% (40/65)</div>
+            <div style="font-size:0.8125rem;color:rgb(var(--color-text-muted))">Oct 22, 2026 - 85 min</div>
+          </div>
+          <span class="chevron">></span>
+        </div>
+        <div class="list-item">
+          <div style="flex:1">
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px"><span class="badge badge-pass">Passed</span><span class="badge badge-kind">Practice</span></div>
+            <div style="font-size:0.9375rem;font-weight:600;color:rgb(var(--color-text))">Cloud Concepts - 18/20 (90%)</div>
+            <div style="font-size:0.8125rem;color:rgb(var(--color-text-muted))">Oct 20, 2026 - 12 min</div>
+          </div>
+          <span class="chevron">></span>
+        </div>
+        <div class="list-item">
+          <div style="flex:1">
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px"><span class="badge badge-fail">Failed</span><span class="badge badge-kind">Mock</span></div>
+            <div style="font-size:0.9375rem;font-weight:600;color:rgb(var(--color-text))">580 - 55% (36/65)</div>
+            <div style="font-size:0.8125rem;color:rgb(var(--color-text-muted))">Oct 15, 2026 - 90 min</div>
+          </div>
+          <span class="chevron">></span>
+        </div>
+      </div>
+    </div>
+    <div class="tab-bar" role="tablist" aria-label="Main navigation"
+      <button class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg><span>Home</span></button>
+      <button class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg><span>Practice</span></button>
+      <button class="tab-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>History</span></button>
+      <button class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span>Settings</span></button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: SETTINGS ===== -->
+  <div class="screen" id="screen-settings">
+    <div class="header-bar">
+      <h1>Settings</h1>
+    </div>
+    <div class="content">
+      <div>
+        <div class="kicker">Appearance</div>
+        <div class="card" style="padding:4px 0">
+          <div class="list-item" style="padding:12px 16px">
+            <div style="flex:1">
+              <div class="label">Theme</div>
+              <div class="desc">Follow system preference</div>
+            </div>
+            <span class="chevron">></span>
+          </div>
+          <div class="list-item" style="padding:12px 16px">
+            <div style="flex:1">
+              <div class="label">Reduce motion</div>
+              <div class="desc">Off</div>
+            </div>
+            <div style="width:48px;height:28px;border-radius:14px;background:rgb(var(--color-border));position:relative"><div style="width:24px;height:24px;border-radius:12px;background:#fff;position:absolute;top:2px;left:2px;box-shadow:0 1px 3px rgb(0 0 0/0.2)"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="kicker">Data</div>
+        <div class="card" style="padding:4px 0">
+          <div class="list-item" style="padding:12px 16px;cursor:pointer">
+            <div class="icon-wrap" style="background:rgb(var(--color-link)/0.12)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-link))" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </div>
+            <div style="flex:1"><div class="label">Export backup</div><div class="desc">Save a local backup file</div></div>
+            <span class="chevron">></span>
+          </div>
+          <div class="list-item" style="padding:12px 16px;cursor:pointer">
+            <div class="icon-wrap" style="background:rgb(var(--color-success)/0.12)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-success))" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <div style="flex:1"><div class="label">Import backup</div><div class="desc">Restore from a backup file</div></div>
+            <span class="chevron">></span>
+          </div>
+          <div class="list-item" style="padding:12px 16px;cursor:pointer">
+            <div class="icon-wrap" style="background:rgb(var(--color-warning)/0.12)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-warning-fill))" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+            </div>
+            <div style="flex:1"><div class="label">Reset progress</div><div class="desc">Clear study data for this cert</div></div>
+            <span class="chevron">></span>
+          </div>
+          <div class="list-item" style="padding:12px 16px;cursor:pointer">
+            <div class="icon-wrap" style="background:rgb(var(--color-danger)/0.12)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-danger))" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+            </div>
+            <div style="flex:1"><div class="label" style="color:rgb(var(--color-danger))">Delete all data</div><div class="desc">Remove all local study data</div></div>
+            <span class="chevron">></span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="kicker">Certifications</div>
+        <div class="card" style="padding:4px 0">
+          <div class="list-item" style="padding:12px 16px;cursor:pointer">
+            <div style="flex:1"><div class="label">Browse certifications</div><div class="desc">Switch active cert</div></div>
+            <span class="chevron">></span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="kicker">About</div>
+        <div class="card" style="padding:12px 16px">
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="font-size:0.875rem;color:rgb(var(--color-text-muted))">App version</span><span class="mono" style="font-size:0.875rem;color:rgb(var(--color-text))">1.0.0</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="font-size:0.875rem;color:rgb(var(--color-text-muted))">Content version</span><span class="mono" style="font-size:0.875rem;color:rgb(var(--color-text))">2026.10.15</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="font-size:0.875rem;color:rgb(var(--color-text-muted))">Schema version</span><span class="mono" style="font-size:0.875rem;color:rgb(var(--color-text))">3</span></div>
+        </div>
+      </div>
+
+      <div class="card" style="text-align:center;padding:16px">
+        <div style="font-size:0.8125rem;color:rgb(var(--color-text-muted));line-height:1.5">All data stays on this device.<br>Nothing is uploaded to any server.<br>Deleting the app deletes your data.</div>
+      </div>
+    </div>
+    <div class="tab-bar" role="tablist" aria-label="Main navigation"
+      <button class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg><span>Home</span></button>
+      <button class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg><span>Practice</span></button>
+      <button class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>History</span></button>
+      <button class="tab-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span>Settings</span></button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const labels={
+  'dashboard':'Home / Dashboard',
+  'practice':'Practice Tab',
+  'mock-start':'Mock Exam Start',
+  'mock-exam':'Mock Exam In Progress',
+  'study-exam':'Study Exam In Progress',
+  'practice-session':'Domain Practice',
+  'results':'Exam Results',
+  'history':'History',
+  'settings':'Settings'
+};
+document.getElementById('screenSelect').addEventListener('change',function(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+this.value).classList.add('active');
+  document.getElementById('screenLabel').textContent=labels[this.value]||this.value;
+});
+function toggleTheme(){
+  const html=document.documentElement;
+  const btn=document.getElementById('themeToggle');
+  if(html.classList.contains('theme-dark')){
+    html.classList.replace('theme-dark','theme-light');
+    btn.textContent='Dark Mode';
+  }else{
+    html.classList.replace('theme-light','theme-dark');
+    btn.textContent='Light Mode';
+  }
+}
+</script>
+</body>
+</html>
