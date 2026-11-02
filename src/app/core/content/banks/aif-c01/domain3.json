@@ -1,0 +1,2755 @@
+[
+  {
+    "id": "aif-q005",
+    "question": "A travel company uses a pre-trained large language model (LLM) to power a booking assistant. The company needs the assistant's replies to be brief and written in a particular language. Which approach will best align the LLM's output with these expectations?",
+    "options": {
+      "A": "Choose an LLM of a different size",
+      "B": "Increase the temperature value",
+      "C": "Refine the prompt",
+      "D": "Increase the Top K value"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Refining the prompt lets the company state the required response length and target language directly, so the model returns brief replies in the chosen language.",
+      "options": {
+        "A": "Choosing a different model size changes the model's capacity and cost rather than enforcing length or language.",
+        "B": "This option is incorrect. The correct answer is Refine the prompt.",
+        "C": "Correct answer. Refining the prompt lets the company state the required response length and target language directly, so the model returns brief replies in the chosen language.",
+        "D": "Increasing the Top K value widens the pool of candidate tokens, which also does not control response length or language."
+      }
+    },
+    "note": "Refining the prompt lets the company state the required response length and target language directly, so the model returns brief replies in the chosen language.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q008",
+    "question": "A manufacturer needs a high-accuracy labeled image dataset for a defect-detection model and wants to keep mislabeled examples to a minimum. Which approach best meets these requirements?",
+    "options": {
+      "A": "Automated annotation with Amazon Rekognition Custom Labels",
+      "B": "Human-in-the-loop validation with Amazon SageMaker Ground Truth Plus",
+      "C": "Synthetic image generation with an Amazon Bedrock foundation model",
+      "D": "Automated active-learning labeling with Amazon SageMaker Ground Truth"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Human-in-the-loop validation with Amazon SageMaker Ground Truth Plus routes labels through expert reviewers who verify and correct them, producing the highest-accuracy annotations with the fewest mistakes.",
+      "options": {
+        "A": "Amazon Rekognition Custom Labels automates labeling but, without human review, can propagate errors; generating synthetic images with an Amazon Bedrock model creates data yet does nothing to validate the labels; SageMaker Ground Truth's automated active-learning labeling cuts effort but raises the chance of incorrect annotations, the opposite of the goal.",
+        "B": "Correct answer. Human-in-the-loop validation with Amazon SageMaker Ground Truth Plus routes labels through expert reviewers who verify and correct them, producing the highest-accuracy annotations with the fewest mistakes.",
+        "C": "Amazon Rekognition Custom Labels automates labeling but, without human review, can propagate errors; generating synthetic images with an Amazon Bedrock model creates data yet does nothing to validate the labels; SageMaker Ground Truth's automated active-learning labeling cuts effort but raises the chance of incorrect annotations, the opposite of the goal.",
+        "D": "Amazon Rekognition Custom Labels automates labeling but, without human review, can propagate errors; generating synthetic images with an Amazon Bedrock model creates data yet does nothing to validate the labels; SageMaker Ground Truth's automated active-learning labeling cuts effort but raises the chance of incorrect annotations, the opposite of the goal."
+      }
+    },
+    "note": "Human-in-the-loop validation with Amazon SageMaker Ground Truth Plus routes labels through expert reviewers who verify and correct them, producing the highest-accuracy annotations with the fewest mistakes.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.3",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon SageMaker Ground Truth Plus",
+      "Amazon Rekognition",
+      "Amazon SageMaker Ground Truth",
+      "Amazon Bedrock"
+    ]
+  },
+  {
+    "id": "aif-q019",
+    "question": "A company uses a foundation model (FM) from Amazon Bedrock for a search tool. The company wants to fine-tune the FM on its own data to make the tool more accurate. Which approach will correctly fine-tune the model?",
+    "options": {
+      "A": "Purchase Provisioned Throughput for Amazon Bedrock",
+      "B": "Supply labeled examples that each contain a prompt field and a completion field",
+      "C": "Prepare the dataset as a .txt file that holds multiple lines of .csv content",
+      "D": "Train the model on journals and textbooks"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Fine-tuning a model on Amazon Bedrock requires a labeled dataset in which each record pairs an input prompt with the expected completion, so the model learns the desired input-to-output behavior from the company data.",
+      "options": {
+        "A": "Provisioned Throughput is a capacity and pricing option for inference, not a fine-tuning method.",
+        "B": "Correct answer. Fine-tuning a model on Amazon Bedrock requires a labeled dataset in which each record pairs an input prompt with the expected completion, so the model learns the desired input-to-output behavior from the company data.",
+        "C": "A .txt file containing .csv lines is not the required fine-tuning format.",
+        "D": "Training on journals and textbooks is unstructured content that lacks the prompt-and-completion pairs that fine-tuning needs."
+      }
+    },
+    "note": "Fine-tuning a model on Amazon Bedrock requires a labeled dataset in which each record pairs an input prompt with the expected completion, so the model learns the desired input-to-output behavior from the company data.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.3",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon Bedrock"
+    ]
+  },
+  {
+    "id": "aif-q021",
+    "question": "An engineering team wants to use Amazon OpenSearch Service as the backbone of a vector search application. Which capability makes this possible?",
+    "options": {
+      "A": "Full-text keyword (BM25) search and ranking",
+      "B": "Geospatial indexing and queries",
+      "C": "k-NN nearest neighbor search over high-dimensional vectors",
+      "D": "Cross-cluster replication for disaster recovery"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "k-NN nearest neighbor search lets Amazon OpenSearch Service index embeddings and return the vectors most similar to a query, which is the core of a vector database application such as semantic search.",
+      "options": {
+        "A": "BM25 full-text search matches keywords rather than semantic vectors; geospatial indexing handles location data; cross-cluster replication supports availability and disaster recovery.",
+        "B": "BM25 full-text search matches keywords rather than semantic vectors; geospatial indexing handles location data; cross-cluster replication supports availability and disaster recovery.",
+        "C": "Correct answer. k-NN nearest neighbor search lets Amazon OpenSearch Service index embeddings and return the vectors most similar to a query, which is the core of a vector database application such as semantic search.",
+        "D": "BM25 full-text search matches keywords rather than semantic vectors; geospatial indexing handles location data; cross-cluster replication supports availability and disaster recovery."
+      }
+    },
+    "note": "k-NN nearest neighbor search lets Amazon OpenSearch Service index embeddings and return the vectors most similar to a query, which is the core of a vector database application such as semantic search.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon OpenSearch Service"
+    ]
+  },
+  {
+    "id": "aif-q024",
+    "question": "A company is building a self-service support chatbot on a foundation model (FM). The chatbot's responses must match the company's brand tone. Which solution meets this requirement?",
+    "options": {
+      "A": "Iterate on and refine the prompt until the FM produces responses in the desired style",
+      "B": "Set a low limit on the number of tokens the FM can produce",
+      "C": "Use batch inference to generate detailed responses",
+      "D": "Set a higher temperature value"
+    },
+    "answer": "A",
+    "explanation": {
+      "summary": "Iteratively refining the prompt steers the foundation model toward responses that match the company brand tone, because the prompt instructions and examples shape the style of the output.",
+      "options": {
+        "A": "Correct answer. Iteratively refining the prompt steers the foundation model toward responses that match the company brand tone, because the prompt instructions and examples shape the style of the output.",
+        "B": "This option is incorrect. The correct answer is Iterate on and refine the prompt until the FM produces responses in the desired style.",
+        "C": "Batch inference changes how requests are processed, not their tone.",
+        "D": "This option is incorrect. The correct answer is Iterate on and refine the prompt until the FM produces responses in the desired style."
+      }
+    },
+    "note": "Iteratively refining the prompt steers the foundation model toward responses that match the company brand tone, because the prompt instructions and examples shape the style of the output.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q025",
+    "question": "A company wants to use a large language model (LLM) on Amazon Bedrock to label text passages as positive or negative. Which prompt engineering strategy meets this requirement?",
+    "options": {
+      "A": "Add a detailed explanation of sentiment analysis and how LLMs work to the prompt",
+      "B": "Provide only the new passage to classify, with no examples or additional context",
+      "C": "Include a few example passages, each labeled positive or negative, in the prompt",
+      "D": "Include the new passage along with a few examples of unrelated tasks such as summarization or translation"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Including a few example passages, each labeled positive or negative, is few-shot prompting, which shows the model the input-to-label pattern and improves classification accuracy on a new passage.",
+      "options": {
+        "A": "Adding an explanation of how sentiment analysis or LLMs work provides theory but no examples to learn from.",
+        "B": "Adding an explanation of how sentiment analysis or LLMs work provides theory but no examples to learn from.",
+        "C": "Correct answer. Including a few example passages, each labeled positive or negative, is few-shot prompting, which shows the model the input-to-label pattern and improves classification accuracy on a new passage.",
+        "D": "Examples of unrelated tasks such as summarization or translation steer the model away from sentiment classification."
+      }
+    },
+    "note": "Including a few example passages, each labeled positive or negative, is few-shot prompting, which shows the model the input-to-label pattern and improves classification accuracy on a new passage.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q029",
+    "question": "A startup is launching an LLM-powered virtual agent and wants to stop users from coaxing it into unsafe actions or leaking its hidden instructions. Which action most directly reduces this risk?",
+    "options": {
+      "A": "Increase the model's temperature so responses vary more",
+      "B": "Raise the Top P value to widen token sampling",
+      "C": "Add system instructions in a prompt template that teach the model to recognize and refuse manipulation attempts",
+      "D": "Reduce the maximum output length on each request"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "A prompt template with system instructions that teach the model to spot and refuse manipulation patterns is a prompt-engineering safeguard that directly lowers the risk of prompt injection and instruction leakage.",
+      "options": {
+        "A": "Raising temperature or Top P only changes how random the sampling is, and shortening the maximum output length just truncates responses; none of these counters prompt manipulation.",
+        "B": "Raising temperature or Top P only changes how random the sampling is, and shortening the maximum output length just truncates responses; none of these counters prompt manipulation.",
+        "C": "Correct answer. A prompt template with system instructions that teach the model to spot and refuse manipulation patterns is a prompt-engineering safeguard that directly lowers the risk of prompt injection and instruction leakage.",
+        "D": "Raising temperature or Top P only changes how random the sampling is, and shortening the maximum output length just truncates responses; none of these counters prompt manipulation."
+      }
+    },
+    "note": "A prompt template with system instructions that teach the model to spot and refuse manipulation patterns is a prompt-engineering safeguard that directly lowers the risk of prompt injection and instruction leakage.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q038",
+    "question": "A logistics company runs an Amazon Titan model on Amazon Bedrock and wants the model's answers to draw on its internal shipping documents. Which solution adds this private context?",
+    "options": {
+      "A": "Fine-tune the FM on the internal documents",
+      "B": "Create an Amazon Bedrock knowledge base over the internal documents",
+      "C": "Lower the temperature value",
+      "D": "Switch to a larger foundation model"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "An Amazon Bedrock knowledge base indexes the internal documents and retrieves the relevant passages at query time (RAG), so the Titan model grounds its answers in the company's private data without any training.",
+      "options": {
+        "A": "Fine-tuning can embed knowledge but is costlier and static, so it is not the targeted way to supplement answers with frequently used documents; lowering the temperature only reduces randomness; switching to a larger model adds capability but still gives it no access to the private documents.",
+        "B": "Correct answer. An Amazon Bedrock knowledge base indexes the internal documents and retrieves the relevant passages at query time (RAG), so the Titan model grounds its answers in the company's private data without any training.",
+        "C": "This option is incorrect. The correct answer is Create an Amazon Bedrock knowledge base over the internal documents.",
+        "D": "Fine-tuning can embed knowledge but is costlier and static, so it is not the targeted way to supplement answers with frequently used documents; lowering the temperature only reduces randomness; switching to a larger model adds capability but still gives it no access to the private documents."
+      }
+    },
+    "note": "An Amazon Bedrock knowledge base indexes the internal documents and retrieves the relevant passages at query time (RAG), so the Titan model grounds its answers in the company's private data without any training.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon Bedrock",
+      "Amazon Bedrock Knowledge Bases"
+    ]
+  },
+  {
+    "id": "aif-q046",
+    "question": "An appliance maker wants a chat interface over its PDF product manuals using large language models (LLMs) on Amazon Bedrock, at the lowest cost. Which approach fits best?",
+    "options": {
+      "A": "Add all the manuals to every prompt as context",
+      "B": "Upload the manuals to an Amazon Bedrock knowledge base and retrieve only the relevant passages per query",
+      "C": "Fine-tune a model on the manuals and serve the fine-tuned model",
+      "D": "Continuously pre-train the base model on the manual content"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "A knowledge base retrieves just the passages relevant to each question, so the model gets the right context cheaply, without paying to send whole manuals every time or to train the model.",
+      "options": {
+        "A": "Pasting all manuals into every prompt inflates token costs; fine-tuning adds training cost and must be redone when manuals change; continuous pre-training on the corpus is the most expensive option and unnecessary for a Q&A interface.",
+        "B": "Correct answer. A knowledge base retrieves just the passages relevant to each question, so the model gets the right context cheaply, without paying to send whole manuals every time or to train the model.",
+        "C": "Pasting all manuals into every prompt inflates token costs; fine-tuning adds training cost and must be redone when manuals change; continuous pre-training on the corpus is the most expensive option and unnecessary for a Q&A interface.",
+        "D": "Pasting all manuals into every prompt inflates token costs; fine-tuning adds training cost and must be redone when manuals change; continuous pre-training on the corpus is the most expensive option and unnecessary for a Q&A interface."
+      }
+    },
+    "note": "A knowledge base retrieves just the passages relevant to each question, so the model gets the right context cheaply, without paying to send whole manuals every time or to train the model.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon Bedrock",
+      "Amazon Bedrock Knowledge Bases"
+    ]
+  },
+  {
+    "id": "aif-q064",
+    "question": "A biotech firm's chatbot answers questions from dense clinical research papers, but even after several prompt tweaks the model handles the specialized terminology poorly. What will best improve it?",
+    "options": {
+      "A": "Use few-shot prompting with sample question-and-answer pairs",
+      "B": "Apply domain adaptation fine-tuning on the specialized corpus",
+      "C": "Add a Retrieval Augmented Generation (RAG) step over the papers",
+      "D": "Lower the temperature to make answers more focused"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Domain adaptation fine-tuning trains the model on the specialized corpus so it actually learns the clinical terminology, which is what fixes poor comprehension of dense domain language.",
+      "options": {
+        "A": "Few-shot prompting and a lower temperature shape responses but do not teach new vocabulary; a RAG step retrieves relevant passages, yet the model still struggles to interpret the specialized terms it has not learned.",
+        "B": "Correct answer. Domain adaptation fine-tuning trains the model on the specialized corpus so it actually learns the clinical terminology, which is what fixes poor comprehension of dense domain language.",
+        "C": "Few-shot prompting and a lower temperature shape responses but do not teach new vocabulary; a RAG step retrieves relevant passages, yet the model still struggles to interpret the specialized terms it has not learned.",
+        "D": "Few-shot prompting and a lower temperature shape responses but do not teach new vocabulary; a RAG step retrieves relevant passages, yet the model still struggles to interpret the specialized terms it has not learned."
+      }
+    },
+    "note": "Domain adaptation fine-tuning trains the model on the specialized corpus so it actually learns the clinical terminology, which is what fixes poor comprehension of dense domain language.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.3",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q069",
+    "question": "An online learning company runs a question-answering assistant and wants the answer style to match each learner's age range, which the app already passes to the model. Which approach needs the LEAST effort?",
+    "options": {
+      "A": "Train a separate fine-tuned model for each age range",
+      "B": "Build a Retrieval Augmented Generation (RAG) pipeline of age-specific content",
+      "C": "Post-process every response with a second model to adjust the tone",
+      "D": "Add a role and audience instruction to the prompt that states the user's age range"
+    },
+    "answer": "D",
+    "explanation": {
+      "summary": "Adding a role and audience instruction to the prompt is a simple prompt-engineering change that steers the style to the stated age range with almost no extra work.",
+      "options": {
+        "A": "Fine-tuning a model per age range, building a RAG pipeline of age-specific content, and running a second model to rewrite tone all add significant data, infrastructure, or processing effort.",
+        "B": "Fine-tuning a model per age range, building a RAG pipeline of age-specific content, and running a second model to rewrite tone all add significant data, infrastructure, or processing effort.",
+        "C": "Fine-tuning a model per age range, building a RAG pipeline of age-specific content, and running a second model to rewrite tone all add significant data, infrastructure, or processing effort.",
+        "D": "Correct answer. Adding a role and audience instruction to the prompt is a simple prompt-engineering change that steers the style to the stated age range with almost no extra work."
+      }
+    },
+    "note": "Adding a role and audience instruction to the prompt is a simple prompt-engineering change that steers the style to the stated age range with almost no extra work.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q076",
+    "question": "A team sends a daily few-shot prompt with 10 examples to a base model on Amazon Bedrock. The model performs well, but the team wants to cut the monthly cost. Which change helps?",
+    "options": {
+      "A": "Purchase Provisioned Throughput for the model",
+      "B": "Reduce the number of examples and tokens in the prompt",
+      "C": "Fine-tune the model so the examples are no longer needed in the prompt",
+      "D": "Move the workload to a larger, more capable model"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Because cost scales with the tokens processed, trimming the number of examples and tokens in the prompt lowers the bill while the model keeps performing well.",
+      "options": {
+        "A": "Provisioned Throughput is meant for high, steady volume and would cost more for a once-a-day job; fine-tuning removes in-prompt examples but adds training cost; moving to a larger model increases the per-call cost.",
+        "B": "Correct answer. Because cost scales with the tokens processed, trimming the number of examples and tokens in the prompt lowers the bill while the model keeps performing well.",
+        "C": "Provisioned Throughput is meant for high, steady volume and would cost more for a once-a-day job; fine-tuning removes in-prompt examples but adds training cost; moving to a larger model increases the per-call cost.",
+        "D": "Provisioned Throughput is meant for high, steady volume and would cost more for a once-a-day job; fine-tuning removes in-prompt examples but adds training cost; moving to a larger model increases the per-call cost."
+      }
+    },
+    "note": "Because cost scales with the tokens processed, trimming the number of examples and tokens in the prompt lowers the bill while the model keeps performing well.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q079",
+    "question": "A travel company localizes its help articles into several languages with an LLM and scores each machine translation against a human reference. Which metric is purpose-built for machine translation?",
+    "options": {
+      "A": "BERTScore",
+      "B": "Recall-Oriented Understudy for Gisting Evaluation (ROUGE)",
+      "C": "Bilingual Evaluation Understudy (BLEU)",
+      "D": "Word error rate"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "BLEU is designed for machine translation, measuring n-gram overlap between the candidate translation and one or more human references, which is exactly the comparison described.",
+      "options": {
+        "A": "ROUGE targets summarization recall; BERTScore measures general semantic similarity rather than serving as the standard translation metric; word error rate evaluates speech transcription.",
+        "B": "ROUGE targets summarization recall; BERTScore measures general semantic similarity rather than serving as the standard translation metric; word error rate evaluates speech transcription.",
+        "C": "Correct answer. BLEU is designed for machine translation, measuring n-gram overlap between the candidate translation and one or more human references, which is exactly the comparison described.",
+        "D": "ROUGE targets summarization recall; BERTScore measures general semantic similarity rather than serving as the standard translation metric; word error rate evaluates speech transcription."
+      }
+    },
+    "note": "BLEU is designed for machine translation, measuring n-gram overlap between the candidate translation and one or more human references, which is exactly the comparison described.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q081",
+    "question": "What is a benefit of continuously pre-training a foundation model (FM)?",
+    "options": {
+      "A": "It adapts the model to a specific labeled task dataset",
+      "B": "It keeps improving the model's knowledge by training it further on new data over time",
+      "C": "It compresses the model to shrink its size and speed up inference",
+      "D": "It removes the need for an evaluation step"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Continuous pre-training keeps exposing the FM to fresh, mostly unlabeled data, so its knowledge stays current and its performance improves over time.",
+      "options": {
+        "A": "Adapting to a labeled task dataset describes fine-tuning; shrinking and speeding up the model describes distillation or quantization; and no training method removes the need to evaluate the model.",
+        "B": "Correct answer. Continuous pre-training keeps exposing the FM to fresh, mostly unlabeled data, so its knowledge stays current and its performance improves over time.",
+        "C": "Adapting to a labeled task dataset describes fine-tuning; shrinking and speeding up the model describes distillation or quantization; and no training method removes the need to evaluate the model.",
+        "D": "Adapting to a labeled task dataset describes fine-tuning; shrinking and speeding up the model describes distillation or quantization; and no training method removes the need to evaluate the model."
+      }
+    },
+    "note": "Continuous pre-training keeps exposing the FM to fresh, mostly unlabeled data, so its knowledge stays current and its performance improves over time.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.3",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q086",
+    "question": "Which prompt-based attack is specifically aimed at revealing a model's hidden system instructions?",
+    "options": {
+      "A": "Jailbreaking",
+      "B": "Prompt injection",
+      "C": "Extracting the prompt template",
+      "D": "Prompted persona switching"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Extracting (leaking) the prompt template coaxes the model into disclosing its underlying system prompt, directly exposing the hidden instructions that configure its behavior.",
+      "options": {
+        "A": "Jailbreaking bypasses safety controls, prompt injection inserts adversarial instructions to hijack behavior, and persona switching pushes the model into a different role; none of these is aimed at dumping the system instructions themselves.",
+        "B": "Jailbreaking bypasses safety controls, prompt injection inserts adversarial instructions to hijack behavior, and persona switching pushes the model into a different role; none of these is aimed at dumping the system instructions themselves.",
+        "C": "Correct answer. Extracting (leaking) the prompt template coaxes the model into disclosing its underlying system prompt, directly exposing the hidden instructions that configure its behavior.",
+        "D": "Jailbreaking bypasses safety controls, prompt injection inserts adversarial instructions to hijack behavior, and persona switching pushes the model into a different role; none of these is aimed at dumping the system instructions themselves."
+      }
+    },
+    "note": "Extracting (leaking) the prompt template coaxes the model into disclosing its underlying system prompt, directly exposing the hidden instructions that configure its behavior.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q088",
+    "question": "A social platform wants to compare the output toxicity of several candidate LLMs from Amazon SageMaker JumpStart with the LEAST operational effort. Which evaluation approach fits?",
+    "options": {
+      "A": "Model evaluation with a human review workforce",
+      "B": "Automatic model evaluation using built-in toxicity metrics",
+      "C": "Crowd-sourced human rating",
+      "D": "A/B testing the models with live users"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Automatic model evaluation scores outputs with built-in toxicity metrics and needs no people to recruit or coordinate, giving the lowest operational effort.",
+      "options": {
+        "A": "Human-workforce evaluation and crowd-sourced rating both require managing reviewers, and A/B testing with live users adds exposure risk and coordination overhead.",
+        "B": "Correct answer. Automatic model evaluation scores outputs with built-in toxicity metrics and needs no people to recruit or coordinate, giving the lowest operational effort.",
+        "C": "Human-workforce evaluation and crowd-sourced rating both require managing reviewers, and A/B testing with live users adds exposure risk and coordination overhead.",
+        "D": "Human-workforce evaluation and crowd-sourced rating both require managing reviewers, and A/B testing with live users adds exposure risk and coordination overhead."
+      }
+    },
+    "note": "Automatic model evaluation scores outputs with built-in toxicity metrics and needs no people to recruit or coordinate, giving the lowest operational effort.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q095",
+    "question": "Which prompting approach is used to harden a model against prompt injection attacks?",
+    "options": {
+      "A": "Chain-of-thought prompting",
+      "B": "Few-shot prompting",
+      "C": "Adversarial prompting",
+      "D": "Zero-shot prompting"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Adversarial prompting deliberately crafts and tests hostile inputs so injection attempts can be detected and neutralized, hardening the model against them.",
+      "options": {
+        "A": "Chain-of-thought, few-shot, and zero-shot prompting shape how the model reasons or learns from examples but offer no defense against malicious prompts.",
+        "B": "Chain-of-thought, few-shot, and zero-shot prompting shape how the model reasons or learns from examples but offer no defense against malicious prompts.",
+        "C": "Correct answer. Adversarial prompting deliberately crafts and tests hostile inputs so injection attempts can be detected and neutralized, hardening the model against them.",
+        "D": "Chain-of-thought, few-shot, and zero-shot prompting shape how the model reasons or learns from examples but offer no defense against malicious prompts."
+      }
+    },
+    "note": "Adversarial prompting deliberately crafts and tests hostile inputs so injection attempts can be detected and neutralized, hardening the model against them.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q096",
+    "question": "An IT support team fine-tuned an LLM to answer help desk questions and wants to confirm the fine-tuning improved its accuracy. Which metric should it use?",
+    "options": {
+      "A": "Precision",
+      "B": "F1 score",
+      "C": "Time to first token",
+      "D": "Perplexity"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "The F1 score balances precision and recall in one number, so it reflects how accurately and completely the model answers, making it the right way to measure the fine-tuning gain.",
+      "options": {
+        "A": "Precision alone ignores missed correct answers; time to first token measures latency; perplexity measures language-modeling fit rather than task accuracy.",
+        "B": "Correct answer. The F1 score balances precision and recall in one number, so it reflects how accurately and completely the model answers, making it the right way to measure the fine-tuning gain.",
+        "C": "Precision alone ignores missed correct answers; time to first token measures latency; perplexity measures language-modeling fit rather than task accuracy.",
+        "D": "Precision alone ignores missed correct answers; time to first token measures latency; perplexity measures language-modeling fit rather than task accuracy."
+      }
+    },
+    "note": "The F1 score balances precision and recall in one number, so it reflects how accurately and completely the model answers, making it the right way to measure the fine-tuning gain.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q097",
+    "question": "A company uses Retrieval Augmented Generation (RAG) with Amazon Bedrock and Stable Diffusion to create product images, but the results are random and miss requested details. The team wants the images to follow the prompts more closely. Which change helps?",
+    "options": {
+      "A": "Increase the number of generation steps",
+      "B": "Increase the classifier-free guidance (CFG) scale",
+      "C": "Set a fixed random seed",
+      "D": "Increase the negative prompt weight"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "The CFG scale controls how strongly the model follows the text prompt, so raising it makes the generated image adhere more closely to the requested details.",
+      "options": {
+        "A": "More generation steps mainly refine denoising quality; a fixed seed only makes results reproducible; increasing the negative prompt weight strengthens what to avoid rather than how closely the image matches the main prompt.",
+        "B": "Correct answer. The CFG scale controls how strongly the model follows the text prompt, so raising it makes the generated image adhere more closely to the requested details.",
+        "C": "More generation steps mainly refine denoising quality; a fixed seed only makes results reproducible; increasing the negative prompt weight strengthens what to avoid rather than how closely the image matches the main prompt.",
+        "D": "More generation steps mainly refine denoising quality; a fixed seed only makes results reproducible; increasing the negative prompt weight strengthens what to avoid rather than how closely the image matches the main prompt."
+      }
+    },
+    "note": "The CFG scale controls how strongly the model follows the text prompt, so raising it makes the generated image adhere more closely to the requested details.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q098",
+    "question": "A telecom company wants an LLM chatbot that gives support agents real-time answers grounded in internal policy documents, at the lowest cost. Which approach fits best?",
+    "options": {
+      "A": "Fine-tune the LLM on the policy documents",
+      "B": "Implement Retrieval Augmented Generation (RAG) over the policy documents",
+      "C": "Pre-train a new model from scratch on the policy corpus",
+      "D": "Paste all policy documents into every prompt as context"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "RAG retrieves the relevant policy passages at query time and grounds the chatbot's answers in them, delivering accurate responses cheaply with no training.",
+      "options": {
+        "A": "Fine-tuning adds training cost and must be repeated as policies change; pre-training from scratch is by far the most expensive option; pasting all documents into every prompt drives up token costs.",
+        "B": "Correct answer. RAG retrieves the relevant policy passages at query time and grounds the chatbot's answers in them, delivering accurate responses cheaply with no training.",
+        "C": "Fine-tuning adds training cost and must be repeated as policies change; pre-training from scratch is by far the most expensive option; pasting all documents into every prompt drives up token costs.",
+        "D": "Fine-tuning adds training cost and must be repeated as policies change; pre-training from scratch is by far the most expensive option; pasting all documents into every prompt drives up token costs."
+      }
+    },
+    "note": "RAG retrieves the relevant policy passages at query time and grounds the chatbot's answers in them, delivering accurate responses cheaply with no training.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q102",
+    "question": "A company built a text summarization solution on Amazon Bedrock and will use Amazon Bedrock Model Evaluation. Which metric should it use to measure summary quality?",
+    "options": {
+      "A": "Area under the ROC curve (AUC)",
+      "B": "BERTScore",
+      "C": "Mean squared error (MSE)",
+      "D": "Perplexity"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "BERTScore compares the generated summary with reference text using contextual embeddings, capturing semantic similarity, which makes it suitable for measuring summarization quality.",
+      "options": {
+        "A": "This option is incorrect. The correct answer is BERTScore.",
+        "B": "Correct answer. BERTScore compares the generated summary with reference text using contextual embeddings, capturing semantic similarity, which makes it suitable for measuring summarization quality.",
+        "C": "AUC measures binary classification ranking, MSE measures regression error, and perplexity measures language-modeling fit; none of these compares a summary against references for quality.",
+        "D": "AUC measures binary classification ranking, MSE measures regression error, and perplexity measures language-modeling fit; none of these compares a summary against references for quality."
+      }
+    },
+    "note": "BERTScore compares the generated summary with reference text using contextual embeddings, capturing semantic similarity, which makes it suitable for measuring summarization quality.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q106",
+    "question": "A language-learning app calls an LLM to rewrite text more clearly and has reference examples of the improved versions. It wants the model's output to resemble those examples. Which metric should it use?",
+    "options": {
+      "A": "Perplexity of the generated text",
+      "B": "Recall-Oriented Understudy for Gisting Evaluation (ROUGE)",
+      "C": "Semantic robustness score",
+      "D": "Average response latency"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "ROUGE measures the n-gram and sequence overlap between the model's output and the reference examples, so it directly captures how closely the output resembles those improved versions.",
+      "options": {
+        "A": "This option is incorrect. The correct answer is Recall-Oriented Understudy for Gisting Evaluation (ROUGE).",
+        "B": "Correct answer. ROUGE measures the n-gram and sequence overlap between the model's output and the reference examples, so it directly captures how closely the output resembles those improved versions.",
+        "C": "Perplexity reflects language-modeling fit, semantic robustness measures stability under input changes, and latency measures speed; none compares output against reference examples.",
+        "D": "This option is incorrect. The correct answer is Recall-Oriented Understudy for Gisting Evaluation (ROUGE)."
+      }
+    },
+    "note": "ROUGE measures the n-gram and sequence overlap between the model's output and the reference examples, so it directly captures how closely the output resembles those improved versions.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q107",
+    "question": "A company's image-generation model keeps producing pictures unrelated to the prompts, and the team wants to adjust its prompting to cut down on these. Which technique helps?",
+    "options": {
+      "A": "Add few-shot example images",
+      "B": "Use negative prompts that state what to exclude",
+      "C": "Use zero-shot prompts",
+      "D": "Make the prompts more open-ended"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Negative prompts explicitly tell the model what to leave out, constraining generation so fewer off-topic elements appear.",
+      "options": {
+        "A": "Adding example images or using zero-shot prompts gives no instruction about what to avoid, and making prompts more open-ended increases drift rather than reducing it.",
+        "B": "Correct answer. Negative prompts explicitly tell the model what to leave out, constraining generation so fewer off-topic elements appear.",
+        "C": "Adding example images or using zero-shot prompts gives no instruction about what to avoid, and making prompts more open-ended increases drift rather than reducing it.",
+        "D": "Adding example images or using zero-shot prompts gives no instruction about what to avoid, and making prompts more open-ended increases drift rather than reducing it."
+      }
+    },
+    "note": "Negative prompts explicitly tell the model what to leave out, constraining generation so fewer off-topic elements appear.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q108",
+    "question": "An electronics retailer wants an LLM to write short, feature-focused product descriptions. Which prompt-engineering approach works best?",
+    "options": {
+      "A": "Write one generic prompt for all products and manually edit each output",
+      "B": "Create category-specific prompts that highlight key features and specify the output format and length",
+      "C": "List every product attribute in a single prompt and ask for a description",
+      "D": "Ask the model for the most creative description it can produce, then trim it"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Category-specific prompts that call out the key features and set the format and length steer the model to consistent, concise, feature-focused descriptions with little rework.",
+      "options": {
+        "A": "A single generic prompt needs heavy manual editing; listing every attribute produces long, unfocused text; asking for maximum creativity and trimming wastes effort and drifts from the required style.",
+        "B": "Correct answer. Category-specific prompts that call out the key features and set the format and length steer the model to consistent, concise, feature-focused descriptions with little rework.",
+        "C": "A single generic prompt needs heavy manual editing; listing every attribute produces long, unfocused text; asking for maximum creativity and trimming wastes effort and drifts from the required style.",
+        "D": "This option is incorrect. The correct answer is Create category-specific prompts that highlight key features and specify the output format and length."
+      }
+    },
+    "note": "Category-specific prompts that call out the key features and set the format and length steer the model to consistent, concise, feature-focused descriptions with little rework.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q119",
+    "question": "An insurance company wants an AI application that lets employees look up open claims, retrieve the details of a specific claim, and pull the claim's documents. Which solution fits best?",
+    "options": {
+      "A": "Use Agents for Amazon Bedrock with Amazon Fraud Detector",
+      "B": "Use Agents for Amazon Bedrock with Amazon Bedrock Knowledge Bases",
+      "C": "Use an Amazon Bedrock knowledge base on its own, without an agent",
+      "D": "Train a new ML model with Amazon SageMaker AI"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Agents for Amazon Bedrock carry out the multi-step actions (looking up claims, extracting details, fetching documents) and call an Amazon Bedrock knowledge base to retrieve the claim data, which together meet all three needs.",
+      "options": {
+        "A": "Pairing the agent with Amazon Fraud Detector adds fraud scoring rather than document retrieval; a knowledge base alone can retrieve content but cannot orchestrate the lookups and actions; training a new model with Amazon SageMaker AI is far more effort than needed.",
+        "B": "Correct answer. Agents for Amazon Bedrock carry out the multi-step actions (looking up claims, extracting details, fetching documents) and call an Amazon Bedrock knowledge base to retrieve the claim data, which together meet all three needs.",
+        "C": "Pairing the agent with Amazon Fraud Detector adds fraud scoring rather than document retrieval; a knowledge base alone can retrieve content but cannot orchestrate the lookups and actions; training a new model with Amazon SageMaker AI is far more effort than needed.",
+        "D": "Pairing the agent with Amazon Fraud Detector adds fraud scoring rather than document retrieval; a knowledge base alone can retrieve content but cannot orchestrate the lookups and actions; training a new model with Amazon SageMaker AI is far more effort than needed."
+      }
+    },
+    "note": "Agents for Amazon Bedrock carry out the multi-step actions (looking up claims, extracting details, fetching documents) and call an Amazon Bedrock knowledge base to retrieve the claim data, which together meet all three needs.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Agents for Amazon Bedrock",
+      "Amazon Bedrock Knowledge Bases",
+      "Amazon Fraud Detector",
+      "Amazon SageMaker AI"
+    ]
+  },
+  {
+    "id": "aif-q128",
+    "question": "An analyst adds an instruction to a prompt on Amazon Bedrock asking the model to show its work and explain each step while solving math problems. Which prompt-engineering technique is being used?",
+    "options": {
+      "A": "Few-shot prompting",
+      "B": "Tree of thoughts prompting",
+      "C": "Chain-of-thought prompting",
+      "D": "Zero-shot prompting"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Chain-of-thought prompting asks the model to lay out its intermediate reasoning step by step, which is exactly what instructing it to show its work does, improving accuracy on math problems.",
+      "options": {
+        "A": "Few-shot prompting supplies worked examples; tree of thoughts explores several reasoning branches in parallel; zero-shot prompting gives only an instruction with no reasoning scaffold.",
+        "B": "Few-shot prompting supplies worked examples; tree of thoughts explores several reasoning branches in parallel; zero-shot prompting gives only an instruction with no reasoning scaffold.",
+        "C": "Correct answer. Chain-of-thought prompting asks the model to lay out its intermediate reasoning step by step, which is exactly what instructing it to show its work does, improving accuracy on math problems.",
+        "D": "Few-shot prompting supplies worked examples; tree of thoughts explores several reasoning branches in parallel; zero-shot prompting gives only an instruction with no reasoning scaffold."
+      }
+    },
+    "note": "Chain-of-thought prompting asks the model to lay out its intermediate reasoning step by step, which is exactly what instructing it to show its work does, improving accuracy on math problems.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q131",
+    "question": "A company needs higher-quality answers from a large language model (LLM) on complex problems that require detailed, step-by-step reasoning. Which prompt-engineering technique fits?",
+    "options": {
+      "A": "Directional stimulus prompting",
+      "B": "Prompt chaining",
+      "C": "Least-to-most prompting",
+      "D": "Chain-of-thought prompting"
+    },
+    "answer": "D",
+    "explanation": {
+      "summary": "Chain-of-thought prompting guides the model to produce its reasoning as a series of logical steps within the response, which improves answer quality on complex problems.",
+      "options": {
+        "A": "Directional stimulus prompting steers output with hints or keywords; prompt chaining sends several separate prompts in sequence; least-to-most prompting decomposes a task into ordered subproblems but is a distinct technique from generating an in-line reasoning chain.",
+        "B": "Directional stimulus prompting steers output with hints or keywords; prompt chaining sends several separate prompts in sequence; least-to-most prompting decomposes a task into ordered subproblems but is a distinct technique from generating an in-line reasoning chain.",
+        "C": "Directional stimulus prompting steers output with hints or keywords; prompt chaining sends several separate prompts in sequence; least-to-most prompting decomposes a task into ordered subproblems but is a distinct technique from generating an in-line reasoning chain.",
+        "D": "Correct answer. Chain-of-thought prompting guides the model to produce its reasoning as a series of logical steps within the response, which improves answer quality on complex problems."
+      }
+    },
+    "note": "Chain-of-thought prompting guides the model to produce its reasoning as a series of logical steps within the response, which improves answer quality on complex problems.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q143",
+    "question": "A retailer runs an AI assistant that helps agents answer frequently asked questions, but the questions keep changing. Agents type a question and need an up-to-date generated answer at the lowest cost. Which approach fits?",
+    "options": {
+      "A": "Use Retrieval Augmented Generation (RAG) with prompt engineering",
+      "B": "Fine-tune the model on a recurring schedule",
+      "C": "Pre-train the model on the FAQ data and benchmark it",
+      "D": "Embed the full FAQ set into the system prompt"
+    },
+    "answer": "A",
+    "explanation": {
+      "summary": "RAG retrieves the most relevant, current information at query time and prompt engineering shapes the response, so the assistant stays accurate as questions change without repeated training cost.",
+      "options": {
+        "A": "Correct answer. RAG retrieves the most relevant, current information at query time and prompt engineering shapes the response, so the assistant stays accurate as questions change without repeated training cost.",
+        "B": "Scheduled fine-tuning and pre-training both require recurring, expensive training runs; embedding the full FAQ set into every prompt drives up token costs and does not scale as the FAQ grows.",
+        "C": "Scheduled fine-tuning and pre-training both require recurring, expensive training runs; embedding the full FAQ set into every prompt drives up token costs and does not scale as the FAQ grows.",
+        "D": "Scheduled fine-tuning and pre-training both require recurring, expensive training runs; embedding the full FAQ set into every prompt drives up token costs and does not scale as the FAQ grows."
+      }
+    },
+    "note": "RAG retrieves the most relevant, current information at query time and prompt engineering shapes the response, so the assistant stays accurate as questions change without repeated training cost.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q146",
+    "question": "A company wants more accurate answers from a generative AI application on Amazon Bedrock and wants the cheapest way to get them. Which approach fits?",
+    "options": {
+      "A": "Fine-tune the FM",
+      "B": "Use prompt engineering",
+      "C": "Retrain the FM from scratch",
+      "D": "Apply model distillation to the FM"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Prompt engineering improves accuracy by refining the instructions and context with no training cost, making it the cheapest option.",
+      "options": {
+        "A": "This option is incorrect. The correct answer is Use prompt engineering.",
+        "B": "Correct answer. Prompt engineering improves accuracy by refining the instructions and context with no training cost, making it the cheapest option.",
+        "C": "This option is incorrect. The correct answer is Use prompt engineering.",
+        "D": "Fine-tuning adds training cost and data preparation, model distillation requires a separate training process to build a smaller model, and retraining from scratch is the most expensive approach of all."
+      }
+    },
+    "note": "Prompt engineering improves accuracy by refining the instructions and context with no training cost, making it the cheapest option.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q155",
+    "question": "An application summarizes books of varying lengths but fails on some of the longer ones. What is the most likely cause?",
+    "options": {
+      "A": "The temperature is set too high",
+      "B": "The input exceeds the model's maximum context window",
+      "C": "The maximum output length is set too low",
+      "D": "The model does not support few-shot prompting"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "A model can only process a limited number of input tokens, so a book whose length exceeds the maximum context window cannot be handled in one pass, which explains why only the longer books fail.",
+      "options": {
+        "A": "A high temperature changes randomness, not capacity; a low maximum output length would shorten every summary rather than fail on selected books; and few-shot support is irrelevant to summarizing one long input.",
+        "B": "Correct answer. A model can only process a limited number of input tokens, so a book whose length exceeds the maximum context window cannot be handled in one pass, which explains why only the longer books fail.",
+        "C": "A high temperature changes randomness, not capacity; a low maximum output length would shorten every summary rather than fail on selected books; and few-shot support is irrelevant to summarizing one long input.",
+        "D": "A high temperature changes randomness, not capacity; a low maximum output length would shorten every summary rather than fail on selected books; and few-shot support is irrelevant to summarizing one long input."
+      }
+    },
+    "note": "A model can only process a limited number of input tokens, so a book whose length exceeds the maximum context window cannot be handled in one pass, which explains why only the longer books fail.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q156",
+    "question": "An airline wants a text chatbot for flight schedules, bookings, and payments, built on large language models (LLMs) plus a knowledge base, with the LEAST development effort. Which solution fits?",
+    "options": {
+      "A": "Train models with Amazon SageMaker Autopilot",
+      "B": "Fine-tune models on Amazon SageMaker JumpStart",
+      "C": "Build a Retrieval Augmented Generation (RAG) agent with Amazon Bedrock",
+      "D": "Build a custom orchestration service with AWS Lambda and a self-hosted model"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Amazon Bedrock lets the team combine an LLM with a knowledge base using RAG to deliver accurate, current answers with minimal development effort.",
+      "options": {
+        "A": "SageMaker Autopilot trains traditional ML models from tabular data; fine-tuning on SageMaker JumpStart needs data preparation and a training run; building a custom Lambda orchestration layer over a self-hosted model is the most work of all.",
+        "B": "SageMaker Autopilot trains traditional ML models from tabular data; fine-tuning on SageMaker JumpStart needs data preparation and a training run; building a custom Lambda orchestration layer over a self-hosted model is the most work of all.",
+        "C": "Correct answer. Amazon Bedrock lets the team combine an LLM with a knowledge base using RAG to deliver accurate, current answers with minimal development effort.",
+        "D": "SageMaker Autopilot trains traditional ML models from tabular data; fine-tuning on SageMaker JumpStart needs data preparation and a training run; building a custom Lambda orchestration layer over a self-hosted model is the most work of all."
+      }
+    },
+    "note": "Amazon Bedrock lets the team combine an LLM with a knowledge base using RAG to deliver accurate, current answers with minimal development effort.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon Bedrock",
+      "Amazon SageMaker JumpStart"
+    ]
+  },
+  {
+    "id": "aif-q161",
+    "question": "Which statement describes a genuine risk or limitation of prompt engineering for a generative AI model?",
+    "options": {
+      "A": "Prompt engineering guarantees deterministic outputs, so validation is unnecessary",
+      "B": "Prompt engineering can expose the model to prompt injection attacks",
+      "C": "Prompt engineering permanently updates the model's weights with each prompt",
+      "D": "Prompt engineering eliminates all risk of data poisoning and model hijacking"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "A real limitation of prompt engineering is that crafted inputs can still be exploited through prompt injection, where an attacker manipulates the prompt to change the model's behavior.",
+      "options": {
+        "A": "Prompt engineering does not make outputs deterministic or remove the need for validation, it does not update the model's weights (that is fine-tuning), and it cannot eliminate risks such as data poisoning or model hijacking.",
+        "B": "Correct answer. A real limitation of prompt engineering is that crafted inputs can still be exploited through prompt injection, where an attacker manipulates the prompt to change the model's behavior.",
+        "C": "Prompt engineering does not make outputs deterministic or remove the need for validation, it does not update the model's weights (that is fine-tuning), and it cannot eliminate risks such as data poisoning or model hijacking.",
+        "D": "Prompt engineering does not make outputs deterministic or remove the need for validation, it does not update the model's weights (that is fine-tuning), and it cannot eliminate risks such as data poisoning or model hijacking."
+      }
+    },
+    "note": "A real limitation of prompt engineering is that crafted inputs can still be exploited through prompt injection, where an attacker manipulates the prompt to change the model's behavior.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q162",
+    "question": "A publisher's Retrieval Augmented Generation (RAG) application must feel near real time, while new articles are published daily. Which two pipeline steps can run as offline batch jobs?",
+    "options": {
+      "A": "Generating embeddings for each incoming user query",
+      "B": "Generating embeddings for the published content",
+      "C": "Ranking and returning results for a user's query",
+      "D": "Building or updating the vector search index",
+      "E": "Detecting the language of each user query"
+    },
+    "answer": [
+      "B",
+      "D"
+    ],
+    "explanation": {
+      "summary": "Generating content embeddings and building or updating the search index depend only on the documents, so they can run in periodic batches as new articles arrive, off the real-time path.",
+      "options": {
+        "A": "Generating embeddings for a user query, ranking and returning results, and detecting a query's language all happen per request and must run in real time.",
+        "B": "Correct answer. Generating content embeddings and building or updating the search index depend only on the documents, so they can run in periodic batches as new articles arrive, off the real-time path.",
+        "C": "Generating embeddings for a user query, ranking and returning results, and detecting a query's language all happen per request and must run in real time.",
+        "D": "Correct answer. Generating content embeddings and building or updating the search index depend only on the documents, so they can run in periodic batches as new articles arrive, off the real-time path.",
+        "E": "Generating embeddings for a user query, ranking and returning results, and detecting a query's language all happen per request and must run in real time."
+      }
+    },
+    "note": "Generating content embeddings and building or updating the search index depend only on the documents, so they can run in periodic batches as new articles arrive, off the real-time path.",
+    "isMultiAnswer": true,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q163",
+    "question": "Which technique decomposes a complex task into smaller subtasks that are sent to a large language model (LLM) in sequence, each building on the last?",
+    "options": {
+      "A": "Tree of thoughts",
+      "B": "Chain-of-thought prompting",
+      "C": "Prompt chaining",
+      "D": "Few-shot prompting"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Prompt chaining breaks a complex task into smaller subtasks and feeds them to the LLM one after another, with each step using the output of the previous one.",
+      "options": {
+        "A": "Chain-of-thought reasons step by step within a single response; tree of thoughts explores multiple reasoning branches; few-shot prompting supplies examples rather than sequencing subtasks.",
+        "B": "Chain-of-thought reasons step by step within a single response; tree of thoughts explores multiple reasoning branches; few-shot prompting supplies examples rather than sequencing subtasks.",
+        "C": "Correct answer. Prompt chaining breaks a complex task into smaller subtasks and feeds them to the LLM one after another, with each step using the output of the previous one.",
+        "D": "Chain-of-thought reasons step by step within a single response; tree of thoughts explores multiple reasoning branches; few-shot prompting supplies examples rather than sequencing subtasks."
+      }
+    },
+    "note": "Prompt chaining breaks a complex task into smaller subtasks and feeds them to the LLM one after another, with each step using the output of the previous one.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q164",
+    "question": "An AI practitioner must improve the accuracy of a text-generation model that depends on rapidly changing inventory data. Which technique helps most?",
+    "options": {
+      "A": "Fine-tune the model on historical inventory data",
+      "B": "Retrieval Augmented Generation (RAG)",
+      "C": "Transfer learning",
+      "D": "Continuous pre-training on inventory snapshots"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "RAG fetches the current inventory data at inference time and conditions generation on it, so the output reflects the latest information and stays accurate without retraining.",
+      "options": {
+        "A": "Fine-tuning on historical data, transfer learning, and continuous pre-training on snapshots all bake data in at training time, so they go stale as the inventory keeps changing.",
+        "B": "Correct answer. RAG fetches the current inventory data at inference time and conditions generation on it, so the output reflects the latest information and stays accurate without retraining.",
+        "C": "Fine-tuning on historical data, transfer learning, and continuous pre-training on snapshots all bake data in at training time, so they go stale as the inventory keeps changing.",
+        "D": "Fine-tuning on historical data, transfer learning, and continuous pre-training on snapshots all bake data in at training time, so they go stale as the inventory keeps changing."
+      }
+    },
+    "note": "RAG fetches the current inventory data at inference time and conditions generation on it, so the output reflects the latest information and stays accurate without retraining.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q167",
+    "question": "In a Retrieval Augmented Generation (RAG) workflow, what is the main purpose of chunking documents?",
+    "options": {
+      "A": "To reduce the cost of storing the documents",
+      "B": "To improve the relevance of passages retrieved from the vector index",
+      "C": "To speed up training of the model",
+      "D": "To avoid having to generate embeddings for the documents"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Splitting documents into smaller, semantically coherent chunks lets the retriever return only the most relevant segments for a query, improving the relevance of the context passed to the model.",
+      "options": {
+        "A": "This option is incorrect. The correct answer is To improve the relevance of passages retrieved from the vector index.",
+        "B": "Correct answer. Splitting documents into smaller, semantically coherent chunks lets the retriever return only the most relevant segments for a query, improving the relevance of the context passed to the model.",
+        "C": "Chunking is not aimed at lowering storage cost, it does not speed up model training, and chunked text is still embedded, so it does not avoid generating embeddings.",
+        "D": "Chunking is not aimed at lowering storage cost, it does not speed up model training, and chunked text is still embedded, so it does not avoid generating embeddings."
+      }
+    },
+    "note": "Splitting documents into smaller, semantically coherent chunks lets the retriever return only the most relevant segments for a query, improving the relevance of the context passed to the model.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q173",
+    "question": "Which statement describes an advantage of Retrieval Augmented Generation (RAG) for natural language processing (NLP) tasks?",
+    "options": {
+      "A": "It speeds up training of the underlying language model",
+      "B": "It reduces the model's parameter count to save memory",
+      "C": "It draws on external knowledge sources to produce more accurate, informative responses",
+      "D": "It guarantees deterministic, repeatable outputs"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "RAG retrieves relevant external documents at inference time and conditions generation on them, enriching responses with up-to-date, domain-specific knowledge without retraining the model.",
+      "options": {
+        "A": "RAG does not speed up training or reduce the model's parameter count, and it does not make a generative model's outputs deterministic.",
+        "B": "RAG does not speed up training or reduce the model's parameter count, and it does not make a generative model's outputs deterministic.",
+        "C": "Correct answer. RAG retrieves relevant external documents at inference time and conditions generation on them, enriching responses with up-to-date, domain-specific knowledge without retraining the model.",
+        "D": "RAG does not speed up training or reduce the model's parameter count, and it does not make a generative model's outputs deterministic."
+      }
+    },
+    "note": "RAG retrieves relevant external documents at inference time and conditions generation on them, enriching responses with up-to-date, domain-specific knowledge without retraining the model.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q175",
+    "question": "Which technique trains an AI model on a labeled dataset so it adapts to a specific industry's terminology and requirements?",
+    "options": {
+      "A": "Continuous pre-training",
+      "B": "In-context learning",
+      "C": "Fine-tuning",
+      "D": "Model distillation"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Fine-tuning continues training a pre-trained model on a labeled, domain-specific dataset so it learns the industry's terminology and task requirements directly from that data.",
+      "options": {
+        "A": "Continuous pre-training relies on large unlabeled data; in-context learning adds examples at inference time without training; model distillation transfers knowledge into a smaller model rather than adapting it to a labeled domain dataset.",
+        "B": "Continuous pre-training relies on large unlabeled data; in-context learning adds examples at inference time without training; model distillation transfers knowledge into a smaller model rather than adapting it to a labeled domain dataset.",
+        "C": "Correct answer. Fine-tuning continues training a pre-trained model on a labeled, domain-specific dataset so it learns the industry's terminology and task requirements directly from that data.",
+        "D": "Continuous pre-training relies on large unlabeled data; in-context learning adds examples at inference time without training; model distillation transfers knowledge into a smaller model rather than adapting it to a labeled domain dataset."
+      }
+    },
+    "note": "Fine-tuning continues training a pre-trained model on a labeled, domain-specific dataset so it learns the industry's terminology and task requirements directly from that data.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.3",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q176",
+    "question": "A team built an agent with Amazon Bedrock Agents and wants to improve its accuracy by giving it a few specific examples. Which approach fits?",
+    "options": {
+      "A": "Fine-tune the underlying model on the examples",
+      "B": "Add the examples to the agent's advanced prompts",
+      "C": "Add the examples to an Amazon Bedrock knowledge base",
+      "D": "Create a guardrail that includes the examples"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Adding the specific input-output examples to the agent's advanced prompts is few-shot prompting, which steers the agent toward more accurate behavior with no retraining or extra services.",
+      "options": {
+        "A": "Fine-tuning the model is far heavier for a handful of examples; a knowledge base supplies retrieved context rather than behavioral examples; a guardrail enforces safety policies, not example-driven accuracy.",
+        "B": "Correct answer. Adding the specific input-output examples to the agent's advanced prompts is few-shot prompting, which steers the agent toward more accurate behavior with no retraining or extra services.",
+        "C": "Fine-tuning the model is far heavier for a handful of examples; a knowledge base supplies retrieved context rather than behavioral examples; a guardrail enforces safety policies, not example-driven accuracy.",
+        "D": "Fine-tuning the model is far heavier for a handful of examples; a knowledge base supplies retrieved context rather than behavioral examples; a guardrail enforces safety policies, not example-driven accuracy."
+      }
+    },
+    "note": "Adding the specific input-output examples to the agent's advanced prompts is few-shot prompting, which steers the agent toward more accurate behavior with no retraining or extra services.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Agents for Amazon Bedrock",
+      "Amazon Bedrock Knowledge Bases"
+    ]
+  },
+  {
+    "id": "aif-q178",
+    "question": "A company will use instruction-based fine-tuning to adapt a foundation model (FM) to its domain. How should it prepare the training data?",
+    "options": {
+      "A": "Assemble a large unlabeled domain corpus and continue pre-training",
+      "B": "Create instruction-and-response (question-and-answer) pairs for the domain",
+      "C": "Build a vector index of the documents for retrieval",
+      "D": "Collect human preference rankings of model outputs"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Instruction-based fine-tuning needs instruction-response examples, so curating domain-specific question-and-answer pairs teaches the model how to interpret domain queries and produce correct answers.",
+      "options": {
+        "A": "An unlabeled corpus is for continuous pre-training; a vector index supports RAG rather than training; human preference rankings are the data used for RLHF, not instruction tuning.",
+        "B": "Correct answer. Instruction-based fine-tuning needs instruction-response examples, so curating domain-specific question-and-answer pairs teaches the model how to interpret domain queries and produce correct answers.",
+        "C": "An unlabeled corpus is for continuous pre-training; a vector index supports RAG rather than training; human preference rankings are the data used for RLHF, not instruction tuning.",
+        "D": "An unlabeled corpus is for continuous pre-training; a vector index supports RAG rather than training; human preference rankings are the data used for RLHF, not instruction tuning."
+      }
+    },
+    "note": "Instruction-based fine-tuning needs instruction-response examples, so curating domain-specific question-and-answer pairs teaches the model how to interpret domain queries and produce correct answers.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.3",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q188",
+    "question": "Which metric is commonly used to evaluate how well a foundation model (FM) performs on text summarization?",
+    "options": {
+      "A": "F1 score",
+      "B": "Mean squared error (MSE)",
+      "C": "Recall-Oriented Understudy for Gisting Evaluation (ROUGE)",
+      "D": "Bilingual Evaluation Understudy (BLEU) score"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "ROUGE measures the overlap between a generated summary and reference summaries, which makes it the standard metric for summarization quality.",
+      "options": {
+        "A": "This option is incorrect. The correct answer is Recall-Oriented Understudy for Gisting Evaluation (ROUGE).",
+        "B": "F1 is a classification metric, MSE measures regression error, and BLEU is built for machine translation; none targets summarization.",
+        "C": "Correct answer. ROUGE measures the overlap between a generated summary and reference summaries, which makes it the standard metric for summarization quality.",
+        "D": "This option is incorrect. The correct answer is Recall-Oriented Understudy for Gisting Evaluation (ROUGE)."
+      }
+    },
+    "note": "ROUGE measures the overlap between a generated summary and reference summaries, which makes it the standard metric for summarization quality.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q189",
+    "question": "What is a benefit of fine-tuning a foundation model (FM)?",
+    "options": {
+      "A": "It lets the model pull in external data at inference time",
+      "B": "It improves the model's performance on a specific task by further training it on task data",
+      "C": "It compresses the model to reduce size and speed up inference",
+      "D": "It refreshes the model's general knowledge by pre-training on newer data"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Fine-tuning updates the model's weights using task-relevant data, sharpening its accuracy and relevance on that specific task.",
+      "options": {
+        "A": "Pulling in external data at inference time describes RAG; compressing the model describes distillation; refreshing general knowledge with newer pre-training describes continuous pre-training.",
+        "B": "Correct answer. Fine-tuning updates the model's weights using task-relevant data, sharpening its accuracy and relevance on that specific task.",
+        "C": "Pulling in external data at inference time describes RAG; compressing the model describes distillation; refreshing general knowledge with newer pre-training describes continuous pre-training.",
+        "D": "Pulling in external data at inference time describes RAG; compressing the model describes distillation; refreshing general knowledge with newer pre-training describes continuous pre-training."
+      }
+    },
+    "note": "Fine-tuning updates the model's weights using task-relevant data, sharpening its accuracy and relevance on that specific task.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.3",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q194",
+    "question": "What are two primary use cases for storing embeddings in a vector database such as Amazon OpenSearch Service?",
+    "options": {
+      "A": "Exact keyword string matching",
+      "B": "Semantic search over documents",
+      "C": "Scheduled batch ETL jobs",
+      "D": "Similarity-based recommendations",
+      "E": "Transactional primary-key lookups"
+    },
+    "answer": [
+      "B",
+      "D"
+    ],
+    "explanation": {
+      "summary": "Semantic search and similarity-based recommendations both rely on nearest neighbor comparison of embeddings, which is exactly what a vector database provides.",
+      "options": {
+        "A": "Exact keyword matching is lexical rather than semantic, and primary-key lookups and scheduled batch ETL are standard database operations that do not use vector similarity.",
+        "B": "Correct answer. Semantic search and similarity-based recommendations both rely on nearest neighbor comparison of embeddings, which is exactly what a vector database provides.",
+        "C": "Exact keyword matching is lexical rather than semantic, and primary-key lookups and scheduled batch ETL are standard database operations that do not use vector similarity.",
+        "D": "Correct answer. Semantic search and similarity-based recommendations both rely on nearest neighbor comparison of embeddings, which is exactly what a vector database provides.",
+        "E": "Exact keyword matching is lexical rather than semantic, and primary-key lookups and scheduled batch ETL are standard database operations that do not use vector similarity."
+      }
+    },
+    "note": "Semantic search and similarity-based recommendations both rely on nearest neighbor comparison of embeddings, which is exactly what a vector database provides.",
+    "isMultiAnswer": true,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon OpenSearch Service"
+    ]
+  },
+  {
+    "id": "aif-q196",
+    "question": "For AI applications, which two capabilities of Amazon Aurora with the pgvector extension are the most important?",
+    "options": {
+      "A": "Standard SQL operations",
+      "B": "Vector similarity search",
+      "C": "Web hosting",
+      "D": "Combining vectors with structured data",
+      "E": "Email handling"
+    },
+    "answer": [
+      "B",
+      "D"
+    ],
+    "explanation": {
+      "summary": "Vector similarity search lets the application find the most semantically related content, which is the core retrieval step in tasks such as RAG, and the ability to combine vectors with structured data means those searches can run alongside existing relational records in the same database, so together these two capabilities are what make Aurora with pgvector valuable for AI workloads.",
+      "options": {
+        "A": "Standard SQL operations are a general database capability that is not specific to AI applications.",
+        "B": "Correct answer. Vector similarity search lets the application find the most semantically related content, which is the core retrieval step in tasks such as RAG, and the ability to combine vectors with structured data means those searches can run alongside existing relational records in the same database, so together these two capabilities are what make Aurora with pgvector valuable for AI workloads.",
+        "C": "Web hosting and email handling are not functions of Amazon Aurora at all and are unrelated to vector storage or AI workloads.",
+        "D": "Correct answer. Vector similarity search lets the application find the most semantically related content, which is the core retrieval step in tasks such as RAG, and the ability to combine vectors with structured data means those searches can run alongside existing relational records in the same database, so together these two capabilities are what make Aurora with pgvector valuable for AI workloads.",
+        "E": "Web hosting and email handling are not functions of Amazon Aurora at all and are unrelated to vector storage or AI workloads."
+      }
+    },
+    "note": "Vector similarity search lets the application find the most semantically related content, which is the core retrieval step in tasks such as RAG, and the ability to combine vectors with structured data means those searches can run alongside existing relational records in the same database, so together these two capabilities are what make Aurora with pgvector valuable for AI workloads.",
+    "isMultiAnswer": true,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-01",
+    "services": [
+      "Amazon Aurora"
+    ]
+  },
+  {
+    "id": "aif-q212",
+    "question": "A company wants a large language model (LLM) to write product descriptions and plans to include several example descriptions that follow a fixed format in the prompt. Which prompt-engineering technique does this use?",
+    "options": {
+      "A": "Zero-shot prompting",
+      "B": "One-shot prompting",
+      "C": "Few-shot prompting",
+      "D": "Role prompting"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Few-shot prompting places several examples in the prompt so the model learns the pattern and format and generates new descriptions in the same style, without any training.",
+      "options": {
+        "A": "Zero-shot prompting supplies no examples, one-shot prompting supplies only a single example, and role prompting assigns a persona but does not provide formatted examples.",
+        "B": "Zero-shot prompting supplies no examples, one-shot prompting supplies only a single example, and role prompting assigns a persona but does not provide formatted examples.",
+        "C": "Correct answer. Few-shot prompting places several examples in the prompt so the model learns the pattern and format and generates new descriptions in the same style, without any training.",
+        "D": "Zero-shot prompting supplies no examples, one-shot prompting supplies only a single example, and role prompting assigns a persona but does not provide formatted examples."
+      }
+    },
+    "note": "Few-shot prompting places several examples in the prompt so the model learns the pattern and format and generates new descriptions in the same style, without any training.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q214",
+    "question": "A grocery chain wants a chatbot that checks live inventory and tells shoppers where a product is located in the store. Which prompt-engineering technique should it use?",
+    "options": {
+      "A": "Few-shot prompting",
+      "B": "Chain-of-thought prompting",
+      "C": "Reasoning and acting (ReAct) prompting",
+      "D": "Zero-shot prompting"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "ReAct prompting interleaves the model's reasoning with explicit actions, such as calling a live inventory API, then uses the returned data to answer, which is what is needed to check stock and report a product's location in real time.",
+      "options": {
+        "A": "Few-shot, chain-of-thought, and zero-shot prompting shape reasoning or supply examples but provide no mechanism to call an external system for live data.",
+        "B": "Few-shot, chain-of-thought, and zero-shot prompting shape reasoning or supply examples but provide no mechanism to call an external system for live data.",
+        "C": "Correct answer. ReAct prompting interleaves the model's reasoning with explicit actions, such as calling a live inventory API, then uses the returned data to answer, which is what is needed to check stock and report a product's location in real time.",
+        "D": "Few-shot, chain-of-thought, and zero-shot prompting shape reasoning or supply examples but provide no mechanism to call an external system for live data."
+      }
+    },
+    "note": "ReAct prompting interleaves the model's reasoning with explicit actions, such as calling a live inventory API, then uses the returned data to answer, which is what is needed to check stock and report a product's location in real time.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q219",
+    "question": "A company measures its translation tool by comparing the tool's outputs with human translations of the same documents. Which evaluation strategy should it use?",
+    "options": {
+      "A": "Use ROUGE to estimate the absolute translation quality of the two methods",
+      "B": "Use the Bilingual Evaluation Understudy (BLEU) score to estimate the relative translation quality of the two methods",
+      "C": "Use the Bilingual Evaluation Understudy (BLEU) score to estimate the absolute translation quality of the two methods",
+      "D": "Use ROUGE to estimate the relative translation quality of the two methods"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "BLEU measures n-gram overlap against reference translations, so applying it to both the tool's outputs and the human outputs on the same documents gives comparable scores for judging which method is relatively better.",
+      "options": {
+        "A": "BLEU produces a relative comparison, not an absolute quality measure, so the absolute-BLEU option is wrong; ROUGE is built for summarization, making it the wrong metric for comparing translations.",
+        "B": "Correct answer. BLEU measures n-gram overlap against reference translations, so applying it to both the tool's outputs and the human outputs on the same documents gives comparable scores for judging which method is relatively better.",
+        "C": "BLEU produces a relative comparison, not an absolute quality measure, so the absolute-BLEU option is wrong; ROUGE is built for summarization, making it the wrong metric for comparing translations.",
+        "D": "BLEU produces a relative comparison, not an absolute quality measure, so the absolute-BLEU option is wrong; ROUGE is built for summarization, making it the wrong metric for comparing translations."
+      }
+    },
+    "note": "BLEU measures n-gram overlap against reference translations, so applying it to both the tool's outputs and the human outputs on the same documents gives comparable scores for judging which method is relatively better.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q224",
+    "question": "A company's generative AI application uses a pre-trained foundation model (FM) on Amazon Bedrock and wants its answers to include the company's own information, at the lowest cost. Which solution fits?",
+    "options": {
+      "A": "Use Amazon Bedrock Knowledge Bases",
+      "B": "Deploy a custom model on Amazon Bedrock",
+      "C": "Fine-tune the FM on the company information",
+      "D": "Use Amazon Bedrock Agents"
+    },
+    "answer": "A",
+    "explanation": {
+      "summary": "Amazon Bedrock Knowledge Bases index and retrieve the company's documents at inference time and inject relevant context into the prompt (RAG), adding the information cheaply with no training.",
+      "options": {
+        "A": "Correct answer. Amazon Bedrock Knowledge Bases index and retrieve the company's documents at inference time and inject relevant context into the prompt (RAG), adding the information cheaply with no training.",
+        "B": "Deploying a custom model and fine-tuning the FM both add training cost; Amazon Bedrock Agents orchestrate tasks but do not, on their own, supply document context.",
+        "C": "Deploying a custom model and fine-tuning the FM both add training cost; Amazon Bedrock Agents orchestrate tasks but do not, on their own, supply document context.",
+        "D": "Deploying a custom model and fine-tuning the FM both add training cost; Amazon Bedrock Agents orchestrate tasks but do not, on their own, supply document context."
+      }
+    },
+    "note": "Amazon Bedrock Knowledge Bases index and retrieve the company's documents at inference time and inject relevant context into the prompt (RAG), adding the information cheaply with no training.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon Bedrock Knowledge Bases",
+      "Agents for Amazon Bedrock"
+    ]
+  },
+  {
+    "id": "aif-q226",
+    "question": "A company is building an HR-policy chatbot on a large language model (LLM) with a large set of digital documents and wants to optimize the quality of its answers. Which technique fits best?",
+    "options": {
+      "A": "Set the temperature to 1",
+      "B": "Use Retrieval Augmented Generation (RAG)",
+      "C": "Fine-tune the model on the policy documents",
+      "D": "Decrease the token size"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "RAG retrieves precise, current passages from the policy documents at query time and grounds the chatbot's answers in them, optimizing accuracy without overloading the context window.",
+      "options": {
+        "A": "This option is incorrect. The correct answer is Use Retrieval Augmented Generation (RAG).",
+        "B": "Correct answer. RAG retrieves precise, current passages from the policy documents at query time and grounds the chatbot's answers in them, optimizing accuracy without overloading the context window.",
+        "C": "Setting the temperature to 1 only adds randomness; fine-tuning is costly and goes stale as policies change; decreasing the token size drops the context the model needs.",
+        "D": "Setting the temperature to 1 only adds randomness; fine-tuning is costly and goes stale as policies change; decreasing the token size drops the context the model needs."
+      }
+    },
+    "note": "RAG retrieves precise, current passages from the policy documents at query time and grounds the chatbot's answers in them, optimizing accuracy without overloading the context window.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q227",
+    "question": "An education company trains a custom large language model (LLM) for teenagers and wants the output to match their style, including creative spelling and shorthand. Which metric should it use to assess the output against reference examples?",
+    "options": {
+      "A": "BERTScore",
+      "B": "Bilingual Evaluation Understudy (BLEU) score",
+      "C": "Perplexity",
+      "D": "F1 score"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "BLEU measures surface-level n-gram overlap between the model's output and reference text, so it is suited to checking how closely the model reproduces the exact teen-style spelling and shorthand.",
+      "options": {
+        "A": "BERTScore measures semantic similarity rather than surface forms; perplexity measures language-modeling fit; F1 is a classification metric.",
+        "B": "Correct answer. BLEU measures surface-level n-gram overlap between the model's output and reference text, so it is suited to checking how closely the model reproduces the exact teen-style spelling and shorthand.",
+        "C": "BERTScore measures semantic similarity rather than surface forms; perplexity measures language-modeling fit; F1 is a classification metric.",
+        "D": "This option is incorrect. The correct answer is Bilingual Evaluation Understudy (BLEU) score."
+      }
+    },
+    "note": "BLEU measures surface-level n-gram overlap between the model's output and reference text, so it is suited to checking how closely the model reproduces the exact teen-style spelling and shorthand.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q234",
+    "question": "A bank is building a chatbot to answer account-opening questions using public bank documents on Amazon Bedrock with prompt engineering. Which technique fits?",
+    "options": {
+      "A": "Directional stimulus prompting",
+      "B": "Zero-shot prompting",
+      "C": "Few-shot prompting",
+      "D": "One-shot prompting"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Few-shot prompting supplies several example questions and answers drawn from the bank documents, guiding the model to produce accurate, well-formatted responses without training.",
+      "options": {
+        "A": "Directional stimulus prompting steers output with hints, zero-shot prompting provides no examples, and one-shot prompting provides only a single example.",
+        "B": "Directional stimulus prompting steers output with hints, zero-shot prompting provides no examples, and one-shot prompting provides only a single example.",
+        "C": "Correct answer. Few-shot prompting supplies several example questions and answers drawn from the bank documents, guiding the model to produce accurate, well-formatted responses without training.",
+        "D": "Directional stimulus prompting steers output with hints, zero-shot prompting provides no examples, and one-shot prompting provides only a single example."
+      }
+    },
+    "note": "Few-shot prompting supplies several example questions and answers drawn from the bank documents, guiding the model to produce accurate, well-formatted responses without training.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q237",
+    "question": "A company wants a chatbot for employee policy questions; policies change often and answers must reflect updates in near real time. Which solution fits?",
+    "options": {
+      "A": "Fine-tune a large language model (LLM) on the policy text with Amazon SageMaker AI",
+      "B": "Create a Retrieval Augmented Generation (RAG) workflow with Amazon Bedrock Knowledge Bases",
+      "C": "Continuously pre-train an LLM on the policy documents",
+      "D": "Build a custom application with Amazon Q Business"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "A RAG workflow with Amazon Bedrock Knowledge Bases retrieves the latest policy documents at query time, so the chatbot reflects updates in near real time without retraining.",
+      "options": {
+        "A": "This option is incorrect. The correct answer is Create a Retrieval Augmented Generation (RAG) workflow with Amazon Bedrock Knowledge Bases.",
+        "B": "Correct answer. A RAG workflow with Amazon Bedrock Knowledge Bases retrieves the latest policy documents at query time, so the chatbot reflects updates in near real time without retraining.",
+        "C": "This option is incorrect. The correct answer is Create a Retrieval Augmented Generation (RAG) workflow with Amazon Bedrock Knowledge Bases.",
+        "D": "Fine-tuning and continuous pre-training must be re-run whenever policies change; a custom Amazon Q Business application is more development effort and is not the targeted way to keep the answers current here."
+      }
+    },
+    "note": "A RAG workflow with Amazon Bedrock Knowledge Bases retrieves the latest policy documents at query time, so the chatbot reflects updates in near real time without retraining.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon Bedrock Knowledge Bases",
+      "Amazon Q Business",
+      "Amazon SageMaker AI"
+    ]
+  },
+  {
+    "id": "aif-q238",
+    "question": "A company uses supervised learning to train a model on a small labeled dataset for a specific task. Which step of the foundation model (FM) lifecycle is this?",
+    "options": {
+      "A": "Pre-training",
+      "B": "Continuous pre-training",
+      "C": "Fine-tuning",
+      "D": "Deployment"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Fine-tuning continues training a pre-trained model on a small labeled dataset for a target task, which is exactly the supervised step described.",
+      "options": {
+        "A": "Pre-training and continuous pre-training use large, mostly unlabeled data; deployment puts the finished model into production.",
+        "B": "Pre-training and continuous pre-training use large, mostly unlabeled data; deployment puts the finished model into production.",
+        "C": "Correct answer. Fine-tuning continues training a pre-trained model on a small labeled dataset for a target task, which is exactly the supervised step described.",
+        "D": "Pre-training and continuous pre-training use large, mostly unlabeled data; deployment puts the finished model into production."
+      }
+    },
+    "note": "Fine-tuning continues training a pre-trained model on a small labeled dataset for a target task, which is exactly the supervised step described.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.3",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q258",
+    "question": "A company wants to label training data with human feedback to fine-tune a foundation model (FM) but does not want to build labeling tools or manage a workforce. Which AWS service or feature fits?",
+    "options": {
+      "A": "Amazon SageMaker Data Wrangler",
+      "B": "Amazon SageMaker Clarify",
+      "C": "Amazon SageMaker Autopilot",
+      "D": "Amazon SageMaker Ground Truth Plus"
+    },
+    "answer": "D",
+    "explanation": {
+      "summary": "Amazon SageMaker Ground Truth Plus is a fully managed labeling service that uses a human workforce, so the company gets human-labeled data without building labeling tools or managing labelers.",
+      "options": {
+        "A": "SageMaker Data Wrangler prepares and transforms data, SageMaker Clarify detects bias and explains predictions, and SageMaker Autopilot automatically builds models.",
+        "B": "SageMaker Data Wrangler prepares and transforms data, SageMaker Clarify detects bias and explains predictions, and SageMaker Autopilot automatically builds models.",
+        "C": "SageMaker Data Wrangler prepares and transforms data, SageMaker Clarify detects bias and explains predictions, and SageMaker Autopilot automatically builds models.",
+        "D": "Correct answer. Amazon SageMaker Ground Truth Plus is a fully managed labeling service that uses a human workforce, so the company gets human-labeled data without building labeling tools or managing labelers."
+      }
+    },
+    "note": "Amazon SageMaker Ground Truth Plus is a fully managed labeling service that uses a human workforce, so the company gets human-labeled data without building labeling tools or managing labelers.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.3",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon SageMaker Ground Truth Plus",
+      "Amazon SageMaker Data Wrangler",
+      "Amazon SageMaker Clarify"
+    ]
+  },
+  {
+    "id": "aif-q259",
+    "question": "A media streaming company wants natural-language image search with similarity and nearest neighbor queries, backed by a vector database. Which AWS service fits?",
+    "options": {
+      "A": "Amazon DynamoDB",
+      "B": "Amazon OpenSearch Service",
+      "C": "Amazon Personalize",
+      "D": "Amazon RDS for MySQL"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Amazon OpenSearch Service supports vector storage with similarity (nearest neighbor) search, which is what natural-language image search and filtering require.",
+      "options": {
+        "A": "Amazon DynamoDB (key-value) and Amazon RDS for MySQL (relational) lack native vector similarity search, and Amazon Personalize generates recommendations rather than serving as a general vector store.",
+        "B": "Correct answer. Amazon OpenSearch Service supports vector storage with similarity (nearest neighbor) search, which is what natural-language image search and filtering require.",
+        "C": "Amazon DynamoDB (key-value) and Amazon RDS for MySQL (relational) lack native vector similarity search, and Amazon Personalize generates recommendations rather than serving as a general vector store.",
+        "D": "Amazon DynamoDB (key-value) and Amazon RDS for MySQL (relational) lack native vector similarity search, and Amazon Personalize generates recommendations rather than serving as a general vector store."
+      }
+    },
+    "note": "Amazon OpenSearch Service supports vector storage with similarity (nearest neighbor) search, which is what natural-language image search and filtering require.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon OpenSearch Service"
+    ]
+  },
+  {
+    "id": "aif-q265",
+    "question": "A company is comparing several large language models (LLMs) for text summarization and needs a metric for summary quality. Which metric fits?",
+    "options": {
+      "A": "Bilingual Evaluation Understudy (BLEU) score",
+      "B": "Area under the ROC curve (AUC)",
+      "C": "Perplexity",
+      "D": "Recall-Oriented Understudy for Gisting Evaluation (ROUGE)"
+    },
+    "answer": "D",
+    "explanation": {
+      "summary": "ROUGE measures the overlap between generated summaries and reference summaries, making it the standard metric for summarization quality.",
+      "options": {
+        "A": "This option is incorrect. The correct answer is Recall-Oriented Understudy for Gisting Evaluation (ROUGE).",
+        "B": "This option is incorrect. The correct answer is Recall-Oriented Understudy for Gisting Evaluation (ROUGE).",
+        "C": "BLEU is built for translation, AUC is a classification metric, and perplexity measures language-modeling fit; none is designed for summary quality.",
+        "D": "Correct answer. ROUGE measures the overlap between generated summaries and reference summaries, making it the standard metric for summarization quality."
+      }
+    },
+    "note": "ROUGE measures the overlap between generated summaries and reference summaries, making it the standard metric for summarization quality.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q271",
+    "question": "A company needs an AI solution that produces both images and text descriptions for a product catalog and is comparing foundation models (FMs) by the output types each supports. Which FM characteristic is it evaluating?",
+    "options": {
+      "A": "Latency",
+      "B": "Context window length",
+      "C": "Modality",
+      "D": "Multilingual support"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Modality describes the input and output types an FM supports, such as text or images, so evaluating whether a model can output both images and text descriptions is an assessment of modality.",
+      "options": {
+        "A": "Latency is response speed, context window length is how much input and output fit, and multilingual support concerns languages; none describes the output types a model can generate.",
+        "B": "Latency is response speed, context window length is how much input and output fit, and multilingual support concerns languages; none describes the output types a model can generate.",
+        "C": "Correct answer. Modality describes the input and output types an FM supports, such as text or images, so evaluating whether a model can output both images and text descriptions is an assessment of modality.",
+        "D": "Latency is response speed, context window length is how much input and output fit, and multilingual support concerns languages; none describes the output types a model can generate."
+      }
+    },
+    "note": "Modality describes the input and output types an FM supports, such as text or images, so evaluating whether a model can output both images and text descriptions is an assessment of modality.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q272",
+    "question": "An online retailer wants to evaluate a model that labels each customer review as positive, negative, or neutral. Which model evaluation task type fits this requirement?",
+    "options": {
+      "A": "Open-ended text generation",
+      "B": "Text summarization",
+      "C": "Classification",
+      "D": "Question and answer"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Classification assigns each input to one of a fixed set of predefined categories, so sorting every customer review into one of three sentiment labels (positive, negative, or neutral) is a classification task and is evaluated with classification metrics.",
+      "options": {
+        "A": "Open-ended text generation produces free-form text from a prompt and has no fixed set of output labels.",
+        "B": "Text summarization condenses longer text into a shorter version rather than assigning it to a category.",
+        "C": "Correct answer. Classification assigns each input to one of a fixed set of predefined categories, so sorting every customer review into one of three sentiment labels (positive, negative, or neutral) is a classification task and is evaluated with classification metrics.",
+        "D": "Question and answer returns a response to a posed question rather than placing the input into predefined sentiment categories."
+      }
+    },
+    "note": "Classification assigns each input to one of a fixed set of predefined categories, so sorting every customer review into one of three sentiment labels (positive, negative, or neutral) is a classification task and is evaluated with classification metrics.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q283",
+    "question": "Which AWS service stores embeddings in a vector database for use with foundation models (FMs) and Retrieval Augmented Generation (RAG)?",
+    "options": {
+      "A": "Amazon S3",
+      "B": "Amazon OpenSearch Service",
+      "C": "Amazon DynamoDB",
+      "D": "Amazon Redshift"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Amazon OpenSearch Service provides a vector database that stores and searches embeddings, which is what powers RAG workflows and integrations with foundation models.",
+      "options": {
+        "A": "Amazon S3 is object storage, Amazon DynamoDB is a key-value database, and Amazon Redshift is a data warehouse; none offers native vector search over embeddings.",
+        "B": "Correct answer. Amazon OpenSearch Service provides a vector database that stores and searches embeddings, which is what powers RAG workflows and integrations with foundation models.",
+        "C": "Amazon S3 is object storage, Amazon DynamoDB is a key-value database, and Amazon Redshift is a data warehouse; none offers native vector search over embeddings.",
+        "D": "Amazon S3 is object storage, Amazon DynamoDB is a key-value database, and Amazon Redshift is a data warehouse; none offers native vector search over embeddings."
+      }
+    },
+    "note": "Amazon OpenSearch Service provides a vector database that stores and searches embeddings, which is what powers RAG workflows and integrations with foundation models.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon OpenSearch Service"
+    ]
+  },
+  {
+    "id": "aif-q285",
+    "question": "A company is building a generative AI solution on Amazon Bedrock and needs a service that provides vector database storage and vector search. Which AWS service fits?",
+    "options": {
+      "A": "Amazon DynamoDB",
+      "B": "Amazon ElastiCache",
+      "C": "Amazon OpenSearch Service",
+      "D": "Amazon Redshift"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Amazon OpenSearch Service supports vector storage and similarity search over embeddings, so it can back a generative AI solution on Amazon Bedrock.",
+      "options": {
+        "A": "Amazon DynamoDB is a key-value database, Amazon ElastiCache is an in-memory cache, and Amazon Redshift is a data warehouse; none provides native vector database and search capabilities.",
+        "B": "Amazon DynamoDB is a key-value database, Amazon ElastiCache is an in-memory cache, and Amazon Redshift is a data warehouse; none provides native vector database and search capabilities.",
+        "C": "Correct answer. Amazon OpenSearch Service supports vector storage and similarity search over embeddings, so it can back a generative AI solution on Amazon Bedrock.",
+        "D": "Amazon DynamoDB is a key-value database, Amazon ElastiCache is an in-memory cache, and Amazon Redshift is a data warehouse; none provides native vector database and search capabilities."
+      }
+    },
+    "note": "Amazon OpenSearch Service supports vector storage and similarity search over embeddings, so it can back a generative AI solution on Amazon Bedrock.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon OpenSearch Service"
+    ]
+  },
+  {
+    "id": "aif-q288",
+    "question": "When designing prompts for a generative AI model, which two practices are important?",
+    "options": {
+      "A": "Maximize prompt length regardless of relevance",
+      "B": "Provide clear context and instructions",
+      "C": "Use ambiguous wording to encourage creativity",
+      "D": "Include relevant examples when they help",
+      "E": "Omit instructions and rely on model defaults"
+    },
+    "answer": [
+      "B",
+      "D"
+    ],
+    "explanation": {
+      "summary": "Clear context and instructions tell the model what is expected, and relevant examples (few-shot prompting) guide it toward the desired output format and style, so both improve prompt quality.",
+      "options": {
+        "A": "Maximizing length regardless of relevance, using ambiguous wording, and omitting instructions all add noise or ambiguity and degrade the model's responses.",
+        "B": "Correct answer. Clear context and instructions tell the model what is expected, and relevant examples (few-shot prompting) guide it toward the desired output format and style, so both improve prompt quality.",
+        "C": "Maximizing length regardless of relevance, using ambiguous wording, and omitting instructions all add noise or ambiguity and degrade the model's responses.",
+        "D": "Correct answer. Clear context and instructions tell the model what is expected, and relevant examples (few-shot prompting) guide it toward the desired output format and style, so both improve prompt quality.",
+        "E": "Maximizing length regardless of relevance, using ambiguous wording, and omitting instructions all add noise or ambiguity and degrade the model's responses."
+      }
+    },
+    "note": "Clear context and instructions tell the model what is expected, and relevant examples (few-shot prompting) guide it toward the desired output format and style, so both improve prompt quality.",
+    "isMultiAnswer": true,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q294",
+    "question": "Which two metrics are commonly used to evaluate the output quality of generative AI models?",
+    "options": {
+      "A": "GPU memory usage",
+      "B": "Bilingual Evaluation Understudy (BLEU) score for translation quality",
+      "C": "Request throughput in requests per second",
+      "D": "Recall-Oriented Understudy for Gisting Evaluation (ROUGE) score for summarization quality",
+      "E": "Model parameter count"
+    },
+    "answer": [
+      "B",
+      "D"
+    ],
+    "explanation": {
+      "summary": "BLEU assesses translation quality and ROUGE assesses summarization quality by comparing generated text to reference text, so both measure the quality of generative output.",
+      "options": {
+        "A": "GPU memory usage, request throughput, and model parameter count are infrastructure and model-size metrics that say nothing about output quality.",
+        "B": "Correct answer. BLEU assesses translation quality and ROUGE assesses summarization quality by comparing generated text to reference text, so both measure the quality of generative output.",
+        "C": "GPU memory usage, request throughput, and model parameter count are infrastructure and model-size metrics that say nothing about output quality.",
+        "D": "Correct answer. BLEU assesses translation quality and ROUGE assesses summarization quality by comparing generated text to reference text, so both measure the quality of generative output.",
+        "E": "GPU memory usage, request throughput, and model parameter count are infrastructure and model-size metrics that say nothing about output quality."
+      }
+    },
+    "note": "BLEU assesses translation quality and ROUGE assesses summarization quality by comparing generated text to reference text, so both measure the quality of generative output.",
+    "isMultiAnswer": true,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q296",
+    "question": "Which two capabilities of Amazon OpenSearch Service are most relevant for AI/ML workloads?",
+    "options": {
+      "A": "Full-text BM25 keyword search",
+      "B": "k-NN nearest neighbor search over vectors",
+      "C": "Geospatial distance queries",
+      "D": "Storing and indexing embeddings as a vector database",
+      "E": "Automated model training"
+    },
+    "answer": [
+      "B",
+      "D"
+    ],
+    "explanation": {
+      "summary": "k-NN nearest neighbor search and storing and indexing embeddings as a vector database underpin AI/ML tasks such as semantic search and RAG.",
+      "options": {
+        "A": "BM25 keyword search is lexical rather than semantic, geospatial queries handle location data, and OpenSearch does not perform model training.",
+        "B": "Correct answer. k-NN nearest neighbor search and storing and indexing embeddings as a vector database underpin AI/ML tasks such as semantic search and RAG.",
+        "C": "BM25 keyword search is lexical rather than semantic, geospatial queries handle location data, and OpenSearch does not perform model training.",
+        "D": "Correct answer. k-NN nearest neighbor search and storing and indexing embeddings as a vector database underpin AI/ML tasks such as semantic search and RAG.",
+        "E": "BM25 keyword search is lexical rather than semantic, geospatial queries handle location data, and OpenSearch does not perform model training."
+      }
+    },
+    "note": "k-NN nearest neighbor search and storing and indexing embeddings as a vector database underpin AI/ML tasks such as semantic search and RAG.",
+    "isMultiAnswer": true,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon OpenSearch Service"
+    ]
+  },
+  {
+    "id": "aif-q301",
+    "question": "A company wants an AI assistant that can evaluate specific data sources, call external APIs, and then generate, compare, and prioritize response options. Which Amazon Bedrock feature fits?",
+    "options": {
+      "A": "Prompt Management",
+      "B": "Knowledge Bases",
+      "C": "Agents",
+      "D": "Amazon Bedrock Model Evaluation"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Amazon Bedrock Agents orchestrate multi-step tasks, including calling external APIs and generating, comparing, and prioritizing response options, which matches all of the stated needs.",
+      "options": {
+        "A": "Prompt Management versions prompts, Knowledge Bases supply retrieved context, and Amazon Bedrock Model Evaluation scores models; none orchestrates API calls and decision-making on its own.",
+        "B": "Prompt Management versions prompts, Knowledge Bases supply retrieved context, and Amazon Bedrock Model Evaluation scores models; none orchestrates API calls and decision-making on its own.",
+        "C": "Correct answer. Amazon Bedrock Agents orchestrate multi-step tasks, including calling external APIs and generating, comparing, and prioritizing response options, which matches all of the stated needs.",
+        "D": "Prompt Management versions prompts, Knowledge Bases supply retrieved context, and Amazon Bedrock Model Evaluation scores models; none orchestrates API calls and decision-making on its own."
+      }
+    },
+    "note": "Amazon Bedrock Agents orchestrate multi-step tasks, including calling external APIs and generating, comparing, and prioritizing response options, which matches all of the stated needs.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Agents for Amazon Bedrock",
+      "Amazon Bedrock Knowledge Bases",
+      "Amazon Bedrock Model Evaluation"
+    ]
+  },
+  {
+    "id": "aif-q344",
+    "question": "In generative AI, what distinguishes zero-shot, one-shot, and few-shot prompting?",
+    "options": {
+      "A": "The model architecture used",
+      "B": "The number of examples provided in the prompt",
+      "C": "The number of reasoning steps the model takes",
+      "D": "The amount of data used to fine-tune the model"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "These terms describe how many examples are placed in the prompt: zero-shot gives none, one-shot gives a single example, and few-shot gives a small set, all without retraining the model.",
+      "options": {
+        "A": "They do not refer to the model architecture, the number of reasoning steps, or the amount of fine-tuning data, which are unrelated to how many in-prompt examples are supplied.",
+        "B": "Correct answer. These terms describe how many examples are placed in the prompt: zero-shot gives none, one-shot gives a single example, and few-shot gives a small set, all without retraining the model.",
+        "C": "They do not refer to the model architecture, the number of reasoning steps, or the amount of fine-tuning data, which are unrelated to how many in-prompt examples are supplied.",
+        "D": "They do not refer to the model architecture, the number of reasoning steps, or the amount of fine-tuning data, which are unrelated to how many in-prompt examples are supplied."
+      }
+    },
+    "note": "These terms describe how many examples are placed in the prompt: zero-shot gives none, one-shot gives a single example, and few-shot gives a small set, all without retraining the model.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q041",
+    "question": "An ML team is training a foundation model (FM) and wants to push its accuracy up to a required threshold. What should the team do?",
+    "options": {
+      "A": "Decrease the number of epochs",
+      "B": "Decrease the batch size",
+      "C": "Increase the number of epochs",
+      "D": "Increase the temperature parameter"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Increasing the number of epochs lets the model train over more passes of the data, which generally improves accuracy until it reaches the target level.",
+      "options": {
+        "A": "This option is incorrect. The correct answer is Increase the number of epochs.",
+        "B": "Decreasing the batch size mainly affects training dynamics and memory use rather than reliably raising accuracy toward a target.",
+        "C": "Correct answer. Increasing the number of epochs lets the model train over more passes of the data, which generally improves accuracy until it reaches the target level.",
+        "D": "Temperature is an inference parameter that controls output randomness and has no effect on training accuracy."
+      }
+    },
+    "note": "Increasing the number of epochs lets the model train over more passes of the data, which generally improves accuracy until it reaches the target level.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.3",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q048",
+    "question": "A cosmetics brand wants a pre-trained generative AI model to write campaign copy that fits its brand voice and messaging. What should the team do?",
+    "options": {
+      "A": "Add more layers to the model's architecture to increase its complexity",
+      "B": "Craft clear, well-structured prompts that provide instructions and context to guide the model's output",
+      "C": "Tune the model's architecture and hyperparameters to improve its overall performance",
+      "D": "Collect a large, diverse dataset and pre-train a new generative model from scratch"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Crafting clear prompts with instructions and context guides the pre-trained model to generate content that matches the brand voice, without modifying the model itself.",
+      "options": {
+        "A": "Adding layers or tuning the architecture and hyperparameters means re-engineering or retraining the model, which is unnecessary and costly here.",
+        "B": "Correct answer. Crafting clear prompts with instructions and context guides the pre-trained model to generate content that matches the brand voice, without modifying the model itself.",
+        "C": "Adding layers or tuning the architecture and hyperparameters means re-engineering or retraining the model, which is unnecessary and costly here.",
+        "D": "Pre-training a new model from scratch is even more resource-intensive and is not needed to align output with brand voice."
+      }
+    },
+    "note": "Crafting clear prompts with instructions and context guides the pre-trained model to generate content that matches the brand voice, without modifying the model itself.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q051",
+    "question": "A consultancy must choose an Amazon Bedrock model for internal use, and its analysts care about the writing style of the answers. How should the firm choose the model?",
+    "options": {
+      "A": "Evaluate the models with built-in prompt datasets",
+      "B": "Choose the model based on public model leaderboards",
+      "C": "Evaluate the models with a human workforce using custom prompt datasets",
+      "D": "Compare the models using the InvocationLatency runtime metric in Amazon CloudWatch"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Using a human workforce to evaluate the models against custom prompt datasets captures subjective style preferences that automated scores miss, so it best identifies the model whose responses match what employees prefer.",
+      "options": {
+        "A": "Built-in prompt datasets and public leaderboards measure general performance, not the company specific style preference.",
+        "B": "Built-in prompt datasets and public leaderboards measure general performance, not the company specific style preference.",
+        "C": "Correct answer. Using a human workforce to evaluate the models against custom prompt datasets captures subjective style preferences that automated scores miss, so it best identifies the model whose responses match what employees prefer.",
+        "D": "The InvocationLatency metric in Amazon CloudWatch measures response speed, not response style."
+      }
+    },
+    "note": "Using a human workforce to evaluate the models against custom prompt datasets captures subjective style preferences that automated scores miss, so it best identifies the model whose responses match what employees prefer.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon Bedrock",
+      "Amazon CloudWatch"
+    ]
+  },
+  {
+    "id": "aif-q065",
+    "question": "A news app runs sentiment analysis with a large language model (LLM) on Amazon Bedrock and wants the same input to yield steadier results. Which inference parameter should it change?",
+    "options": {
+      "A": "Increase the temperature value",
+      "B": "Increase the maximum generation length",
+      "C": "Decrease the temperature value",
+      "D": "Reduce the maximum number of output tokens"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Lowering the temperature reduces randomness in token selection, making the model outputs more deterministic and consistent for the same input.",
+      "options": {
+        "A": "Raising the temperature increases randomness and variability.",
+        "B": "Changing the maximum generation length or reducing the number of output tokens only affects response length, not how consistent the responses are.",
+        "C": "Correct answer. Lowering the temperature reduces randomness in token selection, making the model outputs more deterministic and consistent for the same input.",
+        "D": "Changing the maximum generation length or reducing the number of output tokens only affects response length, not how consistent the responses are."
+      }
+    },
+    "note": "Lowering the temperature reduces randomness in token selection, making the model outputs more deterministic and consistent for the same input.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q070",
+    "question": "A team needs to check how accurately its image-classification foundation model (FM) performs. Which strategy should the team use?",
+    "options": {
+      "A": "Count the number of layers in the model's neural network",
+      "B": "Calculate the total cost of the resources the model uses",
+      "C": "Check the color accuracy of the images the model processes",
+      "D": "Measure the model's accuracy on a predefined benchmark dataset"
+    },
+    "answer": "D",
+    "explanation": {
+      "summary": "Measuring the model's accuracy against a predefined benchmark dataset is the standard way to assess classification accuracy, because performance is compared against known correct labels.",
+      "options": {
+        "A": "Counting neural-network layers describes architecture, not accuracy.",
+        "B": "Calculating total resource cost measures expense.",
+        "C": "Checking the color accuracy of processed images is unrelated to classification correctness.",
+        "D": "Correct answer. Measuring the model's accuracy against a predefined benchmark dataset is the standard way to assess classification accuracy, because performance is compared against known correct labels."
+      }
+    },
+    "note": "Measuring the model's accuracy against a predefined benchmark dataset is the standard way to assess classification accuracy, because performance is compared against known correct labels.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q075",
+    "question": "A telecom company's chatbot uses a large language model (LLM) on Amazon Bedrock for intent detection, and the team wants to improve accuracy with few-shot learning. What data does the team need?",
+    "options": {
+      "A": "Pairs of user messages and their correct user intents",
+      "B": "Pairs of user messages and their correct chatbot responses",
+      "C": "Pairs of chatbot responses and their correct user intents",
+      "D": "Pairs of user intents and their correct chatbot responses"
+    },
+    "answer": "A",
+    "explanation": {
+      "summary": "Few-shot learning supplies the model with example input-output pairs for the task, and intent detection maps a user message to an intent, so the company needs pairs of user messages and their correct user intents.",
+      "options": {
+        "A": "Correct answer. Few-shot learning supplies the model with example input-output pairs for the task, and intent detection maps a user message to an intent, so the company needs pairs of user messages and their correct user intents.",
+        "B": "Pairs that involve chatbot responses, whether messages-to-responses, responses-to-intents, or intents-to-responses, train the wrong mapping and do not demonstrate how to detect a user intent from a message.",
+        "C": "Pairs that involve chatbot responses, whether messages-to-responses, responses-to-intents, or intents-to-responses, train the wrong mapping and do not demonstrate how to detect a user intent from a message.",
+        "D": "Pairs that involve chatbot responses, whether messages-to-responses, responses-to-intents, or intents-to-responses, train the wrong mapping and do not demonstrate how to detect a user intent from a message."
+      }
+    },
+    "note": "Few-shot learning supplies the model with example input-output pairs for the task, and intent detection maps a user message to an intent, so the company needs pairs of user messages and their correct user intents.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q089",
+    "question": "During a red-team test of a foundation model (FM), an engineer tries to get past its safety filters so it produces harmful text. What is this technique called?",
+    "options": {
+      "A": "Fuzzing the training data to find vulnerabilities",
+      "B": "Jailbreaking",
+      "C": "Authorized penetration testing",
+      "D": "Denial-of-service (DoS) attack"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Jailbreaking is the attempt to circumvent or disable a model built-in safety controls so it produces restricted or harmful content, which is exactly what the engineer is doing.",
+      "options": {
+        "A": "Fuzzing the training data probes for vulnerabilities by feeding malformed inputs during development, not by bypassing safety filters.",
+        "B": "Correct answer. Jailbreaking is the attempt to circumvent or disable a model built-in safety controls so it produces restricted or harmful content, which is exactly what the engineer is doing.",
+        "C": "Authorized penetration testing is a sanctioned security assessment.",
+        "D": "A denial-of-service attack targets availability rather than defeating content safeguards."
+      }
+    },
+    "note": "Jailbreaking is the attempt to circumvent or disable a model built-in safety controls so it produces restricted or harmful content, which is exactly what the engineer is doing.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q110",
+    "question": "A team is building a conversational search feature and needs a database that can store generative AI embeddings as vectors and run similarity queries over them. Which AWS service meets this requirement?",
+    "options": {
+      "A": "Amazon Athena",
+      "B": "Amazon Redshift",
+      "C": "Amazon Aurora PostgreSQL",
+      "D": "Amazon EMR"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Amazon Aurora PostgreSQL supports the pgvector extension, which stores, indexes, and runs similarity queries over vector embeddings, making it suitable for storing and querying embeddings as vectors.",
+      "options": {
+        "A": "Amazon Athena is a serverless query service for data in Amazon S3.",
+        "B": "Amazon Redshift is a data warehouse for analytics.",
+        "C": "Correct answer. Amazon Aurora PostgreSQL supports the pgvector extension, which stores, indexes, and runs similarity queries over vector embeddings, making it suitable for storing and querying embeddings as vectors.",
+        "D": "Amazon EMR runs big-data processing frameworks."
+      }
+    },
+    "note": "Amazon Aurora PostgreSQL supports the pgvector extension, which stores, indexes, and runs similarity queries over vector embeddings, making it suitable for storing and querying embeddings as vectors.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon Aurora",
+      "Amazon Athena",
+      "Amazon Redshift",
+      "Amazon EMR"
+    ]
+  },
+  {
+    "id": "aif-q114",
+    "question": "How can a team determine whether a foundation model (FM) effectively meets its business objectives?",
+    "options": {
+      "A": "Evaluate the model's performance on benchmark datasets",
+      "B": "Assess how well the model aligns with the specific use cases it must support",
+      "C": "Analyze the model's architecture and hyperparameters",
+      "D": "Measure the computational resources the model needs for deployment"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Assessing how well the model aligns with the specific use cases it must support shows whether its outputs solve the real business problems, which is how you tell if it meets business objectives.",
+      "options": {
+        "A": "Benchmark performance measures general accuracy, not business fit.",
+        "B": "Correct answer. Assessing how well the model aligns with the specific use cases it must support shows whether its outputs solve the real business problems, which is how you tell if it meets business objectives.",
+        "C": "Analyzing architecture and hyperparameters is a technical detail unrelated to business value.",
+        "D": "Measuring computational resources addresses cost and feasibility, not whether the objectives are met."
+      }
+    },
+    "note": "Assessing how well the model aligns with the specific use cases it must support shows whether its outputs solve the real business problems, which is how you tell if it meets business objectives.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q132",
+    "question": "A company wants to keep its foundation model (FM) current by regularly retraining it on the latest data. Which training strategy meets this requirement?",
+    "options": {
+      "A": "Batch learning",
+      "B": "Static training",
+      "C": "Latent training",
+      "D": "Continuous pre-training"
+    },
+    "answer": "D",
+    "explanation": {
+      "summary": "Continuous pre-training periodically ingests the latest data and updates the model's weights, so the foundation model stays current without retraining from scratch each time.",
+      "options": {
+        "A": "Batch learning processes data in fixed batches but is not a strategy for ongoing model refresh.",
+        "B": "Static training produces a one-time fixed model that does not update.",
+        "C": "Latent training is not a recognized training strategy.",
+        "D": "Correct answer. Continuous pre-training periodically ingests the latest data and updates the model's weights, so the foundation model stays current without retraining from scratch each time."
+      }
+    },
+    "note": "Continuous pre-training periodically ingests the latest data and updates the model's weights, so the foundation model stays current without retraining from scratch each time.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.3",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q136",
+    "question": "A company's large language model (LLM) keeps producing hallucinations. Which change can reduce them?",
+    "options": {
+      "A": "Decrease the temperature inference parameter for the model",
+      "B": "Use Agents for Amazon Bedrock to supervise the model's training",
+      "C": "Preprocess the data to remove any data that causes hallucinations",
+      "D": "Switch to a foundation model (FM) that is trained never to hallucinate"
+    },
+    "answer": "A",
+    "explanation": {
+      "summary": "Lowering the temperature parameter reduces the randomness of the model's token selection, so it relies on higher-probability outputs and is less likely to produce hallucinated content.",
+      "options": {
+        "A": "Correct answer. Lowering the temperature parameter reduces the randomness of the model's token selection, so it relies on higher-probability outputs and is less likely to produce hallucinated content.",
+        "B": "Agents for Amazon Bedrock orchestrate tasks and do not supervise training.",
+        "C": "You cannot reliably identify and remove specific data that causes hallucinations through preprocessing.",
+        "D": "No foundation model is guaranteed never to hallucinate, so switching models does not solve the problem."
+      }
+    },
+    "note": "Lowering the temperature parameter reduces the randomness of the model's token selection, so it relies on higher-probability outputs and is less likely to produce hallucinated content.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q140",
+    "question": "How does top-p (nucleus) sampling differ from temperature-based sampling?",
+    "options": {
+      "A": "It samples from the smallest possible set of tokens",
+      "B": "It always produces deterministic output",
+      "C": "It samples only from the set of tokens whose probabilities add up to p",
+      "D": "It works only with specific model architectures"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Top-p (nucleus) sampling dynamically restricts the candidate tokens to the smallest set whose cumulative probability reaches p and then samples from that set, which adapts the choice of tokens to the probability distribution at each step.",
+      "options": {
+        "A": "It does not fix the token set to the smallest possible size regardless of probabilities.",
+        "B": "It does not produce deterministic output, since it still samples.",
+        "C": "Correct answer. Top-p (nucleus) sampling dynamically restricts the candidate tokens to the smallest set whose cumulative probability reaches p and then samples from that set, which adapts the choice of tokens to the probability distribution at each step.",
+        "D": "It is not limited to specific model architectures."
+      }
+    },
+    "note": "Top-p (nucleus) sampling dynamically restricts the candidate tokens to the smallest set whose cumulative probability reaches p and then samples from that set, which adapts the choice of tokens to the probability distribution at each step.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q190",
+    "question": "A retailer has 100 high-quality agent-customer conversations and wants its chatbot's replies to match the company's tone. Which solution meets this requirement?",
+    "options": {
+      "A": "Use Amazon Personalize to generate the responses",
+      "B": "Create an Amazon Bedrock fine-tuning job",
+      "C": "Create an Amazon SageMaker HyperPod pre-training job",
+      "D": "Host the model on Amazon SageMaker AI and apply TensorRT to optimize LLM inference"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "An Amazon Bedrock fine-tuning job adapts a foundation model on the company's own example conversations, teaching it the company's tone so the chatbot reflects it in responses.",
+      "options": {
+        "A": "This option is incorrect. The correct answer is Create an Amazon Bedrock fine-tuning job.",
+        "B": "Correct answer. An Amazon Bedrock fine-tuning job adapts a foundation model on the company's own example conversations, teaching it the company's tone so the chatbot reflects it in responses.",
+        "C": "A SageMaker HyperPod pre-training job is for large-scale pre-training from scratch, which is overkill for 100 examples.",
+        "D": "Hosting the model and applying TensorRT optimizes inference speed, not response tone."
+      }
+    },
+    "note": "An Amazon Bedrock fine-tuning job adapts a foundation model on the company's own example conversations, teaching it the company's tone so the chatbot reflects it in responses.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.3",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon Bedrock",
+      "Amazon Personalize",
+      "Amazon SageMaker AI"
+    ]
+  },
+  {
+    "id": "aif-q195",
+    "question": "An AI practitioner is comparing top-p (nucleus) sampling with temperature-based sampling. What distinguishes top-p sampling?",
+    "options": {
+      "A": "It works only with certain model architectures",
+      "B": "It always returns the same output for a given prompt",
+      "C": "It limits sampling to exactly one token each step",
+      "D": "It samples from the smallest set of top tokens whose probabilities sum to p"
+    },
+    "answer": "D",
+    "explanation": {
+      "summary": "Top-p (nucleus) sampling chooses the smallest set of highest-probability tokens whose cumulative probability reaches p and samples from that set, adapting the candidate pool to the distribution at each step rather than using a fixed cutoff.",
+      "options": {
+        "A": "It is not restricted to particular model architectures.",
+        "B": "It still samples, so it does not return identical output every time.",
+        "C": "It does not limit selection to a single token.",
+        "D": "Correct answer. Top-p (nucleus) sampling chooses the smallest set of highest-probability tokens whose cumulative probability reaches p and samples from that set, adapting the candidate pool to the distribution at each step rather than using a fixed cutoff."
+      }
+    },
+    "note": "Top-p (nucleus) sampling chooses the smallest set of highest-probability tokens whose cumulative probability reaches p and samples from that set, adapting the candidate pool to the distribution at each step rather than using a fixed cutoff.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q200",
+    "question": "A company is adding a large language model (LLM) to its app and needs responses that are as deterministic and stable as possible. Which solution meets this requirement?",
+    "options": {
+      "A": "Add \"make your response deterministic\" to the end of the prompt before sending it",
+      "B": "Set the temperature parameter to 1 when submitting the prompt",
+      "C": "Set the temperature parameter to 0 when submitting the prompt",
+      "D": "Add \"make your response deterministic\" to the start of the prompt before sending it"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Setting the temperature to 0 forces greedy decoding, so the model selects the most probable next token every time and produces deterministic, stable outputs.",
+      "options": {
+        "A": "Adding an instruction like make your response deterministic at the start or end of the prompt does not control the sampling process and will not reliably make output deterministic.",
+        "B": "This option is incorrect. The correct answer is Set the temperature parameter to 0 when submitting the prompt.",
+        "C": "Correct answer. Setting the temperature to 0 forces greedy decoding, so the model selects the most probable next token every time and produces deterministic, stable outputs.",
+        "D": "Adding an instruction like make your response deterministic at the start or end of the prompt does not control the sampling process and will not reliably make output deterministic."
+      }
+    },
+    "note": "Setting the temperature to 0 forces greedy decoding, so the model selects the most probable next token every time and produces deterministic, stable outputs.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q210",
+    "question": "Which large language model (LLM) parameter sets how many candidate next tokens the model considers at each generation step?",
+    "options": {
+      "A": "Maximum tokens",
+      "B": "Temperature",
+      "C": "Top K",
+      "D": "Batch size"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "The Top K parameter limits sampling at each step to the K most probable next tokens, so it directly controls how many candidate tokens the model considers when generating each token.",
+      "options": {
+        "A": "Maximum tokens caps the total length of the output, not the candidate pool at each step.",
+        "B": "Temperature adjusts the randomness of the distribution rather than the number of candidates.",
+        "C": "Correct answer. The Top K parameter limits sampling at each step to the K most probable next tokens, so it directly controls how many candidate tokens the model considers when generating each token.",
+        "D": "Batch size concerns how many inputs are processed together, not token selection."
+      }
+    },
+    "note": "The Top K parameter limits sampling at each step to the K most probable next tokens, so it directly controls how many candidate tokens the model considers when generating each token.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q220",
+    "question": "An AI practitioner wants a large language model (LLM) to produce more diverse and creative output. How should the practitioner adjust an inference parameter?",
+    "options": {
+      "A": "Decrease the Top K value",
+      "B": "Increase the response length",
+      "C": "Increase the temperature value",
+      "D": "Decrease the prompt length"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Raising the temperature flattens the model's probability distribution and increases the chance of selecting less-likely tokens, which produces more varied and creative responses.",
+      "options": {
+        "A": "Decreasing the Top K value narrows the candidate tokens and makes output more focused, not more diverse.",
+        "B": "Increasing the response length only makes output longer.",
+        "C": "Correct answer. Raising the temperature flattens the model's probability distribution and increases the chance of selecting less-likely tokens, which produces more varied and creative responses.",
+        "D": "Decreasing the prompt length reduces context and does not increase creativity."
+      }
+    },
+    "note": "Raising the temperature flattens the model's probability distribution and increases the chance of selecting less-likely tokens, which produces more varied and creative responses.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q239",
+    "question": "A company will fine-tune a large language model (LLM) on Amazon Bedrock to refine the style of its app's output messages. Which type of data does the company need?",
+    "options": {
+      "A": "Samples of only input messages",
+      "B": "Paired samples of input messages and their corresponding output messages",
+      "C": "Samples of only output messages",
+      "D": "Separate, unpaired samples of input messages and output messages"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Fine-tuning to refine output style requires paired examples of input messages and their corresponding output messages, so the model learns the mapping from input to the desired styled output.",
+      "options": {
+        "A": "Samples of only input messages or only output messages lack the input-to-output relationship the model must learn.",
+        "B": "Correct answer. Fine-tuning to refine output style requires paired examples of input messages and their corresponding output messages, so the model learns the mapping from input to the desired styled output.",
+        "C": "Samples of only input messages or only output messages lack the input-to-output relationship the model must learn.",
+        "D": "Samples of only input messages or only output messages lack the input-to-output relationship the model must learn."
+      }
+    },
+    "note": "Fine-tuning to refine output style requires paired examples of input messages and their corresponding output messages, so the model learns the mapping from input to the desired styled output.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.3",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon Bedrock"
+    ]
+  },
+  {
+    "id": "aif-q246",
+    "question": "Which two parameters are commonly used to control the diversity of a generative AI model's output?",
+    "options": {
+      "A": "Model size",
+      "B": "Top-k sampling",
+      "C": "Training dataset size",
+      "D": "Top-p (nucleus) sampling",
+      "E": "Hardware configuration"
+    },
+    "answer": [
+      "B",
+      "D"
+    ],
+    "explanation": {
+      "summary": "Top-k sampling limits selection to the k most likely next tokens, and Top-p (nucleus) sampling selects from the smallest set of tokens whose probabilities sum to p; both adjust the candidate pool to balance diversity and quality of generated text.",
+      "options": {
+        "A": "Model size, training dataset size, and hardware configuration affect a model's capability, cost, or speed, but they are not runtime parameters that control output diversity.",
+        "B": "Correct answer. Top-k sampling limits selection to the k most likely next tokens, and Top-p (nucleus) sampling selects from the smallest set of tokens whose probabilities sum to p; both adjust the candidate pool to balance diversity and quality of generated text.",
+        "C": "Model size, training dataset size, and hardware configuration affect a model's capability, cost, or speed, but they are not runtime parameters that control output diversity.",
+        "D": "Correct answer. Top-k sampling limits selection to the k most likely next tokens, and Top-p (nucleus) sampling selects from the smallest set of tokens whose probabilities sum to p; both adjust the candidate pool to balance diversity and quality of generated text.",
+        "E": "Model size, training dataset size, and hardware configuration affect a model's capability, cost, or speed, but they are not runtime parameters that control output diversity."
+      }
+    },
+    "note": "Top-k sampling limits selection to the k most likely next tokens, and Top-p (nucleus) sampling selects from the smallest set of tokens whose probabilities sum to p; both adjust the candidate pool to balance diversity and quality of generated text.",
+    "isMultiAnswer": true,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q247",
+    "question": "A design team uses an image-generation foundation model (FM) on Amazon Bedrock and wants to control how detailed or abstract each generated image is. Which model parameter should they adjust?",
+    "options": {
+      "A": "Model checkpoint",
+      "B": "Generation step",
+      "C": "Batch size",
+      "D": "Token length"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "The generation step parameter sets how many refinement steps the model runs while creating an image; more steps yield more detailed images and fewer steps yield more abstract ones, so it controls the level of detail.",
+      "options": {
+        "A": "A model checkpoint selects a saved version of the model, not the detail of a single image.",
+        "B": "Correct answer. The generation step parameter sets how many refinement steps the model runs while creating an image; more steps yield more detailed images and fewer steps yield more abstract ones, so it controls the level of detail.",
+        "C": "Batch size sets how many images are produced at once.",
+        "D": "Token length applies to text generation, not image detail."
+      }
+    },
+    "note": "The generation step parameter sets how many refinement steps the model runs while creating an image; more steps yield more detailed images and fewer steps yield more abstract ones, so it controls the level of detail.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q257",
+    "question": "A team generates images with an Amazon Nova Canvas model and needs to keep specific items out of the results. Which solution meets this requirement?",
+    "options": {
+      "A": "Use a higher temperature value",
+      "B": "Use a negative prompt",
+      "C": "Use a more detailed prompt",
+      "D": "Switch to another foundation model (FM)"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "A negative prompt specifies the items or characteristics the model should avoid, so it keeps the unwanted items out of the generated images.",
+      "options": {
+        "A": "A higher temperature only adds randomness.",
+        "B": "Correct answer. A negative prompt specifies the items or characteristics the model should avoid, so it keeps the unwanted items out of the generated images.",
+        "C": "A more detailed prompt describes what to include but does not reliably exclude specific items.",
+        "D": "Switching to another foundation model does not provide a mechanism to exclude items."
+      }
+    },
+    "note": "A negative prompt specifies the items or characteristics the model should avoid, so it keeps the unwanted items out of the generated images.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q260",
+    "question": "A company is building a generative AI tool and will customize a foundation model (FM) with its internal documents. Which approach meets this requirement?",
+    "options": {
+      "A": "Classification",
+      "B": "Distillation",
+      "C": "Continued pre-training",
+      "D": "Regression"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Continued pre-training further trains a foundation model on the company's internal documents, so the model adapts to the company's domain and content.",
+      "options": {
+        "A": "Classification and regression are supervised ML tasks, not ways to customize an FM on documents.",
+        "B": "Distillation transfers knowledge from a larger model to a smaller one rather than adapting a model to internal documents.",
+        "C": "Correct answer. Continued pre-training further trains a foundation model on the company's internal documents, so the model adapts to the company's domain and content.",
+        "D": "Classification and regression are supervised ML tasks, not ways to customize an FM on documents."
+      }
+    },
+    "note": "Continued pre-training further trains a foundation model on the company's internal documents, so the model adapts to the company's domain and content.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.3",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q266",
+    "question": "A research group wants several scientists to manually compare the outputs of different generative AI models for a defined prompt. Which solution meets this requirement?",
+    "options": {
+      "A": "Use automatic evaluation on Amazon Personalize",
+      "B": "Use model evaluation on Amazon Bedrock",
+      "C": "Use content moderation on Amazon Rekognition",
+      "D": "Use sentiment analysis on Amazon Comprehend"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Amazon Bedrock model evaluation supports human-based evaluation, so a team of scientists can review and compare the models' outputs against the group's prompt and criteria.",
+      "options": {
+        "A": "This option is incorrect. The correct answer is Use model evaluation on Amazon Bedrock.",
+        "B": "Correct answer. Amazon Bedrock model evaluation supports human-based evaluation, so a team of scientists can review and compare the models' outputs against the group's prompt and criteria.",
+        "C": "Amazon Rekognition does image and video content moderation.",
+        "D": "Amazon Comprehend does NLP tasks such as sentiment analysis."
+      }
+    },
+    "note": "Amazon Bedrock model evaluation supports human-based evaluation, so a team of scientists can review and compare the models' outputs against the group's prompt and criteria.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon Bedrock",
+      "Amazon Personalize",
+      "Amazon Rekognition",
+      "Amazon Comprehend"
+    ]
+  },
+  {
+    "id": "aif-q042",
+    "question": "A support center rolls out a large language model (LLM) chatbot to cut down how many steps agents take when answering customer questions. Which business metric best shows whether the chatbot is making a difference?",
+    "options": {
+      "A": "Corporate social responsibility",
+      "B": "Regulatory compliance",
+      "C": "Average call duration",
+      "D": "Website engagement rate"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Average call duration directly reflects how much the chatbot reduces the steps agents take to resolve questions, so tracking it measures the chatbot's business impact.",
+      "options": {
+        "A": "Corporate social responsibility and regulatory compliance are organizational concerns unrelated to how quickly agents resolve customer questions.",
+        "B": "Corporate social responsibility and regulatory compliance are organizational concerns unrelated to how quickly agents resolve customer questions.",
+        "C": "Correct answer. Average call duration directly reflects how much the chatbot reduces the steps agents take to resolve questions, so tracking it measures the chatbot's business impact.",
+        "D": "Website engagement rate measures online visitor behavior, not call center efficiency."
+      }
+    },
+    "note": "Average call duration directly reflects how much the chatbot reduces the steps agents take to resolve questions, so tracking it measures the chatbot's business impact.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-02",
+    "services": []
+  },
+  {
+    "id": "aif-q244",
+    "question": "For AI workloads, what is the main benefit of pairing Amazon Aurora with the pgvector extension?",
+    "options": {
+      "A": "It automatically generates AI models",
+      "B": "It provides pre-trained language models",
+      "C": "It enables vector similarity search inside a relational database",
+      "D": "It provides serverless computing capabilities"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Amazon Aurora with the pgvector extension enables vector similarity search inside a relational database, so embeddings can be stored alongside structured data and queried with SQL while keeping relational features.",
+      "options": {
+        "A": "Aurora does not automatically generate AI models or provide pre-trained language models.",
+        "B": "Aurora does not automatically generate AI models or provide pre-trained language models.",
+        "C": "Correct answer. Amazon Aurora with the pgvector extension enables vector similarity search inside a relational database, so embeddings can be stored alongside structured data and queried with SQL while keeping relational features.",
+        "D": "This option is incorrect. The correct answer is It enables vector similarity search inside a relational database."
+      }
+    },
+    "note": "Amazon Aurora with the pgvector extension enables vector similarity search inside a relational database, so embeddings can be stored alongside structured data and queried with SQL while keeping relational features.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-02",
+    "services": [
+      "Amazon Aurora"
+    ]
+  },
+  {
+    "id": "aif-q384",
+    "question": "A company runs several generative AI applications on Amazon Bedrock and wants to version its prompts, compare different prompt variants, and roll back to a previous version if quality drops. Which Amazon Bedrock feature meets these requirements?",
+    "options": {
+      "A": "Amazon Bedrock Knowledge Bases",
+      "B": "Amazon Bedrock Guardrails",
+      "C": "Amazon Bedrock Prompt Management",
+      "D": "Amazon Bedrock Model Evaluation"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Amazon Bedrock Prompt Management lets teams create, version, and manage prompt templates, compare variants, and roll back to earlier versions, providing the lifecycle controls the company needs to maintain prompt quality across its applications.",
+      "options": {
+        "A": "Amazon Bedrock Knowledge Bases index and retrieve documents for RAG workflows.",
+        "B": "Amazon Bedrock Guardrails filter harmful or unwanted content.",
+        "C": "Correct answer. Amazon Bedrock Prompt Management lets teams create, version, and manage prompt templates, compare variants, and roll back to earlier versions, providing the lifecycle controls the company needs to maintain prompt quality across its applications.",
+        "D": "Amazon Bedrock Model Evaluation scores and compares model performance."
+      }
+    },
+    "note": "Amazon Bedrock Prompt Management lets teams create, version, and manage prompt templates, compare variants, and roll back to earlier versions, providing the lifecycle controls the company needs to maintain prompt quality across its applications.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-03",
+    "services": [
+      "Amazon Bedrock"
+    ]
+  },
+  {
+    "id": "aif-q385",
+    "question": "A company deployed an AI assistant on Amazon Bedrock to handle customer service requests. It wants to measure how effectively the assistant resolves customer issues without escalation. Which metric best captures this?",
+    "options": {
+      "A": "BLEU score",
+      "B": "Task completion rate",
+      "C": "Perplexity",
+      "D": "Model parameter count"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Task completion rate measures the percentage of customer requests the assistant fully resolves without needing human escalation, directly reflecting how effectively it meets the business objective of handling service requests autonomously.",
+      "options": {
+        "A": "BLEU score measures translation quality by comparing generated text to references.",
+        "B": "Correct answer. Task completion rate measures the percentage of customer requests the assistant fully resolves without needing human escalation, directly reflecting how effectively it meets the business objective of handling service requests autonomously.",
+        "C": "Perplexity measures how well a language model predicts text.",
+        "D": "Model parameter count describes model size."
+      }
+    },
+    "note": "Task completion rate measures the percentage of customer requests the assistant fully resolves without needing human escalation, directly reflecting how effectively it meets the business objective of handling service requests autonomously.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-03",
+    "services": []
+  },
+  {
+    "id": "aif-q386",
+    "question": "Which two metrics are examples of business-alignment metrics for evaluating AI applications?",
+    "options": {
+      "A": "User satisfaction",
+      "B": "BERTScore",
+      "C": "Cost per interaction",
+      "D": "ROUGE score",
+      "E": "Model training time"
+    },
+    "answer": [
+      "A",
+      "C"
+    ],
+    "explanation": {
+      "summary": "User satisfaction measures how well the AI application meets end-user expectations, and cost per interaction measures the operational expense of each user engagement, both of which directly align with business objectives and are defined as business-alignment metrics for AI applications.",
+      "options": {
+        "A": "Correct answer. User satisfaction measures how well the AI application meets end-user expectations, and cost per interaction measures the operational expense of each user engagement, both of which directly align with business objectives and are defined as business-alignment metrics for AI applications.",
+        "B": "BERTScore and ROUGE score are technical metrics that measure the quality of generated text against references rather than business outcomes.",
+        "C": "Correct answer. User satisfaction measures how well the AI application meets end-user expectations, and cost per interaction measures the operational expense of each user engagement, both of which directly align with business objectives and are defined as business-alignment metrics for AI applications.",
+        "D": "BERTScore and ROUGE score are technical metrics that measure the quality of generated text against references rather than business outcomes.",
+        "E": "Model training time is an operational metric about how long training takes and says nothing about whether the application achieves its business goals."
+      }
+    },
+    "note": "User satisfaction measures how well the AI application meets end-user expectations, and cost per interaction measures the operational expense of each user engagement, both of which directly align with business objectives and are defined as business-alignment metrics for AI applications.",
+    "isMultiAnswer": true,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-03",
+    "services": []
+  },
+  {
+    "id": "aif-q387",
+    "question": "A company is building a knowledge graph that also needs to store vector embeddings and run similarity searches over them alongside graph traversals. Which AWS database service supports both graph queries and vector search?",
+    "options": {
+      "A": "Amazon DynamoDB",
+      "B": "Amazon Neptune",
+      "C": "Amazon Redshift",
+      "D": "Amazon ElastiCache"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Amazon Neptune is a graph database that also supports vector similarity search, allowing the company to store embeddings alongside knowledge graph relationships and run both graph traversals and nearest-neighbor queries in the same database.",
+      "options": {
+        "A": "Amazon DynamoDB is a key-value and document database without native graph or vector search capabilities.",
+        "B": "Correct answer. Amazon Neptune is a graph database that also supports vector similarity search, allowing the company to store embeddings alongside knowledge graph relationships and run both graph traversals and nearest-neighbor queries in the same database.",
+        "C": "Amazon Redshift is a data warehouse for analytics.",
+        "D": "Amazon ElastiCache is an in-memory caching service."
+      }
+    },
+    "note": "Amazon Neptune is a graph database that also supports vector similarity search, allowing the company to store embeddings alongside knowledge graph relationships and run both graph traversals and nearest-neighbor queries in the same database.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-03",
+    "services": [
+      "Amazon Neptune",
+      "Amazon DynamoDB",
+      "Amazon Redshift",
+      "Amazon ElastiCache"
+    ]
+  },
+  {
+    "id": "aif-q388",
+    "question": "A company generates long-form marketing content with a foundation model and wants to evaluate quality at scale without relying on human reviewers. Which evaluation approach uses another large language model to score the outputs?",
+    "options": {
+      "A": "BLEU scoring",
+      "B": "LLM-as-a-judge",
+      "C": "Benchmark dataset comparison",
+      "D": "A/B testing with live users"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "LLM-as-a-judge uses a separate large language model to evaluate and score the outputs of another model against defined criteria, providing scalable quality assessment without requiring human reviewers for every output.",
+      "options": {
+        "A": "BLEU scoring compares generated text to reference translations using n-gram overlap and requires pre-written references.",
+        "B": "Correct answer. LLM-as-a-judge uses a separate large language model to evaluate and score the outputs of another model against defined criteria, providing scalable quality assessment without requiring human reviewers for every output.",
+        "C": "Benchmark dataset comparison evaluates against fixed test sets with known answers.",
+        "D": "A/B testing requires live users to compare variants."
+      }
+    },
+    "note": "LLM-as-a-judge uses a separate large language model to evaluate and score the outputs of another model against defined criteria, providing scalable quality assessment without requiring human reviewers for every output.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-03",
+    "services": []
+  },
+  {
+    "id": "aif-q436",
+    "question": "A company deployed a RAG-based customer support assistant and wants to evaluate whether the retrieval component returns relevant documents for user queries. Which approach should the team use?",
+    "options": {
+      "A": "Measure the model's perplexity on a held-out dataset",
+      "B": "Compare retrieved passages against known-correct source documents for a set of test queries",
+      "C": "Count the total number of API calls made to Amazon Bedrock",
+      "D": "Measure the BLEU score of the model's outputs"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Evaluating a RAG application requires assessing whether the retrieval component returns relevant documents, which is done by comparing retrieved passages for test queries against known-correct source documents and measuring retrieval precision and recall.",
+      "options": {
+        "A": "Perplexity evaluates language model quality, not retrieval relevance.",
+        "B": "Correct answer. Evaluating a RAG application requires assessing whether the retrieval component returns relevant documents, which is done by comparing retrieved passages for test queries against known-correct source documents and measuring retrieval precision and recall.",
+        "C": "Counting API calls measures usage volume.",
+        "D": "BLEU score evaluates translation quality."
+      }
+    },
+    "note": "Evaluating a RAG application requires assessing whether the retrieval component returns relevant documents, which is done by comparing retrieved passages for test queries against known-correct source documents and measuring retrieval precision and recall.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-03",
+    "services": [
+      "Amazon Bedrock"
+    ]
+  },
+  {
+    "id": "aif-q444",
+    "question": "A company sends the same lengthy system prompt thousands of times daily with only the user query changing, and it wants to reduce latency and cost. Which FM selection criterion is most relevant?",
+    "options": {
+      "A": "Multilingual support",
+      "B": "Prompt caching",
+      "C": "Model complexity",
+      "D": "Diffusion capability"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Prompt caching stores the processed representation of a repeated system prompt so the model does not re-process it on every request, reducing both latency and cost when the same prefix is sent repeatedly with only the user query varying.",
+      "options": {
+        "A": "Multilingual support concerns language coverage.",
+        "B": "Correct answer. Prompt caching stores the processed representation of a repeated system prompt so the model does not re-process it on every request, reducing both latency and cost when the same prefix is sent repeatedly with only the user query varying.",
+        "C": "Model complexity relates to reasoning capability.",
+        "D": "Diffusion capability applies to image generation models."
+      }
+    },
+    "note": "Prompt caching stores the processed representation of a repeated system prompt so the model does not re-process it on every request, reducing both latency and cost when the same prefix is sent repeatedly with only the user query varying.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-03",
+    "services": []
+  },
+  {
+    "id": "aif-q445",
+    "question": "A company needs a foundation model that can accept both text and images as input and produce text output. Which FM selection criterion determines whether a model supports this?",
+    "options": {
+      "A": "Temperature range",
+      "B": "Modality",
+      "C": "Context window size",
+      "D": "Training dataset size"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Modality describes the types of input and output a model supports, such as text, images, audio, or video. A model must support multimodal input (text and images) to accept both types and produce text output.",
+      "options": {
+        "A": "Temperature range controls output randomness.",
+        "B": "Correct answer. Modality describes the types of input and output a model supports, such as text, images, audio, or video. A model must support multimodal input (text and images) to accept both types and produce text output.",
+        "C": "Context window size determines how much information fits in a single prompt.",
+        "D": "Training dataset size affects model knowledge but does not determine supported input types."
+      }
+    },
+    "note": "Modality describes the types of input and output a model supports, such as text, images, audio, or video. A model must support multimodal input (text and images) to accept both types and produce text output.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-03",
+    "services": []
+  },
+  {
+    "id": "aif-q446",
+    "question": "A company runs a large foundation model on Amazon Bedrock but finds the inference cost too high. It wants a smaller, cheaper model that retains most of the large model's quality. Which customization approach meets this requirement?",
+    "options": {
+      "A": "Retrieval Augmented Generation (RAG)",
+      "B": "Model distillation",
+      "C": "Continuous pre-training",
+      "D": "In-context learning"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "Model distillation trains a smaller student model to replicate the behavior of a larger teacher model, producing a compact model that retains most of the original's quality at lower inference cost.",
+      "options": {
+        "A": "This option is incorrect. The correct answer is Model distillation.",
+        "B": "Correct answer. Model distillation trains a smaller student model to replicate the behavior of a larger teacher model, producing a compact model that retains most of the original's quality at lower inference cost.",
+        "C": "Continuous pre-training updates knowledge but does not shrink the model.",
+        "D": "In-context learning adds examples to the prompt, which actually increases token costs."
+      }
+    },
+    "note": "Model distillation trains a smaller student model to replicate the behavior of a larger teacher model, producing a compact model that retains most of the original's quality at lower inference cost.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-03",
+    "services": [
+      "Amazon Bedrock"
+    ]
+  },
+  {
+    "id": "aif-q447",
+    "question": "A travel company wants an AI system that can search flight availability, compare prices across airlines, book tickets, and send confirmation emails, all from a single customer request. Which solution meets this requirement?",
+    "options": {
+      "A": "A text summarization model",
+      "B": "An AI agent that orchestrates multi-step tasks using tool calls",
+      "C": "A classification model that routes requests to departments",
+      "D": "A recommendation engine that suggests popular flights"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "An AI agent can break down the customer's request into steps (searching flights, comparing prices, booking, and sending confirmation) and execute each by calling the appropriate tools and APIs, which is the defining capability of agents for complex business workflows.",
+      "options": {
+        "A": "A summarization model condenses text but cannot take actions.",
+        "B": "Correct answer. An AI agent can break down the customer's request into steps (searching flights, comparing prices, booking, and sending confirmation) and execute each by calling the appropriate tools and APIs, which is the defining capability of agents for complex business workflows.",
+        "C": "A classification model routes requests but cannot execute multi-step tasks.",
+        "D": "A recommendation engine suggests items but cannot book flights or send emails."
+      }
+    },
+    "note": "An AI agent can break down the customer's request into steps (searching flights, comparing prices, booking, and sending confirmation) and execute each by calling the appropriate tools and APIs, which is the defining capability of agents for complex business workflows.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.1",
+    "lastVerified": "2026-06-03",
+    "services": []
+  },
+  {
+    "id": "aif-q448",
+    "question": "Which two practices improve the quality of responses from a foundation model through prompt engineering?",
+    "options": {
+      "A": "Be specific and concise in instructions",
+      "B": "Use vague language to allow creative freedom",
+      "C": "Experiment with different prompt structures and iterate",
+      "D": "Always use the maximum token limit for prompts",
+      "E": "Avoid providing any context to keep prompts short"
+    },
+    "answer": [
+      "A",
+      "C"
+    ],
+    "explanation": {
+      "summary": "Being specific and concise tells the model exactly what is expected without ambiguity, and experimenting with different prompt structures and iterating helps discover what works best for each task, both of which are prompt engineering best practices.",
+      "options": {
+        "A": "Correct answer. Being specific and concise tells the model exactly what is expected without ambiguity, and experimenting with different prompt structures and iterating helps discover what works best for each task, both of which are prompt engineering best practices.",
+        "B": "Vague language introduces ambiguity that degrades response quality.",
+        "C": "Correct answer. Being specific and concise tells the model exactly what is expected without ambiguity, and experimenting with different prompt structures and iterating helps discover what works best for each task, both of which are prompt engineering best practices.",
+        "D": "Using the maximum token limit wastes tokens on irrelevant content.",
+        "E": "This option is incorrect. The correct answer is Be specific and concise in instructions and Experiment with different prompt structures and iterate."
+      }
+    },
+    "note": "Being specific and concise tells the model exactly what is expected without ambiguity, and experimenting with different prompt structures and iterating helps discover what works best for each task, both of which are prompt engineering best practices.",
+    "isMultiAnswer": true,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-03",
+    "services": []
+  },
+  {
+    "id": "aif-q449",
+    "question": "A team manages dozens of prompts across multiple generative AI applications and wants to track changes, compare variants, and revert to previous versions if quality drops. Which Amazon Bedrock feature meets this requirement?",
+    "options": {
+      "A": "Amazon Bedrock Knowledge Bases",
+      "B": "Amazon Bedrock Guardrails",
+      "C": "Amazon Bedrock Prompt Management",
+      "D": "Amazon Bedrock Model Evaluation"
+    },
+    "answer": "C",
+    "explanation": {
+      "summary": "Amazon Bedrock Prompt Management provides prompt versioning, variant comparison, and rollback capabilities, giving teams lifecycle control over their prompts across multiple applications.",
+      "options": {
+        "A": "Knowledge Bases index and retrieve documents for RAG.",
+        "B": "This option is incorrect. The correct answer is Amazon Bedrock Prompt Management.",
+        "C": "Correct answer. Amazon Bedrock Prompt Management provides prompt versioning, variant comparison, and rollback capabilities, giving teams lifecycle control over their prompts across multiple applications.",
+        "D": "Model Evaluation scores model performance."
+      }
+    },
+    "note": "Amazon Bedrock Prompt Management provides prompt versioning, variant comparison, and rollback capabilities, giving teams lifecycle control over their prompts across multiple applications.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.2",
+    "lastVerified": "2026-06-03",
+    "services": [
+      "Amazon Bedrock"
+    ]
+  },
+  {
+    "id": "aif-q461",
+    "type": "ordering",
+    "question": "A team is using Amazon Bedrock to customize a foundation model with their own labeled data so it performs better on a domain-specific support task. Arrange the steps of the fine-tuning workflow from first to last.",
+    "options": {
+      "A": "Run the fine-tuning job, which adjusts the model weights on the provided examples",
+      "B": "Select a base foundation model that supports customization for the target task",
+      "C": "Provision throughput for the resulting custom model and deploy it for inference",
+      "D": "Prepare and upload a labeled training dataset to Amazon S3 in the required format",
+      "E": "Evaluate the tuned model against a held-out validation set to confirm it improved"
+    },
+    "correctOrder": [
+      "B",
+      "D",
+      "A",
+      "E",
+      "C"
+    ],
+    "explanation": {
+      "summary": "You must first select a base foundation model that supports customization, then prepare and upload a labeled dataset to S3, because the training job needs both a target model and formatted data before it can start. Running the fine-tuning job adjusts the weights, after which you evaluate the tuned model on a held-out set and, only once it passes, provision throughput to deploy it.",
+      "options": {
+        "A": "This step belongs at position 3 in the correct sequence.",
+        "B": "This step belongs at position 1 in the correct sequence.",
+        "C": "This step belongs at position 5 in the correct sequence.",
+        "D": "This step belongs at position 2 in the correct sequence.",
+        "E": "This step belongs at position 4 in the correct sequence."
+      }
+    },
+    "note": "You must first select a base foundation model that supports customization, then prepare and upload a labeled dataset to S3, because the training job needs both a target model and formatted data before it can start.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.3",
+    "lastVerified": "2026-06-13",
+    "services": []
+  },
+  {
+    "id": "aif-q462",
+    "type": "matching",
+    "question": "Match each foundation model evaluation metric to what it primarily measures. Pair each metric on the left with the correct description on the right.",
+    "options": {
+      "A": "ROUGE",
+      "B": "BLEU",
+      "C": "BERTScore",
+      "D": "Perplexity"
+    },
+    "targets": {
+      "1": "Precision of n-gram overlap between generated text and references, used mainly to score machine translation quality",
+      "2": "How well a language model predicts a sample, measured as its uncertainty over the next token, where a lower value is better",
+      "3": "Recall-oriented overlap of n-grams between generated and reference text, used mainly to score summarization quality",
+      "4": "Semantic similarity between generated and reference text computed from contextual embeddings rather than exact token matches"
+    },
+    "correctMatches": {
+      "A": "3",
+      "B": "1",
+      "C": "4",
+      "D": "2"
+    },
+    "explanation": {
+      "summary": "ROUGE is recall-oriented and is the standard choice for summarization, while BLEU emphasizes n-gram precision against references and is the classic machine translation metric, so these two are easy to swap if you only remember that both use n-gram overlap. BERTScore moves beyond exact token matching by comparing contextual embeddings to capture semantic similarity, and perplexity is an intrinsic measure of how confidently a model predicts the next token, where lower is better.",
+      "options": {
+        "A": "Correct match: 3 - Recall-oriented overlap of n-grams between generated and reference text, used mainly to score summarization quality.",
+        "B": "Correct match: 1 - Precision of n-gram overlap between generated text and references, used mainly to score machine translation quality.",
+        "C": "Correct match: 4 - Semantic similarity between generated and reference text computed from contextual embeddings rather than exact token matches.",
+        "D": "Correct match: 2 - How well a language model predicts a sample, measured as its uncertainty over the next token, where a lower value is better."
+      }
+    },
+    "note": "ROUGE is recall-oriented and is the standard choice for summarization, while BLEU emphasizes n-gram precision against references and is the classic machine translation metric, so these two are easy to swap if you only remember that both use n-gram overlap.",
+    "isMultiAnswer": false,
+    "taskStatement": "3.4",
+    "lastVerified": "2026-06-13",
+    "services": []
+  }
+]

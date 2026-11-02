@@ -1,0 +1,112 @@
+[
+  {
+    "id": "saa-d1-001",
+    "question": "A company wants to ensure that data stored in Amazon S3 is encrypted at rest using keys fully managed by AWS, with no customer-managed key configuration, no per-key access policies, and no AWS KMS audit trail. Which encryption option should they use?",
+    "options": {
+      "A": "SSE-S3",
+      "B": "SSE-KMS",
+      "C": "SSE-C",
+      "D": "Client-side encryption"
+    },
+    "answer": "A",
+    "explanation": {
+      "summary": "SSE-S3 uses Amazon S3 managed keys (AES-256) with no customer involvement, no per-key policies, and no KMS audit trail.",
+      "options": {
+        "A": "Correct answer. SSE-S3 uses Amazon S3 managed keys (AES-256) with no customer involvement, no per-key policies, and no KMS audit trail.",
+        "B": "SSE-KMS uses AWS KMS keys (AWS-managed or customer-managed) and adds KMS access policies and CloudTrail integration, which is more than the requirement asks for.",
+        "C": "SSE-C requires the customer to provide and manage their own keys on every request.",
+        "D": "Client-side encryption happens before upload and is fully customer-managed."
+      }
+    },
+    "note": "SSE-S3 uses Amazon S3 managed keys (AES-256) with no customer involvement, no per-key policies, and no KMS audit trail.",
+    "isMultiAnswer": false
+  },
+  {
+    "id": "saa-d1-002",
+    "question": "Which AWS service provides a managed hardware security module (HSM) for cryptographic key storage?",
+    "options": {
+      "A": "AWS KMS",
+      "B": "AWS CloudHSM",
+      "C": "AWS Secrets Manager",
+      "D": "AWS Certificate Manager"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "AWS CloudHSM provides dedicated HSM instances. KMS is a managed key service but uses shared infrastructure. Secrets Manager stores secrets, not HSM keys. ACM manages SSL/TLS certificates.",
+      "options": {
+        "A": "KMS is a managed key service but uses shared infrastructure.",
+        "B": "Correct answer. AWS CloudHSM provides dedicated HSM instances. KMS is a managed key service but uses shared infrastructure. Secrets Manager stores secrets, not HSM keys. ACM manages SSL/TLS certificates.",
+        "C": "Secrets Manager stores secrets, not HSM keys.",
+        "D": "This option is incorrect. The correct answer is AWS CloudHSM."
+      }
+    },
+    "note": "AWS CloudHSM provides dedicated HSM instances. KMS is a managed key service but uses shared infrastructure. Secrets Manager stores secrets, not HSM keys. ACM manages SSL/TLS certificates.",
+    "isMultiAnswer": false
+  },
+  {
+    "id": "saa-d1-003",
+    "question": "A solutions architect needs to restrict access to an S3 bucket so that only a specific IAM role can access it. What should they configure?",
+    "options": {
+      "A": "S3 ACL",
+      "B": "S3 bucket policy with a Condition element",
+      "C": "S3 Object Lock",
+      "D": "S3 Versioning"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "A bucket policy with a Condition element can restrict access to a specific IAM role ARN. ACLs are legacy and less precise. Object Lock prevents deletion. Versioning preserves object versions.",
+      "options": {
+        "A": "This option is incorrect. The correct answer is S3 bucket policy with a Condition element.",
+        "B": "Correct answer. A bucket policy with a Condition element can restrict access to a specific IAM role ARN. ACLs are legacy and less precise. Object Lock prevents deletion. Versioning preserves object versions.",
+        "C": "Object Lock prevents deletion.",
+        "D": "This option is incorrect. The correct answer is S3 bucket policy with a Condition element."
+      }
+    },
+    "note": "A bucket policy with a Condition element can restrict access to a specific IAM role ARN. ACLs are legacy and less precise. Object Lock prevents deletion. Versioning preserves object versions.",
+    "isMultiAnswer": false
+  },
+  {
+    "id": "saa-d1-004",
+    "question": "Which feature of Amazon VPC allows you to monitor network traffic flowing to and from network interfaces?",
+    "options": {
+      "A": "VPC Peering",
+      "B": "VPC Flow Logs",
+      "C": "NAT Gateway",
+      "D": "Internet Gateway"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "VPC Flow Logs capture information about IP traffic going to and from network interfaces in a VPC. VPC Peering connects VPCs. NAT Gateway enables outbound internet for private subnets. Internet Gateway connects a VPC to the internet.",
+      "options": {
+        "A": "VPC Peering connects VPCs.",
+        "B": "Correct answer. VPC Flow Logs capture information about IP traffic going to and from network interfaces in a VPC. VPC Peering connects VPCs. NAT Gateway enables outbound internet for private subnets. Internet Gateway connects a VPC to the internet.",
+        "C": "NAT Gateway enables outbound internet for private subnets.",
+        "D": "Internet Gateway connects a VPC to the internet."
+      }
+    },
+    "note": "VPC Flow Logs capture information about IP traffic going to and from network interfaces in a VPC. VPC Peering connects VPCs. NAT Gateway enables outbound internet for private subnets. Internet Gateway connects a VPC to the internet.",
+    "isMultiAnswer": false
+  },
+  {
+    "id": "saa-d1-005",
+    "question": "A company requires all API calls to AWS services to be logged for compliance. Which service should they enable?",
+    "options": {
+      "A": "Amazon CloudWatch",
+      "B": "AWS CloudTrail",
+      "C": "AWS Config",
+      "D": "Amazon GuardDuty"
+    },
+    "answer": "B",
+    "explanation": {
+      "summary": "AWS CloudTrail records API calls made to AWS services. CloudWatch monitors metrics and logs. AWS Config tracks resource configurations. GuardDuty is a threat detection service.",
+      "options": {
+        "A": "CloudWatch monitors metrics and logs.",
+        "B": "Correct answer. AWS CloudTrail records API calls made to AWS services. CloudWatch monitors metrics and logs. AWS Config tracks resource configurations. GuardDuty is a threat detection service.",
+        "C": "AWS Config tracks resource configurations.",
+        "D": "GuardDuty is a threat detection service."
+      }
+    },
+    "note": "AWS CloudTrail records API calls made to AWS services. CloudWatch monitors metrics and logs. AWS Config tracks resource configurations. GuardDuty is a threat detection service.",
+    "isMultiAnswer": false
+  }
+]

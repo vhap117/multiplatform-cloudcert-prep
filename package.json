@@ -8,8 +8,9 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint:dashes": "node scripts/lint-dashes.mjs",
-    "verify": "npm run lint:dashes && ng lint && ng test --watch=false && ng build",
-    "lint": "ng lint"
+    "verify": "npm run lint:dashes && npm run lint:banks && ng lint && ng test --watch=false && ng build",
+    "lint": "ng lint",
+    "lint:banks": "node scripts/check-bank-drift.mjs"
   },
   "private": true,
   "packageManager": "npm@11.19.1",
