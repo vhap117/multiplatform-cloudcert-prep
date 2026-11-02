@@ -23,10 +23,14 @@ Blocks: 005, 006, 007, 008, 009, 011.
 - [ ] Define the `StudyRepository` TypeScript interface covering attempts,
       question results, domain aggregates, per-question mastery, and
       in-progress sessions. (`DATA-16` to `DATA-21`, `IONIC-20`)
-- [ ] Define schema version 1 DDL once, shared by both adapters: tables for
-      `attempts`, `attempt_questions`, `cert_progress`, `question_mastery`,
-      and `sessions`, using the entity fields listed in EXAM-ENGINE.md.
-      (`DATA-9A`, `CONT-37`)
+- [ ] Define schema version 1 as a **relational** shape, not an IndexedDB
+      shape: tables `attempts`, `attempt_questions`, `cert_progress`,
+      `question_mastery`, and `sessions`, each with named columns and row
+      records matching the entity fields in EXAM-ENGINE.md. IndexedDB then
+      stores one object store per table whose records mirror those rows, so the
+      future SQLite DDL is a transcription of the same schema rather than a
+      redesign. Document the mapping in a short comment block above the schema.
+      (`DATA-9A`, `IONIC-19`, `CONT-37`)
 - [ ] Implement the Capacitor SQLite adapter. The database lives in the app
       private data directory and is not world-readable. (`DATA-7`, `DATA-9`,
       `CONT-32`)

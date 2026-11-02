@@ -40,9 +40,11 @@ Blocks: 013 (Settings is part of the hardening pass).
       microphone, contacts, location, or storage-wide access; access only the
       app's private data directory through the repository adapter. Verify the
       installed manifest. (`PRIV-14` to `PRIV-16`)
-- [ ] Share and clipboard rules: the share sheet opens only on an explicit
-      tap; the app never reads the clipboard automatically; copy actions only
-      on explicit tap. (`PRIV-17`, `PRIV-18`)
+- [ ] Share and clipboard rules: sharing or copying happens only on an
+      explicit user action, never automatically. The app never reads the
+      clipboard on its own. The web build has no system share sheet; when the
+      native phase adds one, it plugs into the same explicit-action rule.
+      (`PRIV-17`, `PRIV-18`)
 - [ ] Optional device lock: if offered, a biometric or passcode gate that is
       purely local, is not an account identity, never creates a remote
       profile, and falls back cleanly to no-lock when unavailable without

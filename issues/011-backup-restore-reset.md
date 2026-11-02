@@ -26,9 +26,15 @@ Blocks: 013 (export and import are in the hardening pass).
       progress, per-question mastery, and any in-progress sessions. The format
       is human-readable JSON or a documented archive containing JSON.
       (`DATA-24`, `DATA-25`)
-- [ ] Export flows through the device share sheet or file picker, never a web
-      download. If no share target exists, degrade to saving or copying
-      locally without an error. (`DATA-26`, `CERT-36`, `PRIV-19`)
+- [ ] Define a backup transport interface with two responsibilities: write a
+      backup file and read a backup file. The web implementation downloads a
+      file and reads one through a file input. The native implementation, when
+      it arrives, uses the Capacitor Filesystem and Share plugins behind the
+      same interface. No screen may call a download API or a Capacitor plugin
+      directly. (`DATA-26`, `CERT-36`, `PRIV-19`, `IONIC-20`)
+- [ ] Degrade gracefully when the transport is unavailable: if a write or read
+      cannot start, surface a clear local error instead of failing silently.
+      (`PRIV-19`)
 - [ ] Import validates schema version and contents before touching anything;
       an incompatible version or malformed file is rejected with the existing
       database untouched. (`DATA-27`, `DATA-29`)

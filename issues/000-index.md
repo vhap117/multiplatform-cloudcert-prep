@@ -45,6 +45,41 @@ SQLite behind the existing interface, run the contract suite against both
 adapters, then the device checklist. Until then, `android/` and `ios/` stay in
 `.gitignore` and unused.
 
+## Returning to native later: the seams already in place
+
+The web-only phase is not a throwaway. Six decisions made now are what make the
+native phase an addition rather than a rewrite. Hold these while building; each
+one is cheap today and expensive to retrofit.
+
+| Seam | Where | What it buys |
+|---|---|---|
+| `StudyRepository` interface | 002 | SQLite becomes one new class behind the existing interface. Features never change. |
+| Relational schema shape | 002 | The IndexedDB stores mirror table rows, so the SQLite DDL is a transcription, not a redesign. |
+| Backup transport interface | 011 | Web downloads a file; native swaps in the Filesystem and Share plugins. Screens stay untouched. |
+| Single back entry point | 010 | The hardware back handler calls one navigation method instead of reaching into screens. |
+| Platform-neutral navigation and CSS | 001, 010 | Safe-area insets and stack navigation already assume a phone viewport. |
+| Accessibility semantics already built | 013 | The native phase adds the hardware screen-reader pass, not the ARIA work. |
+
+Two more that are inherent rather than planned: the exam timer already uses
+wall-clock timestamps (issue 004), so backgrounding behaviour carries over; and
+the content banks are bundled assets, so nothing depends on a browser fetch.
+
+The one thing the web phase cannot prove is `appStateChange` behaviour, since a
+browser tab does not model an OS suspending a process. Treat that as unverified
+until the device pass, not as tested.
+
+### Issues the native phase will need
+
+None of these exist yet. They are listed so the return path is explicit:
+
+1. Add Capacitor platforms, install the SQLite plugin, and configure the app.
+2. Implement the SQLite adapter against the existing interface and run the
+   contract suite against both stores.
+3. Replace the backup transport's web implementation with the native one.
+4. Wire the hardware back handler to the existing navigation back entry point.
+5. Run the deferred device checklist from issue 013 on real hardware.
+6. Add the store release tasks: signing, packaging, and submission.
+
 ## Phases and dependency order
 
 | Phase | Issue | Title | Depends on |
