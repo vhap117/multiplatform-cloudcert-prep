@@ -1,95 +1,112 @@
-# Issue 013: Accessibility, offline, and release hardening
+# Issue 013: Web accessibility, offline, and quality hardening
 
 ## Context
 
-This is the closing pass. It is not new features; it is the systematic
-verification and fixing of the guarantees every other issue promised:
-accessibility, lifecycle resilience, storage failure behaviour, offline
-operation, and the device release checklist. Work the checklist top to bottom,
-fix what fails, and re-run until it holds.
+This is the closing pass for the web-only phase. It is not new features; it is
+the systematic verification and fixing of the guarantees every other issue
+promised, in the environment we are actually building for: Chrome, `ng serve`
+or `ionic serve`, with the IndexedDB adapter.
 
-Spec: `../ionic-requirements/08-accessibility-and-resilience.md` (all of it),
-`../ionic-requirements/11-offline-capabilities.md` (all of it),
-`../ionic-requirements/07-privacy-and-telemetry.md` (audit checklist), and the
-verification expectations in `../ionic-requirements/README.md`.
+Device and native checks are deliberately absent. They belong to a future
+native phase, described in the scope note in `000-index.md`. What stays here is
+what can be proven honestly in a browser: accessibility semantics, keyboard
+operation, contrast, browser-offline behaviour, storage failure handling, and
+runtime health.
 
-Traces: `ACC-1` to `ACC-53`, `OFF-1` to `OFF-37`, `CONT-45` to `CONT-47`,
-`IONIC-7`, `IONIC-17`.
+Spec: `../ionic-requirements/08-accessibility-and-resilience.md`,
+`../ionic-requirements/11-offline-capabilities.md`, and
+`../ionic-requirements/07-privacy-and-telemetry.md`.
+
+Traces: `ACC-1` to `ACC-30`, `ACC-38` to `ACC-53`, `OFF-1` to `OFF-6`,
+`OFF-21` to `OFF-26`, `OFF-32`, `CONT-42` to `CONT-47`, `CONT-50`.
 
 Depends on: 005, 006, 007, 008, 009, 010, 011, 012.
-Blocks: nothing. This is the release gate.
+Blocks: nothing. This is the web release gate.
 
 ## Tasks
 
-- [ ] Screen reader pass with TalkBack: screen titles, question text,
-      options, feedback, progress bars, filter states, and modal focus all
-      announce correctly; focus returns to the trigger when a modal closes.
+- [ ] Accessibility semantics audit: every interactive element has an
+      accessible name, decorative icons are hidden from assistive technology,
+      screen titles and route changes are announced, and modals expose a dialog
+      role, a label, focus trapping, and return focus to their trigger.
       (`ACC-1` to `ACC-10`)
-- [ ] External keyboard pass on Android: every focusable element shows a
-      visible focus indicator. (`ACC-11`)
-- [ ] Large text pass: honour the system font size setting; nothing clips,
-      overflows, or needs horizontal scrolling on any screen. (`ACC-12`,
-      `ACC-29`)
+- [ ] Question and feedback semantics: grids, progress bars, and session
+      controls expose state through ARIA, not colour; correct and incorrect
+      feedback always carries text; error and success notices are announced.
+      (`ACC-4` to `ACC-7`)
+- [ ] Automated accessibility scan with axe (or equivalent) across every
+      screen in both themes, with zero violations at the configured rule set.
+      (supports `ACC-1` to `ACC-13`)
+- [ ] Keyboard-only pass: reach and operate every action with Tab, Shift+Tab,
+      Enter, Space, and Escape; visible focus indicator on every focusable
+      element; focus order follows reading order. (`ACC-11`, `ACC-2`)
+- [ ] Large text pass: browser zoom to 200 percent and a bumped root font size
+      clip nothing, overflow nothing, and require no horizontal scrolling on
+      any screen. (`ACC-12`, `ACC-29`)
 - [ ] Contrast pass: 4.5:1 normal text and 3:1 large text in both themes on
-      every screen, using the tokens from DESIGN.md. (`ACC-13`, `ACC-14`,
-      `ACC-18`)
-- [ ] Motion pass: reduced motion collapses entrances and staggers to plain
-      fades; press feedback stays within 90 ms; gestures are never the only
-      path to an action. (`ACC-20` to `ACC-25`)
-- [ ] Keyboard avoidance: inputs are never obscured by the soft keyboard on
-      either platform. (`ACC-30`)
-- [ ] Layout pass: safe areas, portrait first, landscape and tablet usable,
-      long lists virtualized or paginated, status and navigation bars readable
-      in both themes. (`ACC-26` to `ACC-28`)
-- [ ] Lifecycle gauntlet on a real device for every session kind: background,
-      screen lock, force close, phone restart, and app upgrade during an
-      active session each restore correctly; a timed exam ended by the wall
-      clock while backgrounded shows results on return. (`ACC-34` to
-      `ACC-37`, `IONIC-7`)
-- [ ] Storage failure drills: full disk, interrupted write, corrupted row,
-      migration failure, and failed bank load each produce a visible,
-      retryable, recoverable error without corrupting other data and without
-      advancing state as if saved. (`ACC-38` to `ACC-47`)
-- [ ] Offline gauntlet in airplane mode: install, study exam, mock exam,
-      domain practice, history, statistics, settings, backup export and
-      import, and app restart with no network, with zero network errors and
-      zero spinners waiting on connectivity. (`OFF-1` to `OFF-6`,
-      `OFF-21` to `OFF-26`, `OFF-32`)
+      every screen, using the DESIGN.md tokens. (`ACC-13`, `ACC-14`, `ACC-18`)
+- [ ] Motion pass: the reduced-motion override collapses entrances and
+      staggers to plain fades; press feedback stays within 90 ms; no gesture is
+      the only path to an action. (`ACC-20` to `ACC-25`)
+- [ ] Responsive layout pass: phone width, tablet width, and the 720 px capped
+      content column; long lists virtualized or paginated; nothing extends
+      under a simulated safe area. (`ACC-26` to `ACC-28`)
+- [ ] Storage failure drills: quota exceeded, interrupted write, corrupted or
+      unknown row, migration failure, and failed bank load each produce a
+      visible, retryable, recoverable error without corrupting other data and
+      without advancing state as if saved. (`ACC-38` to `ACC-47`)
+- [ ] Browser-offline gauntlet with devtools offline mode: mock exam, study
+      exam, domain practice, history, statistics, settings, and backup export
+      and import all succeed with zero network errors and zero spinners
+      waiting on connectivity. (`OFF-1` to `OFF-6`, `OFF-21` to `OFF-26`,
+      `OFF-32`)
+- [ ] Network audit: confirm zero requests during study flows in the devtools
+      network panel, and that a reload with the network blocked still starts
+      into a usable app. (`OFF-2`, `OFF-3`, `PRIV-3`)
 - [ ] Runtime health sweep: no unexpected console errors in normal flows, no
       broken icons or images, skeletons or labelled spinners instead of blank
-      screens, quick cold start, no polling or background loops, no network
-      requests during study. (`ACC-48` to `ACC-53`)
-- [ ] Privacy audit: airplane-mode use of every core flow, no third-party SDK
-      calls in the network log, share sheet only after explicit tap, no
-      answer or question content in logcat or the system log, privacy
-      statement reachable from Settings, no unnecessary permissions in the
-      installed manifest. (`07-privacy-and-telemetry.md` audit checklist)
-- [ ] Release build: a reproducible Android package with embedded banks and
-      assets, documented permissions only, and signing and publishing secrets
-      outside the repository. (`CONT-31` to `CONT-35`, `CONT-40`, `CONT-41`)
-- [ ] Regression gate: the full unit and contract test suites pass in CI
-      alongside the content validator, for both storage adapters. (`CONT-42`
-      to `CONT-44`, `CONT-50`)
-- [ ] Document the hardening results: a short report listing each checklist
-      item with pass, fixed, or known limitation, so the next release starts
-      from evidence instead of memory.
+      screens, fast first paint, no polling or background loops.
+      (`ACC-48` to `ACC-53`)
+- [ ] Privacy audit for the web scope: no third-party analytics or SDK calls
+      in the network log, share and clipboard only on explicit user action, no
+      answer or question content in the console, privacy statement reachable
+      from Settings, no unnecessary browser permission requests.
+      (`07-privacy-and-telemetry.md` audit checklist, `PRIV-14` to `PRIV-19`)
+- [ ] Production web build: `ng build --configuration production` succeeds,
+      embeds the banks and assets, contains no secrets, and contains no
+      web-only leftovers rejected by `CONT-38`. (`CONT-34` to `CONT-41`)
+- [ ] Regression gate in CI: unit tests, repository contract tests against
+      IndexedDB, the content validator, the em-dash lint, and the
+      accessibility scan all run and pass. (`CONT-42` to `CONT-47`, `CONT-50`)
+- [ ] Document the hardening results: one report listing each checklist item as
+      pass, fixed, or deferred with a reason, so the native phase starts from
+      evidence instead of memory.
 
 ## Acceptance criteria
 
-- The two verification checklists from `08-accessibility-and-resilience.md`
-      and `11-offline-capabilities.md` pass on a real phone without skipped
-      items, or every skipped item is reported as a named known limitation
-      with a reason.
-- The privacy audit checklist from `07-privacy-and-telemetry.md` passes with
-      no unanswered items.
-- A clean install on the target phone followed by the ten verification steps
-      in `README.md` passes end to end.
-- CI is green: unit tests, contract tests against both adapters, content
-      validator, and the em-dash lint from issue 001.
+- Every checklist item above passes in Chrome, or is recorded as deferred with
+  a named reason. No item stays silently unchecked.
+- The axe scan reports zero violations on every screen in both themes.
+- With devtools offline mode on, every core flow completes and the network
+  panel shows no failed requests and no unexpected successful ones.
+- Storage drills reproduce each failure and each one surfaces a retryable,
+  recoverable state rather than a crash or a false success.
+- The production build succeeds and CI is green.
+
+## Deferred to the native phase
+
+These are named here so nobody mistakes their absence for an oversight:
+
+- TalkBack and VoiceOver passes on hardware.
+- Android hardware back, iOS back gesture, safe-area insets on a real device.
+- Force close, phone restart, and app upgrade during an active session.
+- Airplane-mode behaviour and the installed permission manifest.
+- Capacitor SQLite adapter and its side of the contract suite.
+- Native packaging, signing, and store submission.
 
 ## Out of scope
 
-- New features. Anything discovered here that needs new behaviour gets its
-      own issue instead of growing this one.
-- App store submission itself; this issue produces the release-ready build
-      and the evidence, publishing stays a separate human decision.
+- New features. Anything discovered here that needs new behaviour gets its own
+  issue instead of growing this one.
+- Publishing. This issue produces a verified web build and the evidence;
+  deploying it stays a separate human decision.

@@ -15,22 +15,35 @@ Source of truth:
 Global rules that apply to every issue: `IONIC-1` to `IONIC-20` in
 `../ionic-requirements/README.md`. Read them before starting any issue.
 
-## Platform scope
+## Scope: web platform only, for now
 
-The active target is **Android only**. This host is Linux on WSL2, which cannot
-build iOS at all. iOS is deferred, not cancelled:
+All development and all verification currently target the **web platform**:
+the app running in Chrome through `ng serve` or `ionic serve`, with the
+IndexedDB storage adapter. Nothing in this plan requires a phone, an emulator,
+or a native build to proceed.
 
-- Code stays platform-neutral so iOS can be added later without a rewrite.
-- No task in these issues depends on iOS being present.
-- When iOS enters scope, it needs a macOS host or a macOS CI runner, plus a new
-      issue for its verification pass.
-- Any iOS-only requirement in `../ionic-requirements/` stays as documentation
-      of intent until that issue exists.
+Consequences, stated plainly so no task waits on something we are not doing:
 
-Android native directories (`android/`) and `ios/` are listed in `.gitignore`,
-so Capacitor regenerates them from config. If you later make manual native edits
-(signing config, manifest permissions, custom icons), reverse that and commit
-them; native hand-edits are source, not build output.
+- **No Capacitor platforms are added.** No `android/`, no `ios/`, no
+  `npx cap add` in any task. The Capacitor dependencies can be installed, but
+  platform wiring waits.
+- **No SQLite adapter yet.** IndexedDB is the only implemented store. The
+  repository interface is still defined now, so feature code never binds to
+  IndexedDB directly and swapping in SQLite later stays a one-module change.
+- **No device verification.** TalkBack, hardware back, force-close, phone
+  restart, airplane mode, and installed-manifest checks are all deferred.
+- **Accessibility is still built, not tested on hardware.** ARIA roles, labels,
+  focus order, and contrast are implemented and checked in the browser and with
+  automated tooling. Real screen-reader passes come with the native phase.
+- **Offline is verified through the browser**, using devtools offline mode and
+  the absence of network requests, not airplane mode on a handset.
+- **Lenses stay platform-neutral.** Navigation, safe-area insets, and the
+  storage contract are written so Android can be added later without a rewrite.
+
+When the native phase starts it gets its own issues: add the platforms, port
+SQLite behind the existing interface, run the contract suite against both
+adapters, then the device checklist. Until then, `android/` and `ios/` stay in
+`.gitignore` and unused.
 
 ## Phases and dependency order
 

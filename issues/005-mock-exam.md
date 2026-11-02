@@ -37,10 +37,11 @@ Blocks: 009, 010.
       (`EXAM-13`, `EXAM-15`)
 - [ ] Save each answer locally the moment it is given, before any navigation.
       (`EXAM-14`)
-- [ ] Leave guard: in-app navigation away and the Android hardware back button
-      open a leave-confirmation modal; confirming preserves the attempt and
-      returns to the previous screen without discarding answers. (`EXAM-16`
-      to `EXAM-19`)
+- [ ] Leave guard: in-app navigation away opens a leave-confirmation modal;
+      confirming preserves the attempt and returns to the previous screen
+      without discarding answers. The hardware back handler is deferred to the
+      native phase and must reuse this same guard when added. (`EXAM-16` to
+      `EXAM-19`)
 - [ ] Wall-clock timer: deadline stored as `startedAt + examTimeSeconds`;
       remaining time recomputed from `Date.now()`; backgrounding and screen
       lock keep time elapsing; on resume recompute and restore without losing
@@ -80,9 +81,9 @@ Blocks: 009, 010.
 - A completed 2-minute attempt still saves to history. (`EXAM-33`)
 - Scoring matches the engine unit tests: 65-question CLF-C02 exam, known
       answer pattern, expected scaled score and per-domain percentages.
-- Android hardware back during the exam opens the leave modal instead of
-      exiting.
-- The whole flow runs in airplane mode with zero network errors.
+- In-app back during the exam opens the leave modal instead of discarding.
+- The whole flow runs with the browser offline and produces zero network
+      errors.
 
 ## Out of scope
 

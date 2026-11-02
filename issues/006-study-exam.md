@@ -80,7 +80,10 @@ Blocks: 009.
       dialog appears; discarding removes the session from storage.
 - Complete a study exam: it appears in history, distinguishable from mock
       exams, and contributes to best score and mastery.
-- TalkBack announces feedback and progress-bar values correctly.
+- Feedback and progress-bar values are exposed through ARIA roles, labels,
+      and live-region announcements, verified with an accessibility audit in
+      the browser. Hardware screen-reader confirmation is deferred to the
+      native phase.
 - Correct + wrong = answered holds after every answer and after every resume
       (unit and UI tested).
 

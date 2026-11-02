@@ -70,7 +70,7 @@ Blocks: 013 (history is part of the hardening pass).
       is untouched; the confirmation names the scope.
 - Statistics match hand-computed values from a known fixture and never invent
       numbers on a failed read.
-- Everything above works in airplane mode.
+- Everything above works with the browser offline.
 
 ## Out of scope
 

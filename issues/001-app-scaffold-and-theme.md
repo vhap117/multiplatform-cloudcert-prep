@@ -21,9 +21,9 @@ Blocks: every other issue.
 
 ## Tasks
 
-- [ ] Create the project: Ionic + Angular (standalone components) + Capacitor,
-      with the Android platform added. iOS is deferred (see the platform scope
-      note in `000-index.md`). (`IONIC-4`, `CONT-31`)
+- [ ] Create the project: Ionic + Angular (standalone components). Capacitor
+      dependencies may be installed, but no native platform is added. See the
+      scope note in `000-index.md`. (`IONIC-4`, `CONT-31`)
 - [ ] Configure tooling: TypeScript strict mode, ESLint, and a unit test
       runner for pure functions so `npm test` works from day one. (`CONT-42`)
 - [ ] Add a content and copy lint check that fails on em dashes and en dashes
@@ -63,7 +63,7 @@ Blocks: every other issue.
 - With reduced motion on, pressing and navigating shows no entrance animation.
 - `npm test` runs green (even if it only covers the theme service).
 - The dash lint check fails a commit that adds an em dash or en dash.
-- `npx cap sync android` completes.
+- `ng serve` serves the app and the four tabs render in Chrome.
 
 ## Out of scope
 

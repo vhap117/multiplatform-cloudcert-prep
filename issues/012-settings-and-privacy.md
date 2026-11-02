@@ -64,7 +64,9 @@ Blocks: 013 (Settings is part of the hardening pass).
 - Choosing dark, light, and system each persists across app restarts, with
       system following the device preference live.
 - The installed Android manifest declares no camera,
-      microphone, contacts, location, or storage-wide permission.
+      microphone, contacts, location, or storage-wide permission. Deferred to
+      the native phase; in the current scope, verify that the app requests no
+      browser permission and ships no permission-gated API usage.
 - A code grep shows no clipboard read API and no telemetry or analytics SDK
       import anywhere in the app.
 - The privacy statement is reachable offline from Settings and makes all four

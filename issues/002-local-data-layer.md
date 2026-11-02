@@ -3,10 +3,11 @@
 ## Context
 
 Every feature in this app reads and writes through one repository interface.
-On a device the backing store is Capacitor SQLite; in the browser during
-`ionic serve` development and tests it is IndexedDB. Both adapters share one
-schema, one migration chain, and one contract test suite. Feature code never
-touches SQLite or IndexedDB directly.
+The interface is defined now and implemented against IndexedDB, which is the
+only store in the current web-only scope. A Capacitor SQLite adapter will
+implement the same interface later, sharing the schema, migrations, and
+contract suite. Feature code never touches IndexedDB or SQLite directly, so
+that swap stays a one-module change.
 
 Spec: `../ionic-requirements/01-local-data-and-device.md`,
 `../ionic-requirements/cert-banks/EXAM-ENGINE.md` (local persistence section).
@@ -29,6 +30,7 @@ Blocks: 005, 006, 007, 008, 009, 011.
 - [ ] Implement the Capacitor SQLite adapter. The database lives in the app
       private data directory and is not world-readable. (`DATA-7`, `DATA-9`,
       `CONT-32`)
+      **Deferred: web-only scope. Do not start this task.**
 - [ ] Implement the IndexedDB adapter for browser development and automated
       UI tests. It must behave identically, including error handling, so bugs
       surface during `ionic serve`. (`DATA-7`, `DATA-9C`, `ACC-43`, `CONT-33`)
@@ -56,14 +58,16 @@ Blocks: 005, 006, 007, 008, 009, 011.
 
 ## Acceptance criteria
 
-- The same contract test suite passes against the IndexedDB adapter in a
-      browser and the SQLite adapter on a device or emulator.
+- The repository contract test suite passes against the IndexedDB adapter in
+      Chrome. The same suite will run against SQLite when the native phase
+      starts; the tests are written against the interface so no rewrite is
+      needed.
 - Killing the process mid-write never leaves a partial answer: on next launch
       the transaction is either fully applied or fully absent.
 - A forced migration failure in a test shows the recoverable error and the
       pre-migration data still reads correctly.
-- Grep proves feature code imports only `StudyRepository`, never the
-      Capacitor SQLite plugin or IndexedDB APIs directly. (`IONIC-20`)
+- Grep proves feature code imports only `StudyRepository`, never IndexedDB
+      APIs directly and never the Capacitor SQLite plugin. (`IONIC-20`)
 - Nothing in the data layer performs a network request. (`DATA-15`)
 
 ## Out of scope

@@ -51,10 +51,11 @@ Blocks: 008 (dashboard mastery display), 009.
 - [ ] Failure handling: failed save shows a visible retryable error; failed
       bank or session load shows a retryable error and re-enables Start.
       (`PRACT-24`, `PRACT-25`)
-- [ ] Leave practice guard: Android hardware back and in-app back open a Leave
-      practice confirmation; Keep practicing dismisses it; confirming Leave
-      preserves the session for resume. Switching certs routes through the
-      same guard. (`PRACT-27` to `PRACT-30`)
+- [ ] Leave practice guard: in-app back opens a Leave practice
+      confirmation; Keep practicing dismisses it; confirming Leave preserves
+      the session for resume. Switching certs routes through the same guard.
+      The hardware back handler is deferred to the native phase and must reuse
+      this guard. (`PRACT-27` to `PRACT-30`)
 - [ ] Lifecycle: backgrounding preserves the session and current answer;
       force close and reopen offers Resume practice. Practice never sets the
       timed-exam active state and never locks unrelated navigation.
@@ -80,8 +81,8 @@ Blocks: 008 (dashboard mastery display), 009.
       history.
 - Mastery percentage on screen matches the coverage definition and never
       exceeds 100.
-- Whole flow runs in airplane mode; switching certs mid-session triggers the
-      leave guard, never silent data loss.
+- Whole flow runs with the browser offline; switching certs mid-session
+      triggers the leave guard, never silent data loss.
 
 ## Out of scope
 

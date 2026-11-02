@@ -64,16 +64,16 @@ Blocks: 013 (export and import are in the hardening pass).
 
 ## Acceptance criteria
 
-- Export on the IndexedDB adapter, wipe, import on the SQLite adapter (or
-      emulator): history, mastery, settings, and an in-progress study exam all
-      match after restore.
+- Export from one browser profile, wipe, import into a fresh profile:
+      history, mastery, settings, and an in-progress study exam all match after
+      restore. Repeat the same round trip once the SQLite adapter lands.
 - Importing a malformed file or a newer incompatible schema version leaves
       the existing database byte-for-byte unchanged and shows a clear error.
 - The replace confirmation names exactly what will be overwritten before any
       write happens.
 - Reset for one cert leaves other certs intact; delete-all empties study data
       but the app and the question bank keep working offline.
-- The entire export and import flow completes in airplane mode.
+- The entire export and import flow completes with the browser offline.
 
 ## Out of scope
 

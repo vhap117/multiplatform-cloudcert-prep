@@ -37,11 +37,11 @@ Blocks: 013 (navigation is part of the hardening pass).
       through the issue 005 or 007 leave guard. Starting a session while
       another cert has one in progress never silently replaces it. (`CERT-8`,
       `CERT-23`)
-- [ ] Pushed screens show a clear back affordance. Android hardware back
-      closes an open modal first, then pops one level in the stack, and never
-      exits the app from a nested screen. Keep the navigation stack free of
-      platform-specific assumptions so iOS can be added later without a
-      rewrite. (`CERT-15` to `CERT-17`, `ACC-31`)
+- [ ] Pushed screens show a clear back affordance. In-app back pops one level
+      in the stack and closes an open modal first. The Android hardware back
+      handler is deferred to the native phase; the navigation service must
+      expose one back entry point so the native handler can call it without
+      touching screen code. (`CERT-15` to `CERT-17`, `ACC-31`)
 - [ ] Preserve the selected tab and cert across app restarts. (`CERT-14`)
 - [ ] Cold start restores the last screen or a safe home screen; restoring
       directly into a timed exam requires a resume confirmation first.
@@ -61,9 +61,8 @@ Blocks: 013 (navigation is part of the hardening pass).
 - Switching certs updates every cert-scoped surface and leaves the previous
       cert's data intact (verified against a fixture with two certs' worth of
       history).
-- Android hardware back during a mock exam opens the leave modal; closing the
-      modal then pressing back pops the screen, and never exits the app from a
-      nested screen.
+- In-app back during a mock exam opens the leave modal; closing the modal
+      then pressing back pops the screen.
 - Force close on the Practice tab: reopening lands on the Practice tab with
       the same cert selected, and a timed exam requires a resume confirmation
       before showing.
