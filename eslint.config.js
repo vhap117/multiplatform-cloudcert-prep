@@ -38,4 +38,50 @@ module.exports = defineConfig([
     extends: [angular.configs.templateRecommended, angular.configs.templateAccessibility],
     rules: {},
   },
+  {
+    /*
+     * Storage boundary (IONIC-20, DATA-15).
+     *
+     * Feature code depends on the StudyRepository interface only. Reaching for
+     * the IndexedDB implementation, a Capacitor SQLite plugin, or a network API
+     * from anywhere outside the storage layer is a defect, so it fails lint
+     * instead of relying on review.
+     */
+    files: ['src/app/**/*.ts'],
+    ignores: ['src/app/core/storage/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/indexeddb-study-repository', '**/storage/indexeddb*'],
+              message:
+                'Feature code must depend on StudyRepository, not the adapter (IONIC-20).',
+            },
+            {
+              group: ['@capacitor-community/sqlite', '@capacitor/*'],
+              message:
+                'Native plugins are only reached through the storage adapter.',
+            },
+          ],
+        },
+      ],
+      'no-restricted-globals': [
+        'error',
+        {
+          name: 'indexedDB',
+          message: 'Use StudyRepository instead of IndexedDB directly (IONIC-20).',
+        },
+        {
+          name: 'fetch',
+          message: 'Core study flows must not use the network (DATA-15, OFF-3).',
+        },
+        {
+          name: 'XMLHttpRequest',
+          message: 'Core study flows must not use the network (DATA-15, OFF-3).',
+        },
+      ],
+    },
+  },
 ]);
