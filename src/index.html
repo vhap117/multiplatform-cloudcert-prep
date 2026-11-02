@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>CloudCertPrep</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f8f9fa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#16191f" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script>
+    /*
+     * Runs before first paint so the stored theme is already on the root
+     * element. This is what prevents a flash of the wrong theme (ACC-17).
+     * ThemeService re-applies the same class afterwards and keeps it in sync.
+     */
+    (function () {
+      var root = document.documentElement;
+      try {
+        var storedTheme = localStorage.getItem('ccp.theme');
+        var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = storedTheme === 'light' || storedTheme === 'dark'
+          ? storedTheme
+          : (systemDark ? 'dark' : 'light');
+        root.classList.add('theme-' + theme);
+
+        var storedMotion = localStorage.getItem('ccp.motion');
+        var systemReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var reduce = storedMotion === 'reduce' || (storedMotion !== 'full' && systemReduce);
+        if (reduce) {
+          root.classList.add('reduce-motion');
+        }
+      } catch (error) {
+        root.classList.add('theme-light');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>

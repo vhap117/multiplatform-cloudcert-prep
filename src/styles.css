@@ -1,0 +1,449 @@
+/*
+ * CloudCertPrep Ionic: global styles.
+ *
+ * Order matters. Ionic core first, then the design tokens from DESIGN.md so
+ * the tokens win over Ionic defaults, then base element styles, then the
+ * small set of shared utility classes.
+ *
+ * All colours are stored as RGB channel triplets so they can be used as
+ * `rgb(var(--token) / alpha)` when an opacity is needed.
+ */
+
+@import "@ionic/angular/css/core.css";
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* ------------------------------------------------------------------ *
+ * Non-colour tokens. Theme independent.
+ * ------------------------------------------------------------------ */
+
+:root {
+  /* Typography. System stack only, no web fonts (IONIC-15). */
+  --ccp-font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ccp-font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Spacing, 8 px grid. */
+  --ccp-space-xs: 4px;
+  --ccp-space-sm: 8px;
+  --ccp-space-md: 12px;
+  --ccp-space-base: 16px;
+  --ccp-space-lg: 24px;
+  --ccp-space-xl: 32px;
+  --ccp-space-2xl: 48px;
+  --ccp-space-3xl: 64px;
+
+  /* Radius. */
+  --ccp-radius-card: 16px;
+  --ccp-radius-input: 12px;
+  --ccp-radius-inner: 8px;
+  --ccp-radius-pill: 999px;
+
+  /* Motion curves. */
+  --ccp-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ccp-ease-inout: cubic-bezier(0.45, 0, 0.15, 1);
+  --ccp-ease-press: cubic-bezier(0.2, 0, 0, 1);
+  --ccp-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+  /* Motion durations. */
+  --ccp-dur-press: 90ms;
+  --ccp-dur-fast: 180ms;
+  --ccp-dur-base: 200ms;
+  --ccp-dur-gentle: 250ms;
+  --ccp-dur-slow: 350ms;
+  --ccp-dur-reveal: 520ms;
+  --ccp-dur-settle: 600ms;
+
+  /* Layout. */
+  --ccp-gutter: var(--ccp-space-base);
+  --ccp-content-max: 720px;
+  --ccp-tap-target: 44px;
+
+  /* Safe areas. Zero on devices that do not report them. */
+  --ccp-safe-top: env(safe-area-inset-top, 0px);
+  --ccp-safe-right: env(safe-area-inset-right, 0px);
+  --ccp-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --ccp-safe-left: env(safe-area-inset-left, 0px);
+}
+
+/* ------------------------------------------------------------------ *
+ * Light theme, the default.
+ * ------------------------------------------------------------------ */
+
+:root,
+.theme-light {
+  color-scheme: light;
+
+  --ccp-brand: 255 153 0;
+  --ccp-brand-hover: 236 114 17;
+  --ccp-on-brand: 22 25 31;
+  --ccp-cta: 22 29 38;
+  --ccp-on-cta: 255 255 255;
+  --ccp-bg: 248 249 250;
+  --ccp-bg-card: 255 255 255;
+  --ccp-bg-card-hover: 250 251 252;
+  --ccp-header-bg: 255 255 255;
+  --ccp-on-header: 22 25 31;
+  --ccp-border: 233 235 237;
+  --ccp-link: 0 115 187;
+  --ccp-success: 22 101 52;
+  --ccp-danger: 185 28 28;
+  --ccp-on-danger: 255 255 255;
+  --ccp-warning: 154 69 9;
+  --ccp-warning-fill: 217 119 6;
+  --ccp-text: 22 25 31;
+  --ccp-text-muted: 84 91 100;
+
+  --ccp-shadow-card: 0 1px 3px rgb(15 25 35 / 0.06), 0 1px 2px rgb(15 25 35 / 0.04);
+  --ccp-shadow-card-hover: 0 8px 24px -8px rgb(15 25 35 / 0.14),
+    0 2px 8px -2px rgb(15 25 35 / 0.08);
+  --ccp-shadow-overlay: 0 24px 64px -16px rgb(15 25 35 / 0.24);
+  --ccp-card-border: 0;
+}
+
+/* ------------------------------------------------------------------ *
+ * Dark theme. A full theme, not an inversion (ACC-14).
+ * Cards gain a hairline border and lose the base shadow.
+ * ------------------------------------------------------------------ */
+
+.theme-dark {
+  color-scheme: dark;
+
+  --ccp-brand: 255 153 0;
+  --ccp-brand-hover: 236 114 17;
+  --ccp-on-brand: 22 25 31;
+  --ccp-cta: 244 246 248;
+  --ccp-on-cta: 22 25 31;
+  --ccp-bg: 22 25 31;
+  --ccp-bg-card: 28 35 47;
+  --ccp-bg-card-hover: 35 47 62;
+  --ccp-header-bg: 22 25 31;
+  --ccp-on-header: 244 246 248;
+  --ccp-border: 50 60 73;
+  --ccp-link: 68 156 214;
+  --ccp-success: 74 222 128;
+  --ccp-danger: 248 113 113;
+  --ccp-on-danger: 22 25 31;
+  --ccp-warning: 251 191 36;
+  --ccp-warning-fill: 251 191 36;
+  --ccp-text: 244 246 248;
+  --ccp-text-muted: 141 153 168;
+
+  --ccp-shadow-card: none;
+  --ccp-shadow-card-hover: 0 0 0 1px rgb(255 255 255 / 0.08),
+    0 10px 30px -5px rgb(0 0 0 / 0.55);
+  --ccp-shadow-overlay: 0 0 0 1px rgb(255 255 255 / 0.08),
+    0 24px 64px -16px rgb(0 0 0 / 0.7);
+  --ccp-card-border: 1px;
+}
+
+/* ------------------------------------------------------------------ *
+ * Ionic variable bindings.
+ *
+ * Two tokens in DESIGN.md (`link` and `text-muted`) both point at
+ * --ion-color-medium. `text-muted` takes it because it is the more widely
+ * used of the two; `link` keeps its own --ccp-link token and the
+ * .ccp-link utility. See the mismatch note in issues/001.
+ * ------------------------------------------------------------------ */
+
+:root,
+.theme-light,
+.theme-dark {
+  --ion-font-family: var(--ccp-font-sans);
+
+  --ion-background-color: rgb(var(--ccp-bg));
+  --ion-background-color-rgb: var(--ccp-bg);
+  --ion-text-color: rgb(var(--ccp-text));
+  --ion-text-color-rgb: var(--ccp-text);
+
+  --ion-toolbar-background: rgb(var(--ccp-header-bg));
+  --ion-toolbar-color: rgb(var(--ccp-on-header));
+  --ion-border-color: rgb(var(--ccp-border));
+
+  --ion-color-primary: rgb(var(--ccp-brand));
+  --ion-color-primary-rgb: var(--ccp-brand);
+  --ion-color-primary-contrast: rgb(var(--ccp-on-brand));
+  --ion-color-primary-contrast-rgb: var(--ccp-on-brand);
+  --ion-color-primary-shade: rgb(var(--ccp-brand-hover));
+  --ion-color-primary-tint: color-mix(in srgb, rgb(var(--ccp-brand)) 90%, white);
+
+  --ion-color-secondary: rgb(var(--ccp-cta));
+  --ion-color-secondary-rgb: var(--ccp-cta);
+  --ion-color-secondary-contrast: rgb(var(--ccp-on-cta));
+  --ion-color-secondary-contrast-rgb: var(--ccp-on-cta);
+  --ion-color-secondary-shade: color-mix(in srgb, rgb(var(--ccp-cta)) 88%, black);
+  --ion-color-secondary-tint: color-mix(in srgb, rgb(var(--ccp-cta)) 88%, white);
+
+  --ion-color-light: rgb(var(--ccp-bg-card));
+  --ion-color-light-rgb: var(--ccp-bg-card);
+  --ion-color-light-contrast: rgb(var(--ccp-text));
+  --ion-color-light-contrast-rgb: var(--ccp-text);
+  --ion-color-light-shade: rgb(var(--ccp-bg-card-hover));
+  --ion-color-light-tint: color-mix(in srgb, rgb(var(--ccp-bg-card)) 92%, white);
+
+  --ion-color-medium: rgb(var(--ccp-text-muted));
+  --ion-color-medium-rgb: var(--ccp-text-muted);
+  --ion-color-medium-contrast: rgb(var(--ccp-text));
+  --ion-color-medium-contrast-rgb: var(--ccp-text);
+  --ion-color-medium-shade: color-mix(in srgb, rgb(var(--ccp-text-muted)) 88%, black);
+  --ion-color-medium-tint: color-mix(in srgb, rgb(var(--ccp-text-muted)) 88%, white);
+
+  --ion-color-success: rgb(var(--ccp-success));
+  --ion-color-success-rgb: var(--ccp-success);
+  --ion-color-success-contrast: rgb(var(--ccp-bg-card));
+  --ion-color-success-contrast-rgb: var(--ccp-bg-card);
+  --ion-color-success-shade: color-mix(in srgb, rgb(var(--ccp-success)) 88%, black);
+  --ion-color-success-tint: color-mix(in srgb, rgb(var(--ccp-success)) 88%, white);
+
+  --ion-color-danger: rgb(var(--ccp-danger));
+  --ion-color-danger-rgb: var(--ccp-danger);
+  --ion-color-danger-contrast: rgb(var(--ccp-on-danger));
+  --ion-color-danger-contrast-rgb: var(--ccp-on-danger);
+  --ion-color-danger-shade: color-mix(in srgb, rgb(var(--ccp-danger)) 88%, black);
+  --ion-color-danger-tint: color-mix(in srgb, rgb(var(--ccp-danger)) 88%, white);
+
+  --ion-color-warning: rgb(var(--ccp-warning));
+  --ion-color-warning-rgb: var(--ccp-warning);
+  --ion-color-warning-contrast: rgb(var(--ccp-on-brand));
+  --ion-color-warning-contrast-rgb: var(--ccp-on-brand);
+  --ion-color-warning-shade: rgb(var(--ccp-warning-fill));
+  --ion-color-warning-tint: color-mix(in srgb, rgb(var(--ccp-warning)) 88%, white);
+}
+
+/* ------------------------------------------------------------------ *
+ * Base elements.
+ * ------------------------------------------------------------------ */
+
+html,
+body {
+  font-family: var(--ccp-font-sans);
+  background: rgb(var(--ccp-bg));
+  color: rgb(var(--ccp-text));
+}
+
+body {
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: rgb(var(--ccp-text));
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ *
+ * Type scale from DESIGN.md.
+ * ------------------------------------------------------------------ */
+
+.ccp-display {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.ccp-heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.ccp-card-heading {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.ccp-body {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.ccp-small {
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.ccp-caption {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+}
+
+.ccp-mono {
+  font-family: var(--ccp-font-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.ccp-muted {
+  color: rgb(var(--ccp-text-muted));
+}
+
+.ccp-link {
+  color: rgb(var(--ccp-link));
+}
+
+@media (min-width: 768px) {
+  .ccp-display {
+    font-size: 2.25rem;
+  }
+
+  .ccp-heading {
+    font-size: 1.5rem;
+  }
+
+  .ccp-card-heading {
+    font-size: 1.125rem;
+  }
+
+  .ccp-body {
+    font-size: 1.0625rem;
+  }
+
+  :root {
+    --ccp-gutter: var(--ccp-space-lg);
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Kicker: uppercase mono with the 22 px brand bar on the leading side.
+ * ------------------------------------------------------------------ */
+
+.ccp-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ccp-space-sm);
+  font-family: var(--ccp-font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: rgb(var(--ccp-text-muted));
+}
+
+.ccp-kicker::before {
+  content: "";
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: rgb(var(--ccp-brand));
+}
+
+/* ------------------------------------------------------------------ *
+ * Surfaces and layout.
+ * ------------------------------------------------------------------ */
+
+.ccp-page {
+  padding: var(--ccp-space-lg) var(--ccp-gutter);
+  padding-left: calc(var(--ccp-gutter) + var(--ccp-safe-left));
+  padding-right: calc(var(--ccp-gutter) + var(--ccp-safe-right));
+}
+
+.ccp-content {
+  max-width: var(--ccp-content-max);
+  margin: 0 auto;
+}
+
+.ccp-card {
+  background: rgb(var(--ccp-bg-card));
+  border-radius: var(--ccp-radius-card);
+  border: var(--ccp-card-border) solid rgb(var(--ccp-border));
+  box-shadow: var(--ccp-shadow-card);
+  padding: var(--ccp-space-base);
+  transition:
+    background var(--ccp-dur-base) var(--ccp-ease-out),
+    box-shadow var(--ccp-dur-gentle) var(--ccp-ease-out);
+}
+
+@media (min-width: 768px) {
+  .ccp-card {
+    padding: var(--ccp-space-lg);
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Touch. Minimum 44 px targets and press feedback within 90 ms.
+ * ------------------------------------------------------------------ */
+
+.ccp-tap {
+  min-width: var(--ccp-tap-target);
+  min-height: var(--ccp-tap-target);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ccp-pressable {
+  transition: transform var(--ccp-dur-press) var(--ccp-ease-press);
+}
+
+.ccp-pressable:active {
+  transform: scale(0.98);
+}
+
+/* ------------------------------------------------------------------ *
+ * Focus. Brand ring with a 2 px offset, visible on every focusable
+ * element in both themes (ACC-11).
+ * ------------------------------------------------------------------ */
+
+:focus-visible {
+  outline: 2px solid rgb(var(--ccp-brand));
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------ *
+ * Reduced motion. Both the system preference and the in-app override
+ * collapse durations and disable entrance animation (ACC-21, ACC-22).
+ * ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ccp-dur-press: 1ms;
+    --ccp-dur-fast: 1ms;
+    --ccp-dur-base: 1ms;
+    --ccp-dur-gentle: 1ms;
+    --ccp-dur-slow: 1ms;
+    --ccp-dur-reveal: 1ms;
+    --ccp-dur-settle: 1ms;
+  }
+}
+
+.reduce-motion {
+  --ccp-dur-press: 1ms;
+  --ccp-dur-fast: 1ms;
+  --ccp-dur-base: 1ms;
+  --ccp-dur-gentle: 1ms;
+  --ccp-dur-slow: 1ms;
+  --ccp-dur-reveal: 1ms;
+  --ccp-dur-settle: 1ms;
+}
+
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 1ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}

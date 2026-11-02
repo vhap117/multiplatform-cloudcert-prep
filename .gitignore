@@ -36,3 +36,29 @@ npm-debug.log*
 
 # Windows NTFS alternate data streams (created by copying from Windows)
 *:Zone.Identifier
+
+# Angular build and tooling artifacts
+/out-tsc
+/bazel-out
+.sass-cache/
+/connect.lock
+/libpeerconnection.log
+testem.log
+/typings
+__screenshots__/
+/.angular/cache
+
+# Editor project files
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.history/*
+
+# Keep shared VS Code config
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/mcp.json
