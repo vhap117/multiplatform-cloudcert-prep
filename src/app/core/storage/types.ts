@@ -87,6 +87,13 @@ export interface QuestionMasteryRow {
   lastWasWrong: boolean;
   lastSeenAt: number;
   mastered: boolean;
+  /**
+   * Completed practice sessions of this domain since the question was last
+   * answered (issue 007, S10). Optional on purpose: the merged mock and study
+   * completion paths build mastery rows without it, and it reads as 0 when
+   * absent (issue 007 log L3). The practice mastery writer always sets it.
+   */
+  sessionsSinceSeen?: number;
   weight: number | null;
 }
 

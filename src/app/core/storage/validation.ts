@@ -108,6 +108,9 @@ export function isQuestionMasteryRow(value: unknown): value is QuestionMasteryRo
     return false;
   }
   const weight = value['weight'];
+  // Optional counter (issue 007 log L3): rows written before the practice
+  // mastery writer existed do not carry it, and it reads as 0 when absent.
+  const sessionsSinceSeen = value['sessionsSinceSeen'];
   return (
     isNonEmptyString(value['id']) &&
     isNonEmptyString(value['cert']) &&
@@ -117,6 +120,8 @@ export function isQuestionMasteryRow(value: unknown): value is QuestionMasteryRo
     typeof value['lastWasWrong'] === 'boolean' &&
     isFiniteNumber(value['lastSeenAt']) &&
     typeof value['mastered'] === 'boolean' &&
+    (sessionsSinceSeen === undefined ||
+      (isFiniteNumber(sessionsSinceSeen) && sessionsSinceSeen >= 0)) &&
     (weight === null || isFiniteNumber(weight))
   );
 }

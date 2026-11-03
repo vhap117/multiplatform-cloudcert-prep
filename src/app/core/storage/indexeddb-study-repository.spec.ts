@@ -259,6 +259,26 @@ describe('StudyRepository contract (IndexedDB)', () => {
 
       expect(rows[0].weight).toBeNull();
     });
+
+    it('round-trips the optional sessionsSinceSeen counter and skips a negative one', async () => {
+      await repository.commitAnswers({
+        attempt: null,
+        results: [],
+        progress: [],
+        mastery: [mastery({ sessionsSinceSeen: 2 })],
+      });
+      // A corrupted counter must not crash or render; the row is skipped.
+      await repository.writeRawForTest('question_mastery', {
+        ...mastery({ id: 'clf-c02:q-bad', questionId: 'q-bad' }),
+        sessionsSinceSeen: -1,
+      });
+
+      const rows = await repository.getQuestionMastery('clf-c02');
+
+      expect(rows).toHaveLength(1);
+      expect(rows[0].questionId).toBe('q001');
+      expect(rows[0].sessionsSinceSeen).toBe(2);
+    });
   });
 
   describe('sessions', () => {

@@ -12,12 +12,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { Certification } from '../content/certification-types';
 import type { Question } from '../content/question-types';
-import {
-  LAST_WRONG_WEIGHT,
-  LEARNING_WEIGHT_MAX,
-  MASTERED_WEIGHT,
-  masteryWeight,
-} from '../exam';
+import { LAST_WRONG_WEIGHT, LEARNING_WEIGHT_MAX, MASTERED_WEIGHT } from '../exam';
 import type { QuestionMasteryRow, QuestionResultRow } from '../storage/types';
 
 import { buildAttemptRows, type BuildAttemptRowsInput, type GradedAnswer } from './attempt-rows';
@@ -68,6 +63,22 @@ function graded(id: string, domainId: number, isCorrect: boolean, userAnswer = '
     userAnswer,
     correctAnswer: 'B',
     wasFlagged: false,
+  };
+}
+
+function masteryRow(questionId: string, overrides: Partial<QuestionMasteryRow> = {}): QuestionMasteryRow {
+  return {
+    id: `clf-c02:${questionId}`,
+    cert: 'clf-c02',
+    domainId: 1,
+    questionId,
+    correctStreak: 0,
+    lastWasWrong: false,
+    lastSeenAt: 500,
+    mastered: false,
+    sessionsSinceSeen: 0,
+    weight: LEARNING_WEIGHT_MAX,
+    ...overrides,
   };
 }
 
@@ -288,7 +299,10 @@ describe('buildAttemptRows', () => {
         lastWasWrong: false,
         lastSeenAt: 96_000,
         mastered: true,
-        weight: MASTERED_WEIGHT,
+        sessionsSinceSeen: 0,
+        // Answered while mastered: the exclusion window restarts at null
+        // (issue 007 log L2, SR-16).
+        weight: null,
       },
       {
         id: 'clf-c02:q-b',
@@ -299,6 +313,7 @@ describe('buildAttemptRows', () => {
         lastWasWrong: true,
         lastSeenAt: 96_000,
         mastered: false,
+        sessionsSinceSeen: 0,
         weight: LAST_WRONG_WEIGHT,
       },
       {
@@ -310,11 +325,126 @@ describe('buildAttemptRows', () => {
         lastWasWrong: false,
         lastSeenAt: 96_000,
         mastered: false,
+        sessionsSinceSeen: 0,
         weight: LEARNING_WEIGHT_MAX,
       },
     ]);
-    // The weight always comes from the engine bands and is never null
-    // (issue 005 log L2).
-    expect(mastery.every((row) => row.weight === masteryWeight(row))).toBe(true);
+    // The weight comes from the engine bands, except that a mastered
+    // question inside the exclusion window rests at null (issue 007 log L2).
+    expect(mastery.find((row) => row.questionId === 'q-a')?.weight).toBeNull();
+    expect(mastery.find((row) => row.questionId === 'q-b')?.weight).toBe(LAST_WRONG_WEIGHT);
+    expect(mastery.find((row) => row.questionId === 'q-c')?.weight).toBe(LEARNING_WEIGHT_MAX);
+  });
+
+  it('writes sessionsSinceSeen and null weights for resting mastered questions (S10)', () => {
+    const priorMastery: QuestionMasteryRow[] = [
+      // One correct away from mastery.
+      masteryRow('q-a', { correctStreak: 1 }),
+      // Already mastered and resting on session 1 of its window.
+      masteryRow('q-b', { correctStreak: 2, mastered: true, sessionsSinceSeen: 1, weight: null }),
+    ];
+    const { mastery } = buildAttemptRows(
+      baseInput({
+        graded: [graded('q-a', 1, true), graded('q-b', 1, true)],
+        priorMastery,
+      }),
+    );
+
+    expect(mastery).toEqual([
+      {
+        id: 'clf-c02:q-a',
+        cert: 'clf-c02',
+        domainId: 1,
+        questionId: 'q-a',
+        correctStreak: 2,
+        lastWasWrong: false,
+        lastSeenAt: 96_000,
+        mastered: true,
+        sessionsSinceSeen: 0,
+        weight: null,
+      },
+      {
+        id: 'clf-c02:q-b',
+        cert: 'clf-c02',
+        domainId: 1,
+        questionId: 'q-b',
+        correctStreak: 3,
+        lastWasWrong: false,
+        lastSeenAt: 96_000,
+        mastered: true,
+        sessionsSinceSeen: 0,
+        weight: null,
+      },
+    ]);
+  });
+
+  it('ages the unasked rows of a completed practice session domain (S10, SR-16)', () => {
+    const priorMastery: QuestionMasteryRow[] = [
+      // Asked this session: answered by the writer, never aged twice.
+      masteryRow('q-a', { correctStreak: 1 }),
+      // Same domain, not asked: ages inside the window, still resting.
+      masteryRow('q-b', { correctStreak: 2, mastered: true, sessionsSinceSeen: 2, weight: null }),
+      // Same domain, not asked, on the last resting session: the window ends.
+      masteryRow('q-c', { correctStreak: 4, mastered: true, sessionsSinceSeen: 3, weight: null }),
+      // Another domain: the session did not touch it, so it is left alone.
+      masteryRow('q-d', { domainId: 2, correctStreak: 1, weight: LEARNING_WEIGHT_MAX }),
+    ];
+    const { mastery } = buildAttemptRows(
+      baseInput({
+        kind: 'practice',
+        graded: [graded('q-a', 1, true)],
+        priorMastery,
+      }),
+    );
+
+    expect(mastery).toEqual([
+      {
+        id: 'clf-c02:q-a',
+        cert: 'clf-c02',
+        domainId: 1,
+        questionId: 'q-a',
+        correctStreak: 2,
+        lastWasWrong: false,
+        lastSeenAt: 96_000,
+        mastered: true,
+        sessionsSinceSeen: 0,
+        weight: null,
+      },
+      {
+        id: 'clf-c02:q-b',
+        cert: 'clf-c02',
+        domainId: 1,
+        questionId: 'q-b',
+        correctStreak: 2,
+        lastWasWrong: false,
+        lastSeenAt: 500,
+        mastered: true,
+        sessionsSinceSeen: 3,
+        weight: null,
+      },
+      {
+        id: 'clf-c02:q-c',
+        cert: 'clf-c02',
+        domainId: 1,
+        questionId: 'q-c',
+        correctStreak: 4,
+        lastWasWrong: false,
+        lastSeenAt: 500,
+        mastered: true,
+        sessionsSinceSeen: 4,
+        weight: MASTERED_WEIGHT,
+      },
+    ]);
+  });
+
+  it('leaves unasked rows of a study session alone: the window counts practice sessions only', () => {
+    const priorMastery: QuestionMasteryRow[] = [
+      masteryRow('q-b', { correctStreak: 2, mastered: true, sessionsSinceSeen: 2, weight: null }),
+    ];
+    const { mastery } = buildAttemptRows(
+      baseInput({ graded: [graded('q-a', 1, true)], priorMastery }),
+    );
+
+    expect(mastery.map((row) => row.questionId)).toEqual(['q-a']);
   });
 });

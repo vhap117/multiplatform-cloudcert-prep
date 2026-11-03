@@ -31,7 +31,6 @@ import {
   calculateScaledScore,
   getDomainScore,
   isPassed,
-  masteryWeight,
   type DomainResult,
 } from '../exam';
 import type {
@@ -42,6 +41,12 @@ import type {
   QuestionResultRow,
   SessionKind,
 } from '../storage/types';
+
+import {
+  ageMasteryForSession,
+  applyMasteryAnswer,
+  type MasteryRowState,
+} from './mastery';
 
 /**
  * One graded question, reduced to what the stored rows need.
@@ -196,30 +201,65 @@ function progressRows(
 }
 
 /**
- * Fold this attempt into per-question mastery. A correct answer extends the
- * streak, a wrong one resets it and clears the mastered flag. The weight
- * always comes from the engine bands and is never null, because the exclusion
- * window length is an open spec gap that must not be invented here (issue 004
- * open gap, issue 005 log L2).
+ * Fold this attempt into per-question mastery through the mastery writer
+ * (issue 007, S10). Every answered question starts or restarts its exclusion
+ * window, so a mastered answer rests at a null weight. A completed practice
+ * session also ages every prior row of the domains it asked that the session
+ * did not answer, so the window advances and expires (SR-16). Only practice
+ * sessions age the counter, because the window is counted in practice
+ * sessions of the domain (issue 007 log L2); a study or mock session leaves
+ * the rows it did not answer untouched.
  */
 function masteryRows(input: BuildAttemptRowsInput): QuestionMasteryRow[] {
-  const { cert, finishedAt, graded } = input;
+  const { cert, kind, finishedAt, graded } = input;
   const existing = new Map(input.priorMastery.map((row) => [row.questionId, row]));
-  return graded.map((entry) => {
-    const previous = existing.get(entry.question.id);
-    const correctStreak = entry.isCorrect ? (previous?.correctStreak ?? 0) + 1 : 0;
-    const mastered = entry.isCorrect ? (previous?.mastered ?? false) : false;
-    const lastWasWrong = !entry.isCorrect;
+  const rows: QuestionMasteryRow[] = graded.map((entry) => {
+    const next = applyMasteryAnswer(toMasteryState(existing.get(entry.question.id)), {
+      isCorrect: entry.isCorrect,
+      answeredAt: finishedAt,
+    });
     return {
       id: `${cert.code}:${entry.question.id}`,
       cert: cert.code,
       domainId: entry.question.domainId,
       questionId: entry.question.id,
-      correctStreak,
-      lastWasWrong,
-      lastSeenAt: finishedAt,
-      mastered,
-      weight: masteryWeight({ mastered, lastWasWrong, correctStreak }),
+      correctStreak: next.correctStreak,
+      lastWasWrong: next.lastWasWrong,
+      lastSeenAt: next.lastSeenAt,
+      mastered: next.mastered,
+      sessionsSinceSeen: next.sessionsSinceSeen,
+      weight: next.weight,
     };
   });
+
+  if (kind !== 'practice') {
+    return rows;
+  }
+  const asked = new Set(graded.map((entry) => entry.question.id));
+  const sessionDomains = new Set(graded.map((entry) => entry.question.domainId));
+  for (const row of input.priorMastery) {
+    if (asked.has(row.questionId) || !sessionDomains.has(row.domainId)) {
+      continue;
+    }
+    const aged = ageMasteryForSession(toMasteryState(row));
+    rows.push({ ...row, sessionsSinceSeen: aged.sessionsSinceSeen, weight: aged.weight });
+  }
+  return rows;
+}
+
+/** Map a stored row to the writer state; a missing counter reads as 0 (issue 007 log L3). */
+function toMasteryState(row: QuestionMasteryRow): MasteryRowState;
+function toMasteryState(row: QuestionMasteryRow | undefined): MasteryRowState | undefined;
+function toMasteryState(row: QuestionMasteryRow | undefined): MasteryRowState | undefined {
+  if (row === undefined) {
+    return undefined;
+  }
+  return {
+    correctStreak: row.correctStreak,
+    lastWasWrong: row.lastWasWrong,
+    mastered: row.mastered,
+    sessionsSinceSeen: row.sessionsSinceSeen ?? 0,
+    weight: row.weight,
+    lastSeenAt: row.lastSeenAt,
+  };
 }
