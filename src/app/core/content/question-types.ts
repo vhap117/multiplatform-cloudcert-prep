@@ -28,10 +28,12 @@ export interface RawQuestion {
   question: string;
   options: Record<string, string>;
   /**
-   * A key for single and multi questions. Ordering and matching questions
-   * carry an empty string here and use `correctOrder` or `correctMatches`.
+   * A key for single and multi questions. Ordering and matching questions omit
+   * the field entirely and use `correctOrder` or `correctMatches` instead; the
+   * validator treats absent, empty, and empty-array values as unused
+   * (`answerIsUnused`, CONT-7, CONT-8).
    */
-  answer: string | string[];
+  answer?: string | string[];
   explanation: QuestionExplanation;
   /** Short takeaway. Required for live banks, optional in fixtures. */
   note?: string;
