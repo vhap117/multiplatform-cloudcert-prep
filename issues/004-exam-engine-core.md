@@ -149,3 +149,34 @@ where the mastery row is written, before issues 006 and 007 save answers.
       005 to 007 wire it).
 - Any UI. This module never renders.
 - Calendar-based scheduling. Explicitly rejected by `SR-2`.
+
+## Commits
+
+Each commit is a reviewable work unit carrying its own tests.
+
+| Commit | Contents | Lines |
+|---|---|---|
+| `e5f111e` | engine types, constants, shuffle with the explanation remap, optional `answer` | 471 |
+| `43db8a5` | canonical answer encoding, decoding, and all-or-nothing grading | 380 |
+| `0ec91b0` | domain targets, exam selection, scaled scoring, wall-clock timing | 475 |
+| `89ae908` | adaptive practice selection, weight bands, backfill order | 360 |
+| `5de0f75` | mastery coverage, next-domain action, real-bank round trip, lint boundary | 350 |
+| `2bfe122` | unrelated pre-existing dash lint fix in issue 003 | 6 |
+| `e4d9a94` | this document: port notes, deviations, and the open spec gap | 60 |
+
+The last two are documentation and an unrelated gate fix, split out so the
+engine work reviews as five units. The feature branch stays unmerged; push,
+pull request, and merge are the user's decisions.
+
+## Verification evidence
+
+- `src/app/core/exam`: 125 tests across 9 spec files, green.
+- `npm run lint:dashes`, `npm run lint:banks`, `ng lint`, `ng build`: green.
+- Lint boundary proven by a temporary probe file that imported `@angular/core`
+  and `../storage/study-repository`: both were rejected, then the probe was
+  removed.
+- `npm run verify` as a whole is not green, for a reason that predates this
+  branch: 6 spec files with 19 failures on `main` (`theme.service`,
+  `motion.service`, `local-settings`) need DOM globals that the unit-test
+  environment does not provide. Reproduced on `main` with this work stashed:
+  same 19 failures. Not caused by, and not fixed by, issue 004.
