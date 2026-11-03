@@ -84,6 +84,16 @@ documenting the progress ?"
 L2 (scope, earlier): development and verification target the web platform only
 for now. No Capacitor platform, no SQLite adapter, no device checks.
 
+L3 (correction, 2026-11-03): `ionic serve` could not run. The app was
+Ionic in components but not an Ionic project: no `ionic.config.json`, and the
+Angular project was named `cloudcertprep` while the Ionic CLI hardcodes
+`app:serve` (Angular 21 no longer supports `defaultProject`, which the CLI used
+to read). Fixed by running `ionic init` with type `angular-standalone` and
+renaming the Angular project key to `app`, with `outputPath` pinned to
+`dist/cloudcertprep` so artifacts stay where they were. No Capacitor platform
+was added. The icon set stays `lucide-angular` rather than the scaffold's
+`ionicons`.
+
 ### Evidence
 
 | Moment | Result |
