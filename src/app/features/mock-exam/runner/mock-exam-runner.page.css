@@ -1,0 +1,306 @@
+/*
+ * Mock exam runner styles. Colour tokens come from DESIGN.md; every state is
+ * also exposed through text or ARIA, never colour alone (ACC-4).
+ */
+
+.status-toolbar {
+  --border-width: 0;
+}
+
+.status-bar {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ccp-space-sm) var(--ccp-space-base);
+  justify-content: space-between;
+  padding: var(--ccp-space-sm) var(--ccp-gutter);
+}
+
+.status-item {
+  color: rgb(var(--ccp-text-muted));
+  font-size: 0.875rem;
+}
+
+.timer {
+  color: rgb(var(--ccp-text));
+  font-family: var(--ccp-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.timer.low {
+  color: rgb(var(--ccp-danger));
+  font-weight: 600;
+}
+
+.low-badge {
+  background: rgb(var(--ccp-danger) / 0.12);
+  border-radius: var(--ccp-radius-pill);
+  color: rgb(var(--ccp-danger));
+  font-weight: 600;
+  padding: var(--ccp-space-xs) var(--ccp-space-sm);
+}
+
+.task-statement {
+  color: rgb(var(--ccp-text-muted));
+  font-size: 0.9375rem;
+  margin: 0 0 var(--ccp-space-sm);
+}
+
+.question-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0 0 var(--ccp-space-lg);
+}
+
+.options {
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ccp-space-sm);
+  margin: 0 0 var(--ccp-space-base);
+  padding: 0;
+}
+
+.options legend {
+  color: rgb(var(--ccp-text-muted));
+  font-size: 0.875rem;
+  margin-bottom: var(--ccp-space-sm);
+}
+
+.option {
+  align-items: flex-start;
+  background: rgb(var(--ccp-bg-card));
+  border: 1px solid rgb(var(--ccp-border));
+  border-radius: var(--ccp-radius-input);
+  cursor: pointer;
+  display: flex;
+  gap: var(--ccp-space-md);
+  min-height: var(--ccp-tap-target);
+  padding: var(--ccp-space-md);
+}
+
+.option.selected {
+  border-color: rgb(var(--ccp-brand));
+}
+
+.option input {
+  flex: none;
+  height: 20px;
+  margin-top: 2px;
+  width: 20px;
+}
+
+.option-text {
+  line-height: 1.45;
+}
+
+.ccp-button {
+  align-items: center;
+  background: rgb(var(--ccp-bg-card));
+  border: 1px solid rgb(var(--ccp-border));
+  border-radius: var(--ccp-radius-input);
+  color: rgb(var(--ccp-text));
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-weight: 600;
+  justify-content: center;
+  min-height: var(--ccp-tap-target);
+  padding: var(--ccp-space-sm) var(--ccp-space-base);
+  transition: background var(--ccp-dur-press) var(--ccp-ease-press);
+}
+
+.ccp-button:active {
+  background: rgb(var(--ccp-bg-card-hover));
+}
+
+.ccp-button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.ccp-button.primary {
+  background: rgb(var(--ccp-brand));
+  border-color: rgb(var(--ccp-brand));
+  color: rgb(var(--ccp-bg-card));
+}
+
+.ccp-button.flag.active {
+  background: rgb(var(--ccp-warning) / 0.16);
+  border-color: rgb(var(--ccp-warning));
+}
+
+.hint {
+  color: rgb(var(--ccp-text-muted));
+  font-size: 0.875rem;
+  margin: 0 0 var(--ccp-space-sm);
+}
+
+.ordering {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ccp-space-sm);
+  list-style: none;
+  margin: 0 0 var(--ccp-space-base);
+  padding: 0;
+}
+
+.ordering-row {
+  align-items: center;
+  background: rgb(var(--ccp-bg-card));
+  border: 1px solid rgb(var(--ccp-border));
+  border-radius: var(--ccp-radius-input);
+  display: flex;
+  gap: var(--ccp-space-md);
+  min-height: var(--ccp-tap-target);
+  padding: var(--ccp-space-sm) var(--ccp-space-md);
+}
+
+.ordering-position {
+  color: rgb(var(--ccp-text-muted));
+  font-family: var(--ccp-font-mono);
+}
+
+.ordering-text {
+  flex: 1;
+}
+
+.ordering-actions {
+  display: flex;
+  gap: var(--ccp-space-sm);
+}
+
+.ccp-button.move {
+  min-height: var(--ccp-tap-target);
+  padding: var(--ccp-space-xs) var(--ccp-space-md);
+}
+
+.match-row {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ccp-space-sm) var(--ccp-space-base);
+  margin-bottom: var(--ccp-space-md);
+}
+
+.match-left {
+  flex: 1 1 12rem;
+  line-height: 1.45;
+}
+
+.match-select {
+  background: rgb(var(--ccp-bg-card));
+  border: 1px solid rgb(var(--ccp-border));
+  border-radius: var(--ccp-radius-input);
+  color: rgb(var(--ccp-text));
+  flex: 1 1 12rem;
+  font: inherit;
+  min-height: var(--ccp-tap-target);
+  padding: var(--ccp-space-sm);
+}
+
+.action-error {
+  color: rgb(var(--ccp-danger));
+  font-weight: 600;
+  margin: var(--ccp-space-base) 0;
+}
+
+.question-actions,
+.pager,
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ccp-space-md);
+  margin-top: var(--ccp-space-base);
+}
+
+.pager {
+  justify-content: space-between;
+}
+
+.grid-section {
+  margin-top: var(--ccp-space-xl);
+}
+
+.grid-heading {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 var(--ccp-space-sm);
+}
+
+.question-grid {
+  display: grid;
+  gap: var(--ccp-space-sm);
+  grid-template-columns: repeat(auto-fill, minmax(var(--ccp-tap-target), 1fr));
+}
+
+.grid-cell {
+  align-items: center;
+  background: rgb(var(--ccp-bg-card));
+  border: 1px solid rgb(var(--ccp-border));
+  border-radius: var(--ccp-radius-inner);
+  color: rgb(var(--ccp-text));
+  cursor: pointer;
+  display: flex;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  justify-content: center;
+  min-height: var(--ccp-tap-target);
+  min-width: var(--ccp-tap-target);
+}
+
+.grid-cell.answered {
+  border-color: rgb(var(--ccp-brand));
+}
+
+.grid-cell.flagged {
+  background: rgb(var(--ccp-warning) / 0.16);
+  border-color: rgb(var(--ccp-warning));
+}
+
+.grid-cell.current {
+  background: rgb(var(--ccp-brand));
+  border-color: rgb(var(--ccp-brand));
+  color: rgb(var(--ccp-bg-card));
+  font-weight: 700;
+}
+
+.result-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ccp-space-sm);
+  margin: var(--ccp-space-lg) 0;
+}
+
+.result-row {
+  align-items: baseline;
+  background: rgb(var(--ccp-bg-card));
+  border: 1px solid rgb(var(--ccp-border));
+  border-radius: var(--ccp-radius-input);
+  display: flex;
+  justify-content: space-between;
+  padding: var(--ccp-space-md);
+}
+
+.result-row dt {
+  color: rgb(var(--ccp-text-muted));
+  margin: 0;
+}
+
+.result-row dd {
+  font-weight: 700;
+  margin: 0;
+}
+
+.visually-hidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}

@@ -1,0 +1,263 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        defaultHref="/tabs/home"
+        [text]="session.result() ? 'Close' : 'Exit'"
+        [attr.aria-label]="session.result() ? 'Close the result' : 'Leave the exam'"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ session.result() ? 'Exam result' : 'Mock exam' }}</ion-title>
+    @if (!session.result() && !unavailable()) {
+      <ion-buttons slot="end">
+        <ion-button [disabled]="submitting()" aria-label="Submit the exam" (click)="requestSubmit()">
+          Submit
+        </ion-button>
+      </ion-buttons>
+    }
+  </ion-toolbar>
+  @if (!session.result() && !unavailable()) {
+    <ion-toolbar class="status-toolbar">
+      <div class="status-bar">
+        <span class="status-item">
+          Question {{ session.currentIndex() + 1 }} of {{ session.totalQuestions() }}
+        </span>
+        <span class="status-item">
+          Answered {{ session.answeredCount() }} of {{ session.totalQuestions() }}
+        </span>
+        <span class="status-item timer" role="timer" [class.low]="lowTime()">
+          Time {{ formattedRemaining() }}
+        </span>
+        @if (lowTime()) {
+          <span class="status-item low-badge">Low time</span>
+        }
+      </div>
+    </ion-toolbar>
+  }
+</ion-header>
+
+<ion-content>
+  <div class="ccp-page">
+    <div class="ccp-content">
+      @if (session.result(); as examResult) {
+        <p class="ccp-kicker">Mock exam result</p>
+        <h1 class="ccp-display">{{ examResult.attempt.passed ? 'Passed' : 'Not passed' }}</h1>
+        @if (!examResult.committed) {
+          <p class="action-error" role="alert">
+            The result could not be saved locally. Your attempt is still stored on this device,
+            retry the save.
+          </p>
+        }
+        <dl class="result-list">
+          <div class="result-row">
+            <dt>Scaled score</dt>
+            <dd>{{ examResult.attempt.scaledScore }}</dd>
+          </div>
+          <div class="result-row">
+            <dt>Score</dt>
+            <dd>{{ examResult.attempt.scorePercent }} percent</dd>
+          </div>
+          <div class="result-row">
+            <dt>Correct</dt>
+            <dd>{{ examResult.attempt.correctCount }} of {{ examResult.attempt.totalQuestions }}</dd>
+          </div>
+          <div class="result-row">
+            <dt>Time taken</dt>
+            <dd>{{ formatTime(examResult.attempt.timeTakenSeconds) }}</dd>
+          </div>
+        </dl>
+        <div class="action-row">
+          @if (!examResult.committed) {
+            <button
+              type="button"
+              class="ccp-button primary"
+              [disabled]="submitting()"
+              (click)="submitExam()"
+            >
+              Retry save
+            </button>
+          }
+          <button type="button" class="ccp-button" (click)="leaveExam()">Return to exams</button>
+        </div>
+      } @else if (unavailable()) {
+        <p class="ccp-kicker">Mock exam</p>
+        <h1 class="ccp-display">No exam running</h1>
+        <p class="ccp-body ccp-muted">
+          There is no active mock exam on this device. Start or resume one from the exam start
+          screen.
+        </p>
+        <div class="action-row">
+          <button type="button" class="ccp-button" (click)="retryInitialise()">Try again</button>
+          <button type="button" class="ccp-button" (click)="leaveExam()">Back to home</button>
+        </div>
+      } @else if (session.currentQuestion(); as question) {
+        <p class="ccp-kicker">Question {{ session.currentIndex() + 1 }}</p>
+        @if (question.taskStatement; as task) {
+          <p class="task-statement">{{ task }}</p>
+        }
+        <h1 class="question-text">{{ question.question }}</h1>
+
+        @switch (typeOf(question)) {
+          @case ('single') {
+            <fieldset class="options">
+              <legend>Choose one answer.</legend>
+              @for (option of optionEntries(question); track option.key) {
+                <label class="option" [class.selected]="singleSelection() === option.key">
+                  <input
+                    type="radio"
+                    [name]="'answer-' + question.id"
+                    [value]="option.key"
+                    [checked]="singleSelection() === option.key"
+                    (change)="selectSingle(question.id, option.key)"
+                  />
+                  <span class="option-text">{{ option.text }}</span>
+                </label>
+              }
+            </fieldset>
+          }
+          @case ('multi') {
+            <fieldset class="options">
+              <legend>Choose up to {{ maxMulti }} answers, then confirm.</legend>
+              @for (option of optionEntries(question); track option.key) {
+                <label class="option" [class.selected]="multiDraft().includes(option.key)">
+                  <input
+                    type="checkbox"
+                    [value]="option.key"
+                    [checked]="multiDraft().includes(option.key)"
+                    [disabled]="
+                      !multiDraft().includes(option.key) && multiDraft().length >= maxMulti
+                    "
+                    (change)="toggleMulti(option.key)"
+                  />
+                  <span class="option-text">{{ option.text }}</span>
+                </label>
+              }
+            </fieldset>
+            <button
+              type="button"
+              class="ccp-button primary"
+              [disabled]="multiDraft().length === 0"
+              (click)="confirmMulti(question.id)"
+            >
+              Confirm answer
+            </button>
+          }
+          @case ('ordering') {
+            <p class="hint" [id]="'ordering-hint-' + question.id">
+              Place each step in the right position with the up and down buttons.
+            </p>
+            <ol class="ordering" [attr.aria-describedby]="'ordering-hint-' + question.id">
+              @for (
+                key of orderingDraft();
+                track key;
+                let i = $index;
+                let first = $first;
+                let last = $last
+              ) {
+                <li class="ordering-row">
+                  <span class="ordering-position">{{ i + 1 }}.</span>
+                  <span class="ordering-text">{{ optionText(question, key) }}</span>
+                  <span class="ordering-actions">
+                    <button
+                      type="button"
+                      class="ccp-button move"
+                      [disabled]="first"
+                      [attr.aria-label]="'Move ' + optionText(question, key) + ' up'"
+                      (click)="moveOrdering(question.id, i, -1)"
+                    >
+                      Up
+                    </button>
+                    <button
+                      type="button"
+                      class="ccp-button move"
+                      [disabled]="last"
+                      [attr.aria-label]="'Move ' + optionText(question, key) + ' down'"
+                      (click)="moveOrdering(question.id, i, 1)"
+                    >
+                      Down
+                    </button>
+                  </span>
+                </li>
+              }
+            </ol>
+          }
+          @case ('matching') {
+            @for (option of optionEntries(question); track option.key) {
+              <div class="match-row">
+                <span class="match-left">{{ option.text }}</span>
+                <select
+                  class="match-select"
+                  [value]="matchingDraft()[option.key] ?? ''"
+                  [attr.aria-label]="'Match for ' + option.text"
+                  (change)="selectMatch(question.id, option.key, $event)"
+                >
+                  <option value="">Choose a target</option>
+                  @for (target of targetEntries(question); track target.key) {
+                    <option [value]="target.key">{{ target.text }}</option>
+                  }
+                </select>
+              </div>
+            }
+          }
+        }
+
+        @if (actionError(); as error) {
+          <p class="action-error" role="alert">{{ error }}</p>
+        }
+
+        <div class="question-actions">
+          <button
+            type="button"
+            class="ccp-button flag"
+            [class.active]="session.isFlagged(question.id)"
+            [attr.aria-pressed]="session.isFlagged(question.id)"
+            (click)="toggleFlag()"
+          >
+            {{ session.isFlagged(question.id) ? 'Flagged' : 'Flag for review' }}
+          </button>
+        </div>
+
+        <div class="pager">
+          <button
+            type="button"
+            class="ccp-button"
+            [disabled]="session.currentIndex() === 0"
+            (click)="previous()"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            class="ccp-button"
+            [disabled]="session.currentIndex() >= session.totalQuestions() - 1"
+            (click)="next()"
+          >
+            Next
+          </button>
+        </div>
+
+        <section class="grid-section">
+          <h2 class="grid-heading">All questions</h2>
+          <div class="question-grid" role="group" aria-label="Question navigation">
+            @for (entry of session.questions(); track entry.id; let i = $index) {
+              <button
+                type="button"
+                class="grid-cell"
+                [class.current]="i === session.currentIndex()"
+                [class.answered]="session.isAnswered(entry.id)"
+                [class.flagged]="session.isFlagged(entry.id)"
+                [attr.aria-current]="i === session.currentIndex() ? 'true' : null"
+                [attr.aria-label]="gridLabel(entry, i)"
+                (click)="goToQuestion(i)"
+              >
+                {{ i + 1 }}
+              </button>
+            }
+          </div>
+        </section>
+      }
+
+      <p class="visually-hidden" role="status">{{ lowTimeAnnouncement() }}</p>
+    </div>
+  </div>
+</ion-content>

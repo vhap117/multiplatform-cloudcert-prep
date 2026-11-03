@@ -39,6 +39,7 @@ import type {
   AttemptRow,
   QuestionResultRow,
 } from '../../../core/storage/types';
+import { mockExamRunPath } from '../mock-exam.routes';
 import { MockExamSessionService } from '../session/mock-exam-session.service';
 
 import { ReviewCardComponent } from './review-card.component';
@@ -450,7 +451,7 @@ export class MockExamResultsPage {
   /** Deep-link input: the stored attempt id to show instead of the session result. */
   readonly attemptId = input<string>();
   /** Exam runner path, wired by the parent route. */
-  readonly examPath = input('/tabs/practice/mock-exam');
+  readonly examPath = input('');
   /** Practice tab path, the target of Practice weakest domain (log L4). */
   readonly practicePath = input('/tabs/practice');
   /** Cert dashboard path. */
@@ -585,7 +586,7 @@ export class MockExamResultsPage {
     this.retakeError.set(null);
     try {
       await this.session.start(view.attempt.cert);
-      await this.router.navigateByUrl(this.examPath());
+      await this.router.navigateByUrl(this.examPath() || mockExamRunPath(view.attempt.cert));
     } catch {
       this.retakeError.set('A fresh exam could not be started. Try again.');
     } finally {

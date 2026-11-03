@@ -452,7 +452,7 @@ describe('MockExamResultsPage', () => {
     await fixture.whenStable();
 
     expect(session.start).toHaveBeenCalledWith('clf-c02');
-    expect(navigateByUrl).toHaveBeenCalledWith('/tabs/practice/mock-exam');
+    expect(navigateByUrl).toHaveBeenCalledWith('/mock-exam/clf-c02/run');
   });
 
   it('copies the question id to the clipboard from the report action (EXAM-42)', async () => {

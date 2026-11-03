@@ -1,9 +1,11 @@
 import { Component, ElementRef, HostListener, OnInit, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { IonButton, IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular';
 
 import { getCert, listCerts, type Certification } from '../../../core/content/cert-registry';
 import { formatTotalTime } from '../../../core/exam';
 import { SETTINGS_KEYS, readSetting } from '../../../core/settings/local-settings';
+import { mockExamRunPath } from '../mock-exam.routes';
 import { MockExamSessionService } from '../session/mock-exam-session.service';
 
 /**
@@ -236,6 +238,7 @@ function resolveCert(): Certification | null {
   ],
 })
 export class MockExamStartPage implements OnInit {
+  private readonly router = inject(Router);
   private readonly sessions = inject(MockExamSessionService);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
@@ -299,7 +302,9 @@ export class MockExamStartPage implements OnInit {
         // The stored attempt was unreadable and the service quarantined it
         // (DATA-23); the Resume offer must go away with it.
         this.inProgress.set(false);
+        return;
       }
+      await this.router.navigateByUrl(mockExamRunPath(this.cert.code));
     } catch (error) {
       this.errorMessage.set(this.messageOf(error));
     } finally {
@@ -325,6 +330,7 @@ export class MockExamStartPage implements OnInit {
       await this.sessions.abandon();
       await this.sessions.start(this.cert.code);
       await this.refreshInProgress();
+      await this.router.navigateByUrl(mockExamRunPath(this.cert.code));
     } catch (error) {
       this.errorMessage.set(this.messageOf(error));
     } finally {
@@ -386,6 +392,7 @@ export class MockExamStartPage implements OnInit {
     try {
       await this.sessions.start(cert.code);
       await this.refreshInProgress();
+      await this.router.navigateByUrl(mockExamRunPath(cert.code));
     } catch (error) {
       this.errorMessage.set(this.messageOf(error));
     } finally {

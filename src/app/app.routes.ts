@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 
+import { mockExamLeaveGuard } from './features/mock-exam/runner/mock-exam-leave.guard';
+
 /**
  * Tabs are the primary navigation surface (CERT-9 to CERT-12).
  *
@@ -44,6 +46,41 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/settings/settings.page').then((m) => m.SettingsPage),
         title: 'Settings',
+      },
+    ],
+  },
+  {
+    /*
+     * The mock exam flow runs full screen (issue 005). It is deliberately not a
+     * child of the tabs shell: an exam in progress must not expose tab
+     * navigation, and leaving the runner has to go through the leave guard.
+     */
+    path: 'mock-exam/:certCode',
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/mock-exam/start/mock-exam-start.page').then(
+            (m) => m.MockExamStartPage,
+          ),
+        title: 'Mock exam',
+      },
+      {
+        path: 'run',
+        canDeactivate: [mockExamLeaveGuard],
+        loadComponent: () =>
+          import('./features/mock-exam/runner/mock-exam-runner.page').then(
+            (m) => m.MockExamRunnerPage,
+          ),
+        title: 'Mock exam in progress',
+      },
+      {
+        path: 'results',
+        loadComponent: () =>
+          import('./features/mock-exam/results/mock-exam-results.page').then(
+            (m) => m.MockExamResultsPage,
+          ),
+        title: 'Mock exam results',
       },
     ],
   },
