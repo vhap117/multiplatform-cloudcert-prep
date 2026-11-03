@@ -579,12 +579,18 @@ export class StudyExamSessionService {
    * Discard the in-progress attempt without recording any history (S10). The
    * confirmation step belongs to the start screen; this only removes the row.
    */
-  async discard(): Promise<void> {
-    const active = this.active();
-    if (!active) {
-      return;
+  /**
+   * Remove the saved session (STUDY-41).
+   *
+   * Works from a fresh instance too: the start screen can offer Resume before
+   * anything was loaded, and discarding there must delete the stored row even
+   * though no session is active in memory yet.
+   */
+  async discard(certCode?: string): Promise<void> {
+    const code = this.active()?.cert.code ?? certCode;
+    if (code) {
+      await this.repository.deleteSession(code, SESSION_KIND);
     }
-    await this.repository.deleteSession(active.cert.code, SESSION_KIND);
     this.active.set(null);
   }
 

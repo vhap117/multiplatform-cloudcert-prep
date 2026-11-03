@@ -804,5 +804,21 @@ describe('StudyExamSessionService', () => {
       expect(await fresh.resume('test-types')).toBe(false);
       expect(await fresh.hasInProgress('test-types')).toBe(false);
     });
+
+    it('discards a saved session from a fresh instance with no active session', async () => {
+      const first = freshService();
+      await first.start('test-types', { cert: TYPES_CERT, bank: TYPES_BANK, random: IDENTITY });
+      await first.answer('t-single', 'B');
+      expect(await repository.getSession('test-types', 'study')).not.toBeNull();
+
+      // The start screen can offer Resume before anything was loaded, so
+      // discarding there must delete the stored row without an active session.
+      const fresh = freshService();
+      expect(fresh.isActive()).toBe(false);
+      await fresh.discard('test-types');
+
+      expect(await repository.getSession('test-types', 'study')).toBeNull();
+      expect(await fresh.hasInProgress('test-types')).toBe(false);
+    });
   });
 });
