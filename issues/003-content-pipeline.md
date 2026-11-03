@@ -133,7 +133,7 @@ from /tmp feel free to do so"
    and the initial bundle does not grow. Features in issues 005 to 007 are what
    pull it in.
 8. **My own dash lint fired on my validator.** The entity alternatives
-   (`&mdash;`, `&ndash;`) appeared as literal text inside the detection regex.
-   The rule was right, so the code changed: the pattern is now a group,
-   `&(?:mdash|ndash);`, which contains no literal forbidden sequence. The check
-   still catches both entities, re-verified.
+   (the two dash entity spellings) appeared as literal text inside the
+   detection regex. The rule was right, so the code changed: the pattern is now
+   a group, `&(?:mdash|ndash);`, which contains no literal forbidden sequence.
+   The check still catches both entities, re-verified.
