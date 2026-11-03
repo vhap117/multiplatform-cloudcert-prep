@@ -109,6 +109,8 @@ function session(overrides: Partial<SessionRow> = {}): SessionRow {
     currentIndex: 1,
     answers: { q001: 'B' },
     feedbackShown: ['q001'],
+    flagged: [],
+    optionKeyMaps: {},
     startedAt: 1_000,
     deadlineAt: null,
     answeredCount: 1,

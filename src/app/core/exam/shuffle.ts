@@ -50,31 +50,27 @@ function hasContent(value: string | undefined): boolean {
  * display key back to the original bank key. Persist with `encodeAnswerForDb`
  * and `keyMap` so stored answers always live in the original key space.
  */
-export function shuffleQuestionOptions(
-  question: Question,
-  random: RandomSource = Math.random,
-): { question: Question; keyMap: OptionKeyMap } {
-  // Only slots with content take part. A bank question omits unused keys
-  // entirely, and older fixtures carry them as empty strings; either way an
-  // empty slot must not end up in the middle of the displayed options.
-  const contentKeys = Object.keys(question.options).filter((key) =>
+/**
+ * Re-apply a display mapping to a question.
+ *
+ * `keyMap` maps each display key to the bank key whose content sits behind it.
+ * The shuffle uses this to place content, and a resumed attempt uses it to
+ * rebuild the exact display space its stored answers were given in, which is
+ * why the map is persisted with the session instead of being recomputed from a
+ * seed that any later change could break.
+ */
+export function applyOptionKeyMap(question: Question, keyMap: OptionKeyMap): Question {
+  const displayKeys = Object.keys(question.options).filter((key) =>
     hasContent(question.options[key]),
   );
 
-  const shuffledSlots = fisherYatesShuffle(
-    contentKeys.map((key) => ({ key, value: question.options[key] })),
-    random,
-  );
-
   const options: Record<string, string> = { ...question.options };
-  const displayToOriginal: OptionKeyMap = {};
   const originalToDisplay: OptionKeyMap = {};
 
-  contentKeys.forEach((displayKey, index) => {
-    const source = shuffledSlots[index];
-    options[displayKey] = source.value;
-    displayToOriginal[displayKey] = source.key;
-    originalToDisplay[source.key] = displayKey;
+  displayKeys.forEach((displayKey) => {
+    const originalKey = keyMap[displayKey] ?? displayKey;
+    options[displayKey] = question.options[originalKey];
+    originalToDisplay[originalKey] = displayKey;
   });
 
   const remap = (key: string): string => originalToDisplay[key] ?? key;
@@ -91,7 +87,7 @@ export function shuffleQuestionOptions(
         ? question.answer.map(remap)
         : remap(question.answer);
 
-  const shuffled: Question = {
+  const remapped: Question = {
     ...question,
     options,
     explanation: {
@@ -103,7 +99,7 @@ export function shuffleQuestionOptions(
 
   // Ordering: the correct sequence is a list of option keys, so each one moves.
   if (question.correctOrder) {
-    shuffled.correctOrder = question.correctOrder.map(remap);
+    remapped.correctOrder = question.correctOrder.map(remap);
   }
 
   // Matching: only the left option key moves. Targets are never shuffled, so
@@ -113,10 +109,37 @@ export function shuffleQuestionOptions(
     for (const [optionKey, targetKey] of Object.entries(question.correctMatches)) {
       remappedMatches[remap(optionKey)] = targetKey;
     }
-    shuffled.correctMatches = remappedMatches;
+    remapped.correctMatches = remappedMatches;
   }
 
-  return { question: shuffled, keyMap: displayToOriginal };
+  return remapped;
+}
+
+/**
+ * Shuffle a question's option content and remap every key-indexed field.
+ *
+ * Returns the shuffled question (in display space) plus `keyMap`, which maps a
+ * display key back to the original bank key. Persist with `encodeAnswerForDb`
+ * and `keyMap` so stored answers always live in the original key space.
+ */
+export function shuffleQuestionOptions(
+  question: Question,
+  random: RandomSource = Math.random,
+): { question: Question; keyMap: OptionKeyMap } {
+  // Only slots with content take part. A bank question omits unused keys
+  // entirely, and older fixtures carry them as empty strings; either way an
+  // empty slot must not end up in the middle of the displayed options.
+  const contentKeys = Object.keys(question.options).filter((key) =>
+    hasContent(question.options[key]),
+  );
+
+  const shuffledKeys = fisherYatesShuffle(contentKeys, random);
+  const displayToOriginal: OptionKeyMap = {};
+  contentKeys.forEach((displayKey, index) => {
+    displayToOriginal[displayKey] = shuffledKeys[index];
+  });
+
+  return { question: applyOptionKeyMap(question, displayToOriginal), keyMap: displayToOriginal };
 }
 
 /**

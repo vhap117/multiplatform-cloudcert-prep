@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
 import type { Question } from '../content/question-types';
-import { fisherYatesShuffle, shuffleQuestionOptions, toOriginalAnswer } from './shuffle';
+import {
+  applyOptionKeyMap,
+  fisherYatesShuffle,
+  shuffleQuestionOptions,
+  toOriginalAnswer,
+} from './shuffle';
 
 /**
  * Ported from `ionic-requirements/cert-banks/reference/utils.test.ts`.
@@ -168,6 +173,32 @@ describe('shuffleQuestionOptions', () => {
     };
     const { question } = shuffleQuestionOptions(ordering, () => 0);
     expect(question.answer).toBeUndefined();
+  });
+});
+
+describe('applyOptionKeyMap', () => {
+  it('reproduces the display space from a stored key map', () => {
+    const { question: shuffled, keyMap } = shuffleQuestionOptions(baseQuestion, () => 0);
+
+    expect(applyOptionKeyMap(baseQuestion, keyMap)).toEqual(shuffled);
+  });
+
+  it('reproduces the display space for every remapped field', () => {
+    const matching: Question = {
+      ...baseQuestion,
+      answer: ['A', 'C'],
+      isMultiAnswer: true,
+      type: 'matching',
+      targets: { '1': 'r1', '2': 'r2' },
+      correctMatches: { A: '2', B: '1', C: '2', D: '1' },
+    };
+    const { question: shuffled, keyMap } = shuffleQuestionOptions(matching, () => 0);
+
+    expect(applyOptionKeyMap(matching, keyMap)).toEqual(shuffled);
+  });
+
+  it('is the identity for an empty map', () => {
+    expect(applyOptionKeyMap(baseQuestion, {})).toEqual(baseQuestion);
   });
 });
 

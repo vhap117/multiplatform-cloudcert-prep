@@ -35,6 +35,10 @@ function isStringRecord(value: unknown): value is Record<string, string> {
   return isObject(value) && Object.values(value).every((item) => typeof item === 'string');
 }
 
+function isKeyMapRecord(value: unknown): value is Record<string, Record<string, string>> {
+  return isObject(value) && Object.values(value).every(isStringRecord);
+}
+
 const SESSION_KINDS = new Set(['mock', 'study', 'practice']);
 
 export function isAttemptRow(value: unknown): value is AttemptRow {
@@ -130,6 +134,8 @@ export function isSessionRow(value: unknown): value is SessionRow {
     isFiniteNumber(value['currentIndex']) &&
     isStringRecord(value['answers']) &&
     isStringArray(value['feedbackShown']) &&
+    isStringArray(value['flagged']) &&
+    isKeyMapRecord(value['optionKeyMaps']) &&
     isFiniteNumber(value['startedAt']) &&
     (deadlineAt === null || isFiniteNumber(deadlineAt)) &&
     isFiniteNumber(value['answeredCount']) &&

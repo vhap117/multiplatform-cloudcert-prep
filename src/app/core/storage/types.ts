@@ -105,6 +105,17 @@ export interface SessionRow {
   currentIndex: number;
   answers: Record<string, string>;
   feedbackShown: string[];
+  /** Question ids flagged for review (EXAM-11). */
+  flagged: string[];
+  /**
+   * Option key maps per question id, display key to original bank key.
+   *
+   * A resumed attempt rebuilds the exact display space from this, so answers
+   * stored in display space keep pointing at the same option content. Deriving
+   * the mapping from a seed instead would silently misgrade an attempt as soon
+   * as the bank or the shuffle changed.
+   */
+  optionKeyMaps: Record<string, Record<string, string>>;
   startedAt: number;
   /** Absolute deadline for a timed mock exam. Null for untimed sessions. */
   deadlineAt: number | null;
