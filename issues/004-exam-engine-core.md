@@ -23,50 +23,50 @@ Blocks: 005, 006, 007, 008.
 
 ## Tasks
 
-- [ ] Port the domain types (`Question`, `Certification`, attempt and result
+- [x] Port the domain types (`Question`, `Certification`, attempt and result
       shapes) into `core/exam/`. (EXAM-ENGINE.md structure)
-- [ ] Port `getExamDomainTargets(cert)`: per-domain `round()` except the last
+- [x] Port `getExamDomainTargets(cert)`: per-domain `round()` except the last
       domain, which absorbs the remainder so the total is exactly
       `examQuestionCount`. (`EXAM-2`)
-- [ ] Port `selectExamQuestions(bank, cert)`: domain-proportional draw, then a
+- [x] Port `selectExamQuestions(bank, cert)`: domain-proportional draw, then a
       final shuffle. Used by both mock and study exams. (`EXAM-2`, `STUDY-2A`)
-- [ ] Port `fisherYatesShuffle` and `shuffleQuestionOptions(question)` with
+- [x] Port `fisherYatesShuffle` and `shuffleQuestionOptions(question)` with
       its `keyMap`: display keys stay A to E, content moves, `answer`,
       `correctOrder`, and the left side of `correctMatches` are remapped, and
       matching targets are never shuffled. (`EXAM-3`)
-- [ ] Port `encodeAnswerForDb` and its decode path so persisted answer shapes
+- [x] Port `encodeAnswerForDb` and its decode path so persisted answer shapes
       match the web canonical forms (comma-joined keys; `K:T` tokens for
       matching). (EXAM-ENGINE.md shuffling section)
-- [ ] Port `correctAnswerFor` and `isAnswerCorrect` for all four types with
+- [x] Port `correctAnswerFor` and `isAnswerCorrect` for all four types with
       all-or-nothing grading: strict equality for single, set equality for
       multi and matching, positional equality for ordering. (`EXAM-8`,
       `EXAM-9`, `EXAM-10`)
-- [ ] Port `calculateScaledScore` (100 to 1000, clamped) and `isPassed`
+- [x] Port `calculateScaledScore` (100 to 1000, clamped) and `isPassed`
       (threshold inclusive) and per-domain percentages. (`EXAM-28` to
       `EXAM-30`)
-- [ ] Port timing: absolute `startedAt` plus deadline, remaining time from
+- [x] Port timing: absolute `startedAt` plus deadline, remaining time from
       `Date.now()`, `timeTaken` clamped to `[0, examTimeSeconds]`, forward
       clock jumps never inflate saved time, backward jumps never discard a
       completed attempt. (`EXAM-31`, `EXAM-32`)
-- [ ] Port `selectPracticeQuestions(bank, count, masteryRows)`: partition into
+- [x] Port `selectPracticeQuestions(bank, count, masteryRows)`: partition into
       unseen, active, and backfill pools; unseen quota `ceil(count * 0.2)`
       capped by availability; leftover unseen join active at weight 5;
       weighted draw without replacement; oldest-last-seen backfill; final
       shuffle; never a duplicate. (`SR-18` to `SR-25`)
-- [ ] Port the weight bands: unseen 5, last-wrong 6, learning 2 to 3,
+- [x] Port the weight bands: unseen 5, last-wrong 6, learning 2 to 3,
       mastered 1, exclusion window means null weight and backfill-only.
       Document the exclusion window in code and tests together. (`SR-12` to
       `SR-17`)
-- [ ] Port mastery as bank coverage: correct unique questions divided by
+- [x] Port mastery as bank coverage: correct unique questions divided by
       current bank size, deduplicated by question id, intersected with the
       bundled bank, rounded, clamped to 100, unknown domain or cert returns 0,
       failed reads never overwrite real mastery with 0. (`SR-27` to `SR-34`)
-- [ ] Port the next-domain recommendation: first unstarted domain in cert
+- [x] Port the next-domain recommendation: first unstarted domain in cert
       order, else lowest-percent practiced domain, ties break to cert order.
       (`SR-35` to `SR-40`)
-- [ ] Port all five reference test files and keep them green against the real
+- [x] Port all five reference test files and keep them green against the real
       bundled banks. (`CONT-42`)
-- [ ] Keep the module dependency-clean: a lint or architecture check fails if
+- [x] Keep the module dependency-clean: a lint or architecture check fails if
       anything under `core/exam/` imports Angular, Ionic, Capacitor, or the
       storage layer. (`SR-25`, `SR-26`)
 
@@ -81,6 +81,67 @@ Blocks: 005, 006, 007, 008.
       backfill order oldest first, excluded questions hidden from the active
       pool.
 - The engine module has zero framework imports (checked in CI or lint).
+
+## Port notes and deliberate deviations
+
+1. **`explanation.options` is remapped by the shuffle.** The reference remaps
+   `answer`, `correctOrder`, and the left side of `correctMatches` but leaves the
+   per-option explanations on their original keys. Because that map is indexed
+   by option key, feedback after a shake explained the wrong option and broke
+   PRACT-14 and EXAM-41. `shuffleQuestionOptions` now remaps it alongside the
+   other key-indexed fields, and both a unit test and a real-bank round trip pin
+   it.
+2. **`answer` is optional in the content type.** The 10 ordering and matching
+   questions omit the field instead of carrying `""`, which the old type
+   contradicted. The validator already treats absent, empty, and empty-array
+   values as unused (`answerIsUnused`), so the type caught up with the data.
+3. **No guest branch in `selectPracticeQuestions`.** The reference took a
+   `userId` and fell back to a uniform draw when it was null. The Ionic app has
+   one local user and no login, so "no history" already means every question is
+   unseen (SR-10) and the normal path produces the same uniform draw. The dead
+   branch is not ported.
+4. **`in_exclusion_window` is not a field.** The reference mastery row carried
+   it; the storage row from issue 002 encodes the same fact as `weight: null`
+   (SR-9, SR-16), so the engine reads that and the two sources of truth stay
+   collapsed into one.
+5. **`lastSeenAt` is epoch milliseconds, not an ISO string.** It matches the
+   stored row, so backfill ordering is a numeric comparison with no date parsing
+   and no `NaN` on a malformed value.
+6. **The random source is injectable.** Every selector takes an optional
+   `RandomSource`. Production passes nothing and gets `Math.random`; tests pass a
+   seeded generator, which is what makes the weighted draw, the domain draw, and
+   the backfill order assertable instead of "any random answer is fine".
+7. **The weighted draw always makes progress.** The reference subtracted
+   weights from a floating point target and pushed nothing when the subtraction
+   never crossed zero, which spins forever on an all-zero weight pool. This
+   version removes exactly one candidate per pass and has a test for it.
+8. **`availableExamQuestions` gates a short bank.** SAA-C03 ships 5 questions
+   per domain against a 65-question exam, so the draw silently returns 20. The
+   helper reports the shortfall so issue 005 can refuse to start an exam that
+   cannot be filled instead of mislabelling a 20-question run as a 65-question
+   mock.
+9. **`isTooShort` is a display hint, never a discard rule.** EXAM-33 removed
+   the web app's 60-second persistence floor, while EXAM-32 still requires that a
+   backward clock jump must not discard a completed attempt.
+10. **The learning band splits by streak.** SR-14 fixes weights 2 to 3 but the
+    reference derived the exact value inside SQL. `masteryWeight` uses the low
+    end at streak 0 and the high end once a streak exists, and the tests pin that
+    interpretation because it is the only part of the band model the reference
+    did not express in TypeScript.
+11. **Attempt and result shapes are not duplicated.** The task list asked to port
+    them into `core/exam`, but issue 002 already owns the persistence shapes and
+    the engine boundary forbids importing storage. The engine defines only the
+    computation shapes it consumes and returns, so the storage contract stays in
+    one place.
+
+## Open spec gap
+
+The exclusion window has no length anywhere in the materials: SR-16 and SR-17
+require it to exist, say it is counted in sessions rather than days, and demand
+that changing it updates docs and tests, but no number is given and the web
+reference derived it in SQL that is not part of this port. Issue 004 therefore
+consumes `weight: null` and does not invent a window. The value has to be fixed
+where the mastery row is written, before issues 006 and 007 save answers.
 
 ## Out of scope
 
