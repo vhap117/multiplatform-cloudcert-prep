@@ -90,60 +90,60 @@ owns the practice session itself.
 
 ## Tasks
 
-- [ ] Start screen: show cert format, question count, duration, and pass
+- [x] Start screen: show cert format, question count, duration, and pass
       threshold from the registry, with a Start exam action. (`EXAM-1`,
       `EXAM-4`)
-- [ ] Resume entry: when an in-progress mock exam exists for the cert, show a
+- [x] Resume entry: when an in-progress mock exam exists for the cert, show a
       Resume exam action; starting fresh with one in progress requires an
       explicit resume-or-discard choice. (`EXAM-5`, `EXAM-6`, `DATA-40`)
-- [ ] Composition: build the question set with `selectExamQuestions`, shuffle
+- [x] Composition: build the question set with `selectExamQuestions`, shuffle
       question and option order with remap preserved, and persist the session
       state before the first question renders. (`EXAM-2`, `EXAM-3`, `EXAM-7`,
       `DATA-21`)
-- [ ] Question flow for all four types: single grades on selection; multi,
+- [x] Question flow for all four types: single grades on selection; multi,
       ordering, and matching grade after an explicit submit once the response
       is complete; grading is all-or-nothing. (`EXAM-8`, `EXAM-9`, `EXAM-10`)
-- [ ] Flag and unflag per question, and a question grid showing answered,
+- [x] Flag and unflag per question, and a question grid showing answered,
       unanswered, current, and flagged states. (`EXAM-11`, `EXAM-12`)
-- [ ] Persistent toolbar with position, answered progress, remaining time, and
+- [x] Persistent toolbar with position, answered progress, remaining time, and
       a submit action. Previous, next, and grid navigation between questions.
       (`EXAM-13`, `EXAM-15`)
-- [ ] Save each answer locally the moment it is given, before any navigation.
+- [x] Save each answer locally the moment it is given, before any navigation.
       (`EXAM-14`)
-- [ ] Leave guard: in-app navigation away opens a leave-confirmation modal;
+- [x] Leave guard: in-app navigation away opens a leave-confirmation modal;
       confirming preserves the attempt and returns to the previous screen
       without discarding answers. The hardware back handler is deferred to the
       native phase and must reuse this same guard when added. (`EXAM-16` to
       `EXAM-19`)
-- [ ] Wall-clock timer: deadline stored as `startedAt + examTimeSeconds`;
+- [x] Wall-clock timer: deadline stored as `startedAt + examTimeSeconds`;
       remaining time recomputed from `Date.now()`; backgrounding and screen
       lock keep time elapsing; on resume recompute and restore without losing
       answers. (`EXAM-20` to `EXAM-23`)
-- [ ] Deadline passed while backgrounded: end the attempt and show results,
+- [x] Deadline passed while backgrounded: end the attempt and show results,
       unless the student already submitted. (`EXAM-24`)
-- [ ] Low-time warning below a documented threshold, announced to assistive
+- [x] Low-time warning below a documented threshold, announced to assistive
       technology at sensible intervals without noise. (`EXAM-25`, `EXAM-26`)
-- [ ] Submit flow: Ready to submit dialog summarizing answered and flagged
+- [x] Submit flow: Ready to submit dialog summarizing answered and flagged
       counts; on confirm compute raw score, scaled score, per-domain scores,
       pass or fail, and elapsed time in one local transaction that also marks
       the session complete. (`EXAM-27` to `EXAM-34`, `EXAM-36`)
-- [ ] Exactly at the passing threshold passes. No 60-second minimum: a short
+- [x] Exactly at the passing threshold passes. No 60-second minimum: a short
       completed attempt still saves. (`EXAM-30`, `EXAM-33`)
-- [ ] Failed save keeps the results on screen with a retry action and never
+- [x] Failed save keeps the results on screen with a retry action and never
       claims success. (`EXAM-35`)
-- [ ] Results screen: pass or fail, scaled score, percentage, correct count,
+- [x] Results screen: pass or fail, scaled score, percentage, correct count,
       total questions, elapsed time, and per-domain breakdown. (`EXAM-37`,
       `EXAM-38`)
-- [ ] Review mode with all, incorrect, flagged, and per-domain filters; each
+- [x] Review mode with all, incorrect, flagged, and per-domain filters; each
       card shows student answer, correct answer, correctness, flag state,
       explanation summary, and per-option explanations. (`EXAM-39` to
       `EXAM-41`)
-- [ ] Results actions: Practice weakest domain (from local per-domain data)
+- [x] Results actions: Practice weakest domain (from local per-domain data)
       on a failed result, retake with reset state, and return to the cert
       dashboard. Optional: share text that never uploads score data, and a
       report-question action that copies the question id or opens a
       configured issue URL. (`EXAM-42` to `EXAM-46`)
-- [ ] Keep exam events local; nothing leaves the device. (`EXAM-47`)
+- [x] Keep exam events local; nothing leaves the device. (`EXAM-47`)
 
 ## Acceptance criteria
 
@@ -157,6 +157,58 @@ owns the practice session itself.
 - In-app back during the exam opens the leave modal instead of discarding.
 - The whole flow runs with the browser offline and produces zero network
       errors.
+
+## Delivered slices
+
+| Commit | Slice | Tests |
+|---|---|---|
+| `ed3fd68` | session lifecycle, persistence, typed commit failure | 14 |
+| `6220b3d` | this spec and log | - |
+| `c6f70b8` | start screen | 10 |
+| `2338d93` | results and review | 39 |
+| `3c3b382` | routes and navigation across the three screens | - |
+
+Verification: `npm run verify` green on the branch, 313 tests in 24 files, plus
+dash lint, bank drift, ESLint, and the production build. Each slice was rerun by
+the parent before its commit instead of trusting the writer report.
+
+## Decisions recorded during implementation
+
+1. **The flow is full screen.** `/mock-exam/:certCode` with `run` and `results`
+   children sits outside the tabs shell, because an exam in progress must not
+   expose tab navigation and the leave guard only means something when leaving
+   is an explicit decision.
+2. **`SessionRow` gained two fields.** `optionKeyMaps` persists each question's
+   display mapping and `flagged` owns the review flags. The first cut rebuilt
+   the option shuffle from a PRNG seeded by `startedAt`, which would silently
+   misgrade every stored answer after any bank or shuffle change. Borrowing
+   `feedbackShown` for flags would collide with issue 006. `applyOptionKeyMap`
+   was added to the engine so a resume re-applies the stored map.
+3. **Mastery rows never carry a null weight** here, because the exclusion
+   window has no documented length. See the open gaps.
+4. **Share is not implemented** (EXAM-43 is optional and no target is
+   configured). Report question copies the question id (EXAM-42).
+5. **Practice weakest domain navigates to `/tabs/practice?domain=<id>`**, which
+   issue 007 will consume.
+6. **The runner keeps a stopgap result panel** for an uncommitted save, since
+   the results screen needs a stored attempt to review. A committed attempt
+   always goes to the real results route.
+
+## Open gaps
+
+1. **Exclusion window length.** Still absent from every material (issue 004).
+   It must be fixed where mastery rows are written before issues 006 and 007
+   depend on it.
+2. **Mastered threshold.** The rule that flips `mastered` true is also
+   undocumented; the implementation extends the streak on a correct answer,
+   resets it and clears `mastered` on a wrong one, and preserves a prior
+   `mastered` flag otherwise. No number was invented.
+3. **Exam format wording.** The registry has no format field, so the start
+   screen reads "Timed mock exam, scaled score 100 to 1000".
+4. **Coming-soon refusal is composed screen-side** because the session service
+   does not validate `status`. Moving it into the service is the cleaner home.
+5. **Hardware back is deferred** to the native phase and must reuse
+   `mockExamLeaveGuard` (EXAM-19).
 
 ## Out of scope
 
