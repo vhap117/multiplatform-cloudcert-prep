@@ -163,6 +163,7 @@ Each commit is a reviewable work unit carrying its own tests.
 | `5de0f75` | mastery coverage, next-domain action, real-bank round trip, lint boundary | 350 |
 | `2bfe122` | unrelated pre-existing dash lint fix in issue 003 | 6 |
 | `e4d9a94` | this document: port notes, deviations, and the open spec gap | 60 |
+| `118318e` | test environment: in-memory Storage through `setupFiles` | 96 |
 
 The last two are documentation and an unrelated gate fix, split out so the
 engine work reviews as five units. The feature branch stays unmerged; push,
@@ -171,12 +172,18 @@ pull request, and merge are the user's decisions.
 ## Verification evidence
 
 - `src/app/core/exam`: 125 tests across 9 spec files, green.
-- `npm run lint:dashes`, `npm run lint:banks`, `ng lint`, `ng build`: green.
+- Full gate green: dash lint, bank drift, ESLint, 229 tests in 19 files, and the
+  production build.
 - Lint boundary proven by a temporary probe file that imported `@angular/core`
   and `../storage/study-repository`: both were rejected, then the probe was
   removed.
-- `npm run verify` as a whole is not green, for a reason that predates this
-  branch: 6 spec files with 19 failures on `main` (`theme.service`,
-  `motion.service`, `local-settings`) need DOM globals that the unit-test
-  environment does not provide. Reproduced on `main` with this work stashed:
-  same 19 failures. Not caused by, and not fixed by, issue 004.
+- The gate was already red on `main` for two reasons that predate this branch,
+  both fixed here because they blocked any verification of this work:
+  - `issues/003-content-pipeline.md` quoted the literal dash entities in prose,
+    which the dash lint rejects (commit `2bfe122`).
+  - 19 tests in three spec files (`theme.service`, `motion.service`,
+    `local-settings`) failed because the runner exposes `window` and `document`
+    through jsdom but leaves `localStorage` and `sessionStorage` undefined, even
+    though jsdom 28 provides both. A setup file now installs an in-memory
+    Storage only when the global is missing (commit `118318e`). Reproduced on
+    `main` with this work stashed before fixing it.
