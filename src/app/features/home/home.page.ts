@@ -6,6 +6,7 @@ import { getCert, listCerts, type Certification } from '../../core/content/cert-
 import { formatTotalTime } from '../../core/exam';
 import { SETTINGS_KEYS, readSetting } from '../../core/settings/local-settings';
 import { mockExamStartPath } from '../mock-exam/mock-exam.routes';
+import { studyExamStartPath } from '../study-exam/study-exam.routes';
 
 /**
  * Placeholder for the cert dashboard (issue 008).
@@ -43,6 +44,16 @@ import { mockExamStartPath } from '../mock-exam/mock-exam.routes';
               <h2 class="ccp-card-heading">Mock exam</h2>
               <p class="ccp-small ccp-muted">{{ examSummary }}</p>
               <ion-button expand="block" [routerLink]="examPath">Start mock exam</ion-button>
+            </div>
+          }
+
+          @if (studyExamPath; as studyPath) {
+            <div class="ccp-card" style="margin-top: var(--ccp-space-lg)">
+              <h2 class="ccp-card-heading">Study exam</h2>
+              <p class="ccp-small ccp-muted">{{ studyExamSummary }}</p>
+              <ion-button expand="block" fill="outline" [routerLink]="studyPath">
+                Start study exam
+              </ion-button>
             </div>
           }
 
@@ -120,6 +131,11 @@ export class HomePage {
 
   /** Null when the registry has no active cert, which hides the entry. */
   readonly mockExamPath = this.cert ? mockExamStartPath(this.cert.code) : null;
+
+  readonly studyExamPath = this.cert ? studyExamStartPath(this.cert.code) : null;
+
+  readonly studyExamSummary =
+    'Untimed, feedback after every answer, saved automatically.';
 
   readonly examSummary = this.cert
     ? `${this.cert.examQuestionCount} questions, ${formatTotalTime(

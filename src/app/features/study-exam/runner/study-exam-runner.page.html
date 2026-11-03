@@ -1,0 +1,430 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        [defaultHref]="backHref()"
+        [text]="summary() ? 'Close' : 'Exit'"
+        [attr.aria-label]="summary() ? 'Close the summary' : 'Leave the study exam'"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ summary() ? 'Study exam summary' : 'Study exam' }}</ion-title>
+    @if (!summary() && !unavailable() && session.isActive()) {
+      <ion-buttons slot="end">
+        <ion-button [disabled]="finishing()" aria-label="Finish the study exam" (click)="finish()">
+          Finish
+        </ion-button>
+      </ion-buttons>
+    }
+  </ion-toolbar>
+  @if (!summary() && !unavailable() && session.isActive()) {
+    <ion-toolbar class="status-toolbar">
+      <div class="status-bar">
+        <span class="status-item">
+          Question {{ session.currentIndex() + 1 }} of {{ session.totalQuestions() }}
+        </span>
+      </div>
+      <div class="progress-bars" role="group" aria-label="Session progress">
+        <div class="progress-row">
+          <span class="progress-label" id="study-bar-answered-label">Answered</span>
+          <span
+            class="progress-track"
+            role="progressbar"
+            aria-labelledby="study-bar-answered-label"
+            [attr.aria-valuenow]="session.answeredCount()"
+            aria-valuemin="0"
+            [attr.aria-valuemax]="session.totalQuestions()"
+            [attr.aria-valuetext]="answeredValueText()"
+          >
+            <span
+              class="progress-fill answered"
+              [style.width.%]="session.answeredPercent()"
+              [style.background]="answeredFill()"
+            ></span>
+          </span>
+          <span class="progress-value">
+            {{ session.answeredCount() }} of {{ session.totalQuestions() }}
+            ({{ session.answeredPercent() }}%)
+          </span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label" id="study-bar-correct-label">Correct</span>
+          <span
+            class="progress-track"
+            role="progressbar"
+            aria-labelledby="study-bar-correct-label"
+            [attr.aria-valuenow]="session.correctCount()"
+            aria-valuemin="0"
+            [attr.aria-valuemax]="session.totalQuestions()"
+            [attr.aria-valuetext]="correctValueText()"
+          >
+            <span
+              class="progress-fill correct"
+              [style.width.%]="correctPercentOfTotal()"
+            ></span>
+          </span>
+          <span class="progress-value">{{ session.correctCount() }}</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label" id="study-bar-wrong-label">Wrong</span>
+          <span
+            class="progress-track"
+            role="progressbar"
+            aria-labelledby="study-bar-wrong-label"
+            [attr.aria-valuenow]="session.wrongCount()"
+            aria-valuemin="0"
+            [attr.aria-valuemax]="session.totalQuestions()"
+            [attr.aria-valuetext]="wrongValueText()"
+          >
+            <span class="progress-fill wrong" [style.width.%]="wrongPercentOfTotal()"></span>
+          </span>
+          <span class="progress-value">{{ session.wrongCount() }}</span>
+        </div>
+      </div>
+    </ion-toolbar>
+  }
+</ion-header>
+
+<ion-content>
+  <div class="ccp-page">
+    <div class="ccp-content">
+      @if (summary(); as result) {
+        <p class="ccp-kicker">Study exam</p>
+        <h1 class="ccp-display">Study exam complete</h1>
+        <dl class="result-list">
+          <div class="result-row">
+            <dt>Answered</dt>
+            <dd>{{ result.answered }} of {{ result.total }}</dd>
+          </div>
+          <div class="result-row">
+            <dt>Correct</dt>
+            <dd>{{ result.correct }}</dd>
+          </div>
+          <div class="result-row">
+            <dt>Wrong</dt>
+            <dd>{{ result.wrong }}</dd>
+          </div>
+          <div class="result-row">
+            <dt>Accuracy</dt>
+            <dd>{{ result.accuracyPercent }} percent</dd>
+          </div>
+        </dl>
+        @if (result.domains.length > 0) {
+          <h2 class="summary-heading">Results by domain</h2>
+          <dl class="result-list">
+            @for (domain of result.domains; track domain.domainId) {
+              <div class="result-row">
+                <dt>{{ domainName(domain.domainId) }}</dt>
+                <dd>
+                  {{ domain.correct }} of {{ domain.answered }} correct
+                  ({{ domainPercent(domain) }}%)
+                </dd>
+              </div>
+            }
+          </dl>
+        }
+        <div class="action-row">
+          <button type="button" class="ccp-button" (click)="leaveToStart()">
+            Back to study exam
+          </button>
+        </div>
+      } @else if (initialising()) {
+        <p class="ccp-kicker">Study exam</p>
+        <h1 class="ccp-display">Loading your study exam</h1>
+        <p class="ccp-body ccp-muted">Restoring the saved session, if there is one.</p>
+      } @else if (unavailable()) {
+        <p class="ccp-kicker">Study exam</p>
+        <h1 class="ccp-display">No study exam running</h1>
+        <p class="ccp-body ccp-muted">
+          There is no active study exam on this device. Start or resume one from the study exam
+          start screen.
+        </p>
+        <div class="action-row">
+          <button type="button" class="ccp-button" (click)="retryInitialise()">Try again</button>
+          <button type="button" class="ccp-button" (click)="leaveToStart()">
+            Back to study exam
+          </button>
+        </div>
+      } @else if (session.currentQuestion(); as question) {
+        <p class="ccp-kicker">Question {{ session.currentIndex() + 1 }}</p>
+        @if (question.taskStatement; as task) {
+          <p class="task-statement">{{ task }}</p>
+        }
+        <h1 class="question-text">{{ question.question }}</h1>
+
+        @switch (typeOf(question)) {
+          @case ('single') {
+            <fieldset class="options">
+              <legend>
+                {{ session.isGraded(question.id) ? 'Your recorded answer.' : 'Choose one answer. It grades as soon as you select it.' }}
+              </legend>
+              @for (option of optionEntries(question); track option.key) {
+                <label
+                  class="option"
+                  [class.selected]="singleSelection() === option.key"
+                  [class.recorded]="
+                    session.isGraded(question.id) && singleSelection() === option.key
+                  "
+                >
+                  <input
+                    type="radio"
+                    [name]="'answer-' + question.id"
+                    [value]="option.key"
+                    [checked]="singleSelection() === option.key"
+                    [disabled]="session.isGraded(question.id)"
+                    (change)="selectSingle(question.id, option.key)"
+                  />
+                  <span class="option-text">{{ option.text }}</span>
+                  @if (session.isGraded(question.id) && singleSelection() === option.key) {
+                    <span class="option-marker">Your answer</span>
+                  }
+                </label>
+              }
+            </fieldset>
+          }
+          @case ('multi') {
+            <fieldset class="options">
+              <legend>
+                {{ session.isGraded(question.id) ? 'Your recorded answer.' : 'Choose up to ' + maxMulti + ' answers, then confirm to grade.' }}
+              </legend>
+              @for (option of optionEntries(question); track option.key) {
+                <label
+                  class="option"
+                  [class.selected]="multiDraft().includes(option.key)"
+                  [class.recorded]="
+                    session.isGraded(question.id) && multiDraft().includes(option.key)
+                  "
+                >
+                  <input
+                    type="checkbox"
+                    [value]="option.key"
+                    [checked]="multiDraft().includes(option.key)"
+                    [disabled]="
+                      session.isGraded(question.id) ||
+                      (!multiDraft().includes(option.key) && multiDraft().length >= maxMulti)
+                    "
+                    (change)="toggleMulti(question.id, option.key)"
+                  />
+                  <span class="option-text">{{ option.text }}</span>
+                  @if (session.isGraded(question.id) && multiDraft().includes(option.key)) {
+                    <span class="option-marker">Your answer</span>
+                  }
+                </label>
+              }
+            </fieldset>
+            @if (!session.isGraded(question.id)) {
+              <button
+                type="button"
+                class="ccp-button primary"
+                [disabled]="!responseComplete(question)"
+                (click)="confirmMulti(question.id)"
+              >
+                Confirm answer
+              </button>
+            }
+          }
+          @case ('ordering') {
+            <p class="hint" [id]="'ordering-hint-' + question.id">
+              {{ session.isGraded(question.id) ? 'Your recorded order.' : 'Place each step in the right position with the up and down buttons, then confirm to grade.' }}
+            </p>
+            <ol class="ordering" [attr.aria-describedby]="'ordering-hint-' + question.id">
+              @for (
+                key of orderingDraft();
+                track key;
+                let i = $index;
+                let first = $first;
+                let last = $last
+              ) {
+                <li class="ordering-row">
+                  <span class="ordering-position">{{ i + 1 }}.</span>
+                  <span class="ordering-text">{{ optionText(question, key) }}</span>
+                  @if (!session.isGraded(question.id)) {
+                    <span class="ordering-actions">
+                      <button
+                        type="button"
+                        class="ccp-button move"
+                        [disabled]="first"
+                        [attr.aria-label]="'Move ' + optionText(question, key) + ' up'"
+                        (click)="moveOrdering(question.id, i, -1)"
+                      >
+                        Up
+                      </button>
+                      <button
+                        type="button"
+                        class="ccp-button move"
+                        [disabled]="last"
+                        [attr.aria-label]="'Move ' + optionText(question, key) + ' down'"
+                        (click)="moveOrdering(question.id, i, 1)"
+                      >
+                        Down
+                      </button>
+                    </span>
+                  }
+                </li>
+              }
+            </ol>
+            @if (!session.isGraded(question.id)) {
+              <button
+                type="button"
+                class="ccp-button primary"
+                [disabled]="!responseComplete(question)"
+                (click)="confirmOrdering(question.id)"
+              >
+                Confirm answer
+              </button>
+            }
+          }
+          @case ('matching') {
+            @if (session.isGraded(question.id)) {
+              <p class="hint">Your recorded matches.</p>
+              <ul class="match-results">
+                @for (pair of recordedMatching(question); track pair.left.key) {
+                  <li class="match-result">
+                    <span class="match-left">{{ pair.left.text }}</span>
+                    <span class="match-target">{{ pair.targetText }}</span>
+                  </li>
+                }
+              </ul>
+            } @else {
+              <p class="hint">Choose a target for each option, then confirm to grade.</p>
+              @for (option of optionEntries(question); track option.key) {
+                <div class="match-row">
+                  <span class="match-left" [id]="'match-left-' + question.id + '-' + option.key">
+                    {{ option.text }}
+                  </span>
+                  <select
+                    class="match-select"
+                    [value]="matchingDraft()[option.key] ?? ''"
+                    [attr.aria-label]="'Match for ' + option.text"
+                    (change)="selectMatch(question.id, option.key, $event)"
+                  >
+                    <option value="">Choose a target</option>
+                    @for (target of targetEntries(question); track target.key) {
+                      <option [value]="target.key">{{ target.text }}</option>
+                    }
+                  </select>
+                </div>
+              }
+              <button
+                type="button"
+                class="ccp-button primary"
+                [disabled]="!responseComplete(question)"
+                (click)="confirmMatching(question.id)"
+              >
+                Confirm answer
+              </button>
+            }
+          }
+        }
+
+        @if (session.isGraded(question.id)) {
+          @if (session.feedbackFor(question.id); as feedback) {
+            <section
+              class="feedback"
+              #feedbackPanel
+              tabindex="-1"
+              aria-labelledby="study-feedback-heading"
+              [class.correct]="feedback.isCorrect"
+              [class.incorrect]="!feedback.isCorrect"
+            >
+              <h2 class="feedback-heading" id="study-feedback-heading">Feedback</h2>
+              <p class="feedback-verdict">
+                {{ feedback.isCorrect ? 'Correct answer.' : 'Incorrect answer.' }}
+              </p>
+              <p class="feedback-summary">{{ feedback.summary }}</p>
+              @if (!feedback.isCorrect) {
+                @if (entriesOfKind(feedback, 'chosen-wrong').length > 0) {
+                  <div class="feedback-group">
+                    <h3>Wrong options you chose</h3>
+                    <ul>
+                      @for (entry of entriesOfKind(feedback, 'chosen-wrong'); track entry.key) {
+                        <li>
+                          <span class="feedback-key">{{ entry.key }}.</span>
+                          {{ optionText(question, entry.key) }}: {{ entry.text }}
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+                @if (entriesOfKind(feedback, 'missed-correct').length > 0) {
+                  <div class="feedback-group">
+                    <h3>Correct options you missed</h3>
+                    <ul>
+                      @for (entry of entriesOfKind(feedback, 'missed-correct'); track entry.key) {
+                        <li>
+                          <span class="feedback-key">{{ entry.key }}.</span>
+                          {{ optionText(question, entry.key) }}: {{ entry.text }}
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+                @if (entriesOfKind(feedback, 'correct-chosen').length > 0) {
+                  <div class="feedback-group">
+                    <h3>Options you chose correctly</h3>
+                    <ul>
+                      @for (entry of entriesOfKind(feedback, 'correct-chosen'); track entry.key) {
+                        <li>
+                          <span class="feedback-key">{{ entry.key }}.</span>
+                          {{ optionText(question, entry.key) }}: {{ entry.text }}
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+              }
+            </section>
+          }
+        }
+
+        @if (actionError(); as error) {
+          <p class="action-error" role="alert">{{ error }}</p>
+        }
+
+        <div class="pager">
+          <button
+            type="button"
+            class="ccp-button"
+            [disabled]="session.currentIndex() === 0"
+            (click)="previous()"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            class="ccp-button"
+            [disabled]="session.currentIndex() >= session.totalQuestions() - 1"
+            (click)="next()"
+          >
+            Next
+          </button>
+        </div>
+
+        <section class="grid-section">
+          <h2 class="grid-heading">All questions</h2>
+          <div class="question-grid" role="group" aria-label="Question navigation">
+            @for (entry of session.questions(); track entry.id; let i = $index) {
+              <button
+                type="button"
+                class="grid-cell"
+                [class.current]="i === session.currentIndex()"
+                [class.graded-correct]="
+                  session.isGraded(entry.id) && session.isCorrect(entry.id) === true
+                "
+                [class.graded-incorrect]="
+                  session.isGraded(entry.id) && session.isCorrect(entry.id) === false
+                "
+                [attr.aria-current]="i === session.currentIndex() ? 'true' : null"
+                [attr.aria-label]="gridLabel(entry, i)"
+                (click)="goToQuestion(i)"
+              >
+                {{ i + 1 }}
+              </button>
+            }
+          </div>
+        </section>
+      }
+
+      <p class="visually-hidden" role="status">{{ feedbackAnnouncement() }}</p>
+    </div>
+  </div>
+</ion-content>

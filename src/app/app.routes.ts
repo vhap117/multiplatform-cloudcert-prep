@@ -85,6 +85,32 @@ export const routes: Routes = [
     ],
   },
   {
+    /*
+     * The study exam runs full screen too. It deliberately has no leave guard:
+     * progress is saved after every graded answer, so walking away never
+     * discards anything (STUDY-52).
+     */
+    path: 'study-exam/:certCode',
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/study-exam/start/study-exam-start.page').then(
+            (m) => m.StudyExamStartPage,
+          ),
+        title: 'Study exam',
+      },
+      {
+        path: 'run',
+        loadComponent: () =>
+          import('./features/study-exam/runner/study-exam-runner.page').then(
+            (m) => m.StudyExamRunnerPage,
+          ),
+        title: 'Study exam in progress',
+      },
+    ],
+  },
+  {
     path: '**',
     redirectTo: 'tabs/home',
   },

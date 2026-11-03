@@ -27,6 +27,12 @@ describe('home page', () => {
     expect(fixture.componentInstance.mockExamPath).toMatch(/^\/mock-exam\/[a-z0-9-]+$/);
   });
 
+  it('links to the study exam flow for the bundled cert', async () => {
+    const fixture = await createPage();
+
+    expect(fixture.componentInstance.studyExamPath).toMatch(/^\/study-exam\/[a-z0-9-]+$/);
+  });
+
   it('summarizes the exam from the registry', async () => {
     const fixture = await createPage();
 
