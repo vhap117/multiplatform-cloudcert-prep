@@ -84,4 +84,32 @@ module.exports = defineConfig([
       ],
     },
   },
+  {
+    /*
+     * Engine boundary (SR-25, SR-26, issue 004).
+     *
+     * `core/exam` is the pure engine: selection, shuffling, grading, scoring,
+     * timing, adaptive practice, and mastery. A framework or storage import
+     * would make it untestable without a device and would break the promise
+     * that swapping IndexedDB for SQLite is a one-module change.
+     */
+    files: ['src/app/core/exam/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@angular/*', '@ionic/*', '@capacitor/*', '@capacitor-community/*'],
+              message: 'The exam engine is framework independent (SR-25, SR-26).',
+            },
+            {
+              group: ['**/storage/**', '../storage', '../storage/*'],
+              message: 'The engine computes; StudyRepository persists (IONIC-19, SR-26).',
+            },
+          ],
+        },
+      ],
+    },
+  },
 ]);
