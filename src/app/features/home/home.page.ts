@@ -1,5 +1,11 @@
 import { Component } from '@angular/core';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular';
+import { RouterLink } from '@angular/router';
+import { IonButton, IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular';
+
+import { getCert, listCerts, type Certification } from '../../core/content/cert-registry';
+import { formatTotalTime } from '../../core/exam';
+import { SETTINGS_KEYS, readSetting } from '../../core/settings/local-settings';
+import { mockExamStartPath } from '../mock-exam/mock-exam.routes';
 
 /**
  * Placeholder for the cert dashboard (issue 008).
@@ -7,10 +13,14 @@ import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular';
  * The token check card is temporary: it exists so light and dark themes can be
  * verified by eye before any real screen lands. Remove it when issue 008
  * replaces this page.
+ *
+ * The mock exam entry is temporary too. Issue 008 owns the real dashboard
+ * navigation, but without a door here the finished mock exam flow (issue 005)
+ * would be reachable only by typing its URL.
  */
 @Component({
   selector: 'app-home',
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent],
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton, RouterLink],
   template: `
     <ion-header>
       <ion-toolbar>
@@ -27,6 +37,14 @@ import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular';
             The cert dashboard, best score, domain mastery and resume card
             arrive in issue 008.
           </p>
+
+          @if (mockExamPath; as examPath) {
+            <div class="ccp-card" style="margin-top: var(--ccp-space-lg)">
+              <h2 class="ccp-card-heading">Mock exam</h2>
+              <p class="ccp-small ccp-muted">{{ examSummary }}</p>
+              <ion-button expand="block" [routerLink]="examPath">Start mock exam</ion-button>
+            </div>
+          }
 
           <div class="ccp-card" style="margin-top: var(--ccp-space-lg)">
             <h2 class="ccp-card-heading">Design tokens</h2>
@@ -97,4 +115,22 @@ import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular';
     `,
   ],
 })
-export class HomePage {}
+export class HomePage {
+  private readonly cert = resolveCert();
+
+  /** Null when the registry has no active cert, which hides the entry. */
+  readonly mockExamPath = this.cert ? mockExamStartPath(this.cert.code) : null;
+
+  readonly examSummary = this.cert
+    ? `${this.cert.examQuestionCount} questions, ${formatTotalTime(
+        Math.round(this.cert.examTimeSeconds / 60),
+      )}, pass at ${this.cert.passingScore}`
+    : 'No active certification is bundled.';
+}
+
+/** The locally selected cert, falling back to the first active one (EXAM-1). */
+function resolveCert(): Certification | null {
+  const selected = readSetting(SETTINGS_KEYS.selectedCert);
+  const chosen = selected ? getCert(selected) : null;
+  return chosen ?? listCerts({ activeOnly: true })[0] ?? null;
+}
