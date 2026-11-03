@@ -167,6 +167,22 @@ owns the practice session itself.
 | `c6f70b8` | start screen | 10 |
 | `2338d93` | results and review | 39 |
 | `3c3b382` | routes and navigation across the three screens | - |
+| `fix` | `app.config` provider for `STUDY_REPOSITORY`, plus a spec that boots the real provider list | 1 |
+| `feat` | home screen entry into the flow | 3 |
+
+## Wiring defect found after the close
+
+The flow shipped with routes but no `provideStudyRepository()` in
+`app.config.ts`, so all three screens threw a NullInjectorError while
+constructing and rendered blank. Every feature spec provided the token itself,
+which is why build and 316 tests were green while the app was unusable.
+
+Two lessons are now enforced: `src/app/app.config.spec.ts` boots the real
+provider list and requires the token to resolve, and no screen is considered
+delivered before a headless browser dump shows its content, because Ionic
+renders `<app-root>` only and grepping the served HTML proves nothing.
+
+
 
 Verification: `npm run verify` green on the branch, 313 tests in 24 files, plus
 dash lint, bank drift, ESLint, and the production build. Each slice was rerun by
@@ -193,6 +209,12 @@ the parent before its commit instead of trusting the writer report.
 6. **The runner keeps a stopgap result panel** for an uncommitted save, since
    the results screen needs a stored attempt to review. A committed attempt
    always goes to the real results route.
+
+## Entry point
+
+The mock exam is reached from the Home screen card, which issue 008 will
+replace with the real dashboard navigation. The flow is full screen, so it has
+no tab bar once inside.
 
 ## Open gaps
 
