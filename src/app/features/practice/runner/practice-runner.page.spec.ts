@@ -325,14 +325,23 @@ describe('PracticeRunnerPage question flow (PRACT-9 to PRACT-15)', () => {
     const { fixture, el } = await render();
 
     expect(el.textContent).toContain('Question 1 of 4');
-    const bar = el.querySelector<HTMLElement>('[role="progressbar"]');
-    expect(bar?.getAttribute('aria-valuenow')).toBe('0');
+    const bars = () => [...el.querySelectorAll<HTMLElement>('[role="progressbar"]')];
+    expect(bars()).toHaveLength(3);
+    expect(bars()[0]?.getAttribute('aria-valuenow')).toBe('0');
 
     await answerSingle(fixture, el, 'B');
 
-    expect(el.querySelector<HTMLElement>('[role="progressbar"]')?.getAttribute('aria-valuenow')).toBe(
-      '1',
-    );
+    const [answered, correct, wrong] = bars() as [HTMLElement, HTMLElement, HTMLElement];
+    expect(answered.getAttribute('aria-valuenow')).toBe('1');
+    expect(answered.getAttribute('aria-valuemax')).toBe('4');
+    expect(answered.getAttribute('aria-valuetext')).toBe('1 of 4 answered, 25 percent');
+    expect(correct.getAttribute('aria-valuenow')).toBe('1');
+    expect(correct.getAttribute('aria-valuetext')).toBe('1 correct');
+    expect(wrong.getAttribute('aria-valuenow')).toBe('0');
+    expect(wrong.getAttribute('aria-valuetext')).toBe('0 wrong');
+    expect(el.querySelector('#practice-bar-answered-label')?.textContent).toBe('Answered');
+    expect(el.querySelector('#practice-bar-correct-label')?.textContent).toBe('Correct');
+    expect(el.querySelector('#practice-bar-wrong-label')?.textContent).toBe('Wrong');
   });
 
   it('grades a single answer on selection and shows the explanation feedback', async () => {

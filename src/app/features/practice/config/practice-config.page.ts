@@ -10,6 +10,7 @@ import {
 } from '@ionic/angular';
 
 import { getCert, type Certification } from '../../../core/content/cert-registry';
+import { HomeButtonComponent } from '../../../layout/home-button/home-button.component';
 import {
   DEFAULT_PRACTICE_QUESTIONS,
   MAX_PRACTICE_QUESTIONS,
@@ -36,11 +37,19 @@ const SIZE_STEP = 5;
  */
 @Component({
   selector: 'app-practice-config',
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton],
+  imports: [
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonButton,
+    HomeButtonComponent,
+  ],
   template: `
     <ion-header>
       <ion-toolbar>
         <ion-title>Domain practice</ion-title>
+        <app-home-button />
       </ion-toolbar>
     </ion-header>
 

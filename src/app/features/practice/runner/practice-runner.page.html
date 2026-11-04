@@ -16,23 +16,62 @@
           Question {{ session.currentIndex() + 1 }} of {{ session.totalQuestions() }}
         </span>
       </div>
-      <div class="progress-row">
-        <span class="progress-label" id="practice-bar-answered-label">Answered</span>
-        <span
-          class="progress-track"
-          role="progressbar"
-          aria-labelledby="practice-bar-answered-label"
-          [attr.aria-valuenow]="session.answeredCount()"
-          aria-valuemin="0"
-          [attr.aria-valuemax]="session.totalQuestions()"
-          [attr.aria-valuetext]="answeredValueText()"
-        >
-          <span class="progress-fill" [style.width.%]="session.answeredPercent()"></span>
-        </span>
-        <span class="progress-value">
-          {{ session.answeredCount() }} of {{ session.totalQuestions() }}
-          ({{ session.answeredPercent() }}%)
-        </span>
+      <div class="progress-bars" role="group" aria-label="Session progress">
+        <div class="progress-row">
+          <span class="progress-label" id="practice-bar-answered-label">Answered</span>
+          <span
+            class="progress-track"
+            role="progressbar"
+            aria-labelledby="practice-bar-answered-label"
+            [attr.aria-valuenow]="session.answeredCount()"
+            aria-valuemin="0"
+            [attr.aria-valuemax]="session.totalQuestions()"
+            [attr.aria-valuetext]="answeredValueText()"
+          >
+            <span
+              class="progress-fill answered"
+              [style.width.%]="session.answeredPercent()"
+              [style.background]="answeredFill()"
+            ></span>
+          </span>
+          <span class="progress-value">
+            {{ session.answeredCount() }} of {{ session.totalQuestions() }}
+            ({{ session.answeredPercent() }}%)
+          </span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label" id="practice-bar-correct-label">Correct</span>
+          <span
+            class="progress-track"
+            role="progressbar"
+            aria-labelledby="practice-bar-correct-label"
+            [attr.aria-valuenow]="session.correctCount()"
+            aria-valuemin="0"
+            [attr.aria-valuemax]="session.totalQuestions()"
+            [attr.aria-valuetext]="correctValueText()"
+          >
+            <span
+              class="progress-fill correct"
+              [style.width.%]="correctPercentOfTotal()"
+            ></span>
+          </span>
+          <span class="progress-value">{{ session.correctCount() }}</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label" id="practice-bar-wrong-label">Wrong</span>
+          <span
+            class="progress-track"
+            role="progressbar"
+            aria-labelledby="practice-bar-wrong-label"
+            [attr.aria-valuenow]="session.wrongCount()"
+            aria-valuemin="0"
+            [attr.aria-valuemax]="session.totalQuestions()"
+            [attr.aria-valuetext]="wrongValueText()"
+          >
+            <span class="progress-fill wrong" [style.width.%]="wrongPercentOfTotal()"></span>
+          </span>
+          <span class="progress-value">{{ session.wrongCount() }}</span>
+        </div>
       </div>
     </ion-toolbar>
   }

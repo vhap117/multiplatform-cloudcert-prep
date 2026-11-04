@@ -381,6 +381,36 @@ export class PracticeRunnerPage implements OnInit, PracticeLeaveAware {
       `${this.session.answeredPercent()} percent`,
   );
 
+  /** Accuracy blends the answered bar between light green and intense orange. */
+  readonly accuracyPercent = computed(() => {
+    const answered = this.session.answeredCount();
+    if (answered === 0) {
+      return 100;
+    }
+    return Math.round((this.session.correctCount() / answered) * 100);
+  });
+
+  readonly answeredFill = computed(
+    () => `color-mix(in srgb, rgb(74 222 128) ${this.accuracyPercent()}%, rgb(249 115 22))`,
+  );
+
+  readonly correctPercentOfTotal = computed(() =>
+    this.percentOfTotal(this.session.correctCount()),
+  );
+
+  readonly wrongPercentOfTotal = computed(() =>
+    this.percentOfTotal(this.session.wrongCount()),
+  );
+
+  private percentOfTotal(count: number): number {
+    const total = this.session.totalQuestions();
+    return total === 0 ? 0 : Math.round((count / total) * 100);
+  }
+
+  readonly correctValueText = computed(() => `${this.session.correctCount()} correct`);
+
+  readonly wrongValueText = computed(() => `${this.session.wrongCount()} wrong`);
+
   async goToQuestion(index: number): Promise<void> {
     if (
       index < 0 ||

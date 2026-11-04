@@ -5,6 +5,7 @@ import { IonButton, IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/a
 import { getCert, listCerts, type Certification } from '../../../core/content/cert-registry';
 import { formatTotalTime } from '../../../core/exam';
 import { SETTINGS_KEYS, readSetting } from '../../../core/settings/local-settings';
+import { HomeButtonComponent } from '../../../layout/home-button/home-button.component';
 import { mockExamRunPath } from '../mock-exam.routes';
 import { MockExamSessionService } from '../session/mock-exam-session.service';
 
@@ -50,11 +51,19 @@ function resolveCert(): Certification | null {
 
 @Component({
   selector: 'app-mock-exam-start',
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton],
+  imports: [
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonButton,
+    HomeButtonComponent,
+  ],
   template: `
     <ion-header>
       <ion-toolbar>
         <ion-title>Mock exam</ion-title>
+        <app-home-button />
       </ion-toolbar>
     </ion-header>
 

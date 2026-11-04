@@ -4,6 +4,7 @@ import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular';
 
 import { getCert, listCerts, type Certification } from '../../core/content/cert-registry';
 import { SETTINGS_KEYS, readSetting } from '../../core/settings/local-settings';
+import { HomeButtonComponent } from '../../layout/home-button/home-button.component';
 
 import { PRACTICE_SEGMENT } from './practice.routes';
 
@@ -15,11 +16,19 @@ import { PRACTICE_SEGMENT } from './practice.routes';
  */
 @Component({
   selector: 'app-practice',
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, RouterLink],
+  imports: [
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    RouterLink,
+    HomeButtonComponent,
+  ],
   template: `
     <ion-header>
       <ion-toolbar>
         <ion-title>Practice</ion-title>
+        <app-home-button />
       </ion-toolbar>
     </ion-header>
 

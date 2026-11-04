@@ -5,6 +5,7 @@ import { IonButton, IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/a
 import { getCert, listCerts, type Certification } from '../../../core/content/cert-registry';
 import { getExamDomainTargets } from '../../../core/exam';
 import { SETTINGS_KEYS, readSetting } from '../../../core/settings/local-settings';
+import { HomeButtonComponent } from '../../../layout/home-button/home-button.component';
 import { StudyExamSessionService } from '../session/study-exam-session.service';
 import { studyExamRunPath } from '../study-exam.routes';
 
@@ -81,11 +82,19 @@ function buildDomainFacts(cert: Certification): readonly DomainFact[] {
 
 @Component({
   selector: 'app-study-exam-start',
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton],
+  imports: [
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonButton,
+    HomeButtonComponent,
+  ],
   template: `
     <ion-header>
       <ion-toolbar>
         <ion-title>Study exam</ion-title>
+        <app-home-button />
       </ion-toolbar>
     </ion-header>
 
