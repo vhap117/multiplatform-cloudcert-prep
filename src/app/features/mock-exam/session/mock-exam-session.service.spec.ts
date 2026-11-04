@@ -5,16 +5,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { Certification } from '../../../core/content/cert-registry';
 import { questionType, type Question } from '../../../core/content/question-types';
-import {
-  LEARNING_WEIGHT_MAX,
-  correctAnswerFor,
-  decodeAnswerForDb,
-} from '../../../core/exam';
+import { correctAnswerFor, decodeAnswerForDb } from '../../../core/exam';
 import { StorageWriteError } from '../../../core/storage/errors';
 import { createStudyRepository } from '../../../core/storage/repository-provider';
 import { STUDY_REPOSITORY } from '../../../core/storage/repository-provider';
 import type { StudyRepository } from '../../../core/storage/study-repository';
-import type { CommitAnswersInput } from '../../../core/storage/types';
+import type { CommitAnswersInput, QuestionMasteryRow } from '../../../core/storage/types';
 
 import { MockExamCommitError, MockExamSessionError } from './mock-exam-session.errors';
 import { MockExamSessionService } from './mock-exam-session.service';
@@ -395,20 +391,14 @@ describe('MockExamSessionService', () => {
       expect(input.clearSession).toEqual({ cert: 'clf-c02', kind: 'mock' });
       expect(input.attempt?.id).toBe(attempt.id);
       expect(input.results).toHaveLength(65);
-      expect(input.mastery).toHaveLength(65);
+      // EXAM-34A: a mock exam writes no question mastery rows at all.
+      expect(input.mastery).toEqual([]);
       expect(input.progress).toHaveLength(4);
       expect(attempt.correctCount).toBe(65);
       expect(attempt.scaledScore).toBe(1000);
       expect(attempt.passed).toBe(true);
       expect(attempt.domainScores.every((domain) => domain.percent === 100)).toBe(true);
       expect(input.results.find((row) => row.questionId === flagged.id)?.wasFlagged).toBe(true);
-      // Mastery rows carry an engine band weight, never null (issue 005 log L2).
-      expect(input.mastery.every((row) => row.weight !== null)).toBe(true);
-      expect(
-        input.mastery.every(
-          (row) => row.weight === LEARNING_WEIGHT_MAX && row.correctStreak === 1 && !row.lastWasWrong,
-        ),
-      ).toBe(true);
 
       expect(await repository.getSession('clf-c02', 'mock')).toBeNull();
       expect(await repository.getAttempt(attempt.id)).not.toBeNull();
@@ -418,6 +408,47 @@ describe('MockExamSessionService', () => {
       const fresh = freshService();
       expect(await fresh.resume('clf-c02')).toBe(false);
       expect(await fresh.hasInProgress('clf-c02')).toBe(false);
+    });
+
+    it('never touches question mastery: a resting row survives a mock submit byte for byte (EXAM-34A)', async () => {
+      at(4_500_000);
+      const service = freshService();
+      await service.start('clf-c02');
+      const resting = service.questions()[0];
+      if (!resting) {
+        throw new Error('expected a session question');
+      }
+
+      // A mastered question resting inside its exclusion window: null weight,
+      // two sessions into a three session rest (SR-16).
+      const restingRow: QuestionMasteryRow = {
+        id: `clf-c02:${resting.id}`,
+        cert: 'clf-c02',
+        domainId: resting.domainId,
+        questionId: resting.id,
+        correctStreak: 2,
+        lastWasWrong: false,
+        lastSeenAt: 500,
+        mastered: true,
+        sessionsSinceSeen: 2,
+        weight: null,
+      };
+      await repository.commitAnswers({
+        attempt: null,
+        results: [],
+        progress: [],
+        mastery: [restingRow],
+      });
+
+      // The student answers the resting question correctly inside the exam.
+      await service.answer(resting.id, correctAnswerFor(resting));
+      const attempt = await service.submit();
+
+      expect(attempt.correctCount).toBeGreaterThanOrEqual(1);
+      // The stored mastery row is exactly what it was: a mock exam never
+      // ends an exclusion window or rewrites a weight (EXAM-34A, SR-16).
+      const rows = await repository.getQuestionMastery('clf-c02');
+      expect(rows.find((row) => row.questionId === resting.id)).toEqual(restingRow);
     });
 
     it('leaves the session intact and raises a typed error when the commit fails', async () => {

@@ -25,10 +25,11 @@
  *   write, where only complete responses count (S3). `correctCount` and
  *   `wrongCount` stay zero while the exam runs because a mock exam grades
  *   nothing before submit.
- * - Mastery rows at submit derive their weight from the engine
- *   `masteryWeight` bands and never write a null weight, because the
- *   exclusion window length is an open spec gap that must not be invented
- *   here (issue 004 open gap, issue 005 log L2).
+ * - Pure assessment for mastery (EXAM-34A, issue 005 log L5): submit writes
+ *   no question mastery rows at all. Only study exams and practice sessions
+ *   move per-question mastery (SR-7, SR-11), so a mock exam never shifts
+ *   the adaptive pool or ends an exclusion window. Domain progress still
+ *   updates from every result (EXAM-34).
  */
 
 import { Injectable, computed, inject, signal } from '@angular/core';
@@ -49,7 +50,6 @@ import {
   getDomainScore,
   isAnswerCorrect,
   isPassed,
-  masteryWeight,
   remainingSeconds as secondsUntil,
   selectExamQuestions,
   shuffleAndMapQuestions,
@@ -61,7 +61,6 @@ import type {
   AttemptRow,
   CertProgressRow,
   DomainScoreRow,
-  QuestionMasteryRow,
   QuestionResultRow,
   SessionRow,
 } from '../../../core/storage/types';
@@ -356,10 +355,11 @@ export class MockExamSessionService {
 
   /**
    * Grade the exam and commit it in exactly one local transaction (S6):
-   * attempt, question rows, derived domain progress, mastery rows, and the
-   * session clear. A failed commit raises `MockExamCommitError`, keeps the
-   * session row intact, and keeps the computed result available for retry
-   * (EXAM-35).
+   * attempt, question rows, derived domain progress, and the session clear.
+   * The commit carries no mastery rows: a mock exam is pure assessment for
+   * per-question mastery (EXAM-34A, issue 005 log L5). A failed commit
+   * raises `MockExamCommitError`, keeps the session row intact, and keeps
+   * the computed result available for retry (EXAM-35).
    */
   async submit(): Promise<AttemptRow> {
     const active = this.requireActive();
@@ -402,14 +402,14 @@ export class MockExamSessionService {
     }));
 
     const progress = await this.deriveProgress(active, results, now);
-    const mastery = await this.deriveMastery(active, graded, now);
 
     try {
       await this.repository.commitAnswers({
         attempt,
         results,
         progress,
-        mastery,
+        // EXAM-34A: a mock exam never creates or updates question mastery.
+        mastery: [],
         clearSession: { cert: active.cert.code, kind: SESSION_KIND },
       });
     } catch (cause) {
@@ -547,39 +547,6 @@ export class MockExamSessionService {
         correct: rows.filter((row) => row.isCorrect).length,
         masteryPercent: calculateDomainMastery(covered.size, domain.id, active.cert.code),
         updatedAt: now,
-      };
-    });
-  }
-
-  /**
-   * Fold this attempt into per-question mastery. A correct answer extends the
-   * streak, a wrong one resets it and clears the mastered flag. The weight
-   * always comes from the engine bands and is never null, because the
-   * exclusion window length is an open spec gap (issue 005 log L2).
-   */
-  private async deriveMastery(
-    active: ActiveMockExam,
-    graded: readonly GradedQuestion[],
-    now: number,
-  ): Promise<QuestionMasteryRow[]> {
-    const existing = new Map(
-      (await this.repository.getQuestionMastery(active.cert.code)).map((row) => [row.questionId, row]),
-    );
-    return graded.map((entry) => {
-      const previous = existing.get(entry.question.id);
-      const correctStreak = entry.isCorrect ? (previous?.correctStreak ?? 0) + 1 : 0;
-      const mastered = entry.isCorrect ? (previous?.mastered ?? false) : false;
-      const lastWasWrong = !entry.isCorrect;
-      return {
-        id: `${active.cert.code}:${entry.question.id}`,
-        cert: active.cert.code,
-        domainId: entry.question.domainId,
-        questionId: entry.question.id,
-        correctStreak,
-        lastWasWrong,
-        lastSeenAt: now,
-        mastered,
-        weight: masteryWeight({ mastered, lastWasWrong, correctStreak }),
       };
     });
   }
