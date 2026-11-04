@@ -85,7 +85,6 @@ export interface ExamAttempt {
   cert_code: string
   attempted_at: string
   score_percent: number
-  scaled_score: number
   passed: boolean
   time_taken_seconds: number
   total_questions: number

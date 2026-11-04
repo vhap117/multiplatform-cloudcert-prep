@@ -41,7 +41,7 @@ import {
   applyOptionKeyMap,
   availableExamQuestions,
   calculateDomainMastery,
-  calculateScaledScore,
+  calculateScorePercent,
   computeExamTiming,
   correctAnswerFor,
   deadlineFor,
@@ -373,7 +373,7 @@ export class MockExamSessionService {
     const correctCount = graded.filter((entry) => entry.isCorrect).length;
     const total = graded.length;
     const timing = computeExamTiming(active.row.startedAt, now, active.cert.examTimeSeconds);
-    const scaledScore = calculateScaledScore(correctCount, total);
+    const scorePercent = calculateScorePercent(correctCount, total);
     const attempt: AttemptRow = {
       id: `${active.cert.code}:${SESSION_KIND}:${active.row.startedAt}`,
       cert: active.cert.code,
@@ -382,9 +382,8 @@ export class MockExamSessionService {
       finishedAt: now,
       totalQuestions: total,
       correctCount,
-      scorePercent: total === 0 ? 0 : Math.round((correctCount / total) * 100),
-      scaledScore,
-      passed: isPassed(scaledScore, active.cert.passingScore),
+      scorePercent,
+      passed: isPassed(scorePercent, active.cert.passingPercent),
       timeTakenSeconds: timing.timeTaken,
       domainScores: this.domainScores(active.cert, graded),
     };

@@ -39,7 +39,8 @@ export interface Certification {
   shortName: string;
   examQuestionCount: number;
   examTimeSeconds: number;
-  passingScore: number;
+  /** Minimum score percentage required to pass. */
+  passingPercent: number;
   domains: CertDomain[];
   status: CertStatus;
   /** Exam guide revision the bank was checked against, when known. */

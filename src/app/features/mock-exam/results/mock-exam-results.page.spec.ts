@@ -92,7 +92,6 @@ const PASS_ATTEMPT: AttemptRow = {
   totalQuestions: 65,
   correctCount: 44,
   scorePercent: 68,
-  scaledScore: 709,
   passed: true,
   timeTakenSeconds: 3123,
   domainScores: [
@@ -107,7 +106,6 @@ const FAIL_ATTEMPT: AttemptRow = {
   ...PASS_ATTEMPT,
   correctCount: 40,
   scorePercent: 62,
-  scaledScore: 654,
   passed: false,
   domainScores: [
     { domainId: 1, correct: 9, total: 16, percent: 56 },
@@ -249,9 +247,8 @@ describe('MockExamResultsPage', () => {
     const text = fixture.nativeElement.textContent as string;
 
     expect(text).toContain('You passed');
-    expect(text).toContain('709');
-    expect(text).toContain('of 1000');
-    expect(text).toContain('pass mark 700');
+    expect(text).toContain('68%');
+    expect(text).toContain('pass mark 67%');
     expect(text).toContain('68%');
     expect(text).toContain('44');
     expect(text).toContain('of 65 questions');
@@ -286,7 +283,7 @@ describe('MockExamResultsPage', () => {
 
     const text = fixture.nativeElement.textContent as string;
     expect(text).toContain('You passed');
-    expect(text).toContain('709');
+    expect(text).toContain('68%');
   });
 
   it('narrows the review list with each filter (S9, EXAM-39, EXAM-40)', async () => {

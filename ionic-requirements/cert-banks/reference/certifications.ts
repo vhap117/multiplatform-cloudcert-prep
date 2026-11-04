@@ -85,10 +85,8 @@ export interface ExamFormat {
   questionCount: number
   /** Time allotted for the real exam, in minutes. */
   timeMinutes: number
-  /** Scaled score required to pass. */
-  passingScore: number
-  /** Scaled-score range, e.g. '100-1000'. */
-  scoringScale: string
+  /** Score percentage required to pass. */
+  passingPercent: number
   /**
    * Question formats used by the REAL exam, e.g. 'single-select',
    * 'multi-select', 'ordering', 'matching'. Mirrors the official
@@ -116,7 +114,7 @@ export interface Certification {
   shortName: string
   examQuestionCount: number
   examTimeSeconds: number
-  passingScore: number
+  passingPercent: number
   domains: CertDomain[]
   status: 'active' | 'coming-soon'
   /**
@@ -169,7 +167,7 @@ export const CERTIFICATIONS: Record<string, Certification> = {
     shortName: 'CLF-C02',
     examQuestionCount: 65,
     examTimeSeconds: 90 * 60,
-    passingScore: 700,
+    passingPercent: 67,
     domains: [
       { id: 1, name: 'Cloud Concepts', questionCount: 187, examProportion: 0.24, weight: 24, taskRange: '1.1-1.4', blurb: 'what the AWS Cloud offers, the Cloud Adoption Framework, and core design ideas like elasticity, high availability, and why cloud can cost less than your own servers' },
       { id: 2, name: 'Security & Compliance', questionCount: 247, examProportion: 0.30, weight: 30, taskRange: '2.1-2.4', blurb: 'the AWS shared responsibility model, identity and access management, encryption, and the AWS tools that keep cloud workloads secure and compliant' },
@@ -187,8 +185,7 @@ export const CERTIFICATIONS: Record<string, Certification> = {
     examFormat: {
       questionCount: 65,
       timeMinutes: 90,
-      passingScore: 700,
-      scoringScale: '100-1000',
+      passingPercent: 67,
       questionTypes: ['multiple choice', 'multiple response'],
     },
     // Task statements verbatim from the AWS CLF-C02 exam guide content outline.
@@ -345,7 +342,7 @@ export const CERTIFICATIONS: Record<string, Certification> = {
     shortName: 'SAA-C03',
     examQuestionCount: 65,
     examTimeSeconds: 130 * 60,
-    passingScore: 720,
+    passingPercent: 69,
     domains: [
       { id: 1, name: 'Design Secure Architectures', questionCount: 5, examProportion: 0.30 },
       { id: 2, name: 'Design Resilient Architectures', questionCount: 5, examProportion: 0.26 },
@@ -363,7 +360,7 @@ export const CERTIFICATIONS: Record<string, Certification> = {
     shortName: 'AIF-C01',
     examQuestionCount: 65,
     examTimeSeconds: 90 * 60,
-    passingScore: 700,
+    passingPercent: 67,
     domains: [
       { id: 1, name: 'Fundamentals of AI and ML', questionCount: 133, examProportion: 0.20, weight: 20, taskRange: '1.1-1.3', blurb: 'basic AI and machine-learning ideas and terms, real-world uses for AI, and the stages of the machine-learning lifecycle' },
       { id: 2, name: 'Fundamentals of Generative AI', questionCount: 80, examProportion: 0.24, weight: 24, taskRange: '2.1-2.3', blurb: 'how generative AI and foundation models work, which business problems they can and cannot solve, and the AWS services used to build generative AI applications' },
@@ -379,8 +376,7 @@ export const CERTIFICATIONS: Record<string, Certification> = {
     examFormat: {
       questionCount: 65,
       timeMinutes: 90,
-      passingScore: 700,
-      scoringScale: '100-1000',
+      passingPercent: 67,
       // Real AIF-C01 exam (guide v1.1, April 2026) uses these four response
       // formats. The official exam guide lists NO case-study format - do not
       // re-add it (verified against the AIF-C01 guide question-types section).

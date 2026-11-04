@@ -1,26 +1,25 @@
 /**
  * Exam scoring (EXAM-28 to EXAM-30).
  *
- * AWS reports a scaled score on a 100 to 1000 band. The passing threshold is
- * per cert and inclusive, so exactly 700 passes CLF-C02 but fails SAA-C03,
- * which asks for 720.
+ * Scores are percentages of correct answers. Pass/fail compares that
+ * percentage with the cert's configured passing percentage, so exactly the
+ * configured threshold passes.
  */
 
 import type { DomainResult } from './exam-types';
 
-/** Map a raw correct count onto the AWS 100 to 1000 band, clamped. */
-export function calculateScaledScore(correct: number, total: number): number {
+/** Percentage of correct answers, rounded to a whole percent. */
+export function calculateScorePercent(correct: number, total: number): number {
   if (total <= 0) {
-    return 100;
+    return 0;
   }
-  const rawPercent = correct / total;
-  const scaled = Math.round(100 + rawPercent * 900);
-  return Math.min(1000, Math.max(100, scaled));
+  const percent = Math.round((correct / total) * 100);
+  return Math.min(100, Math.max(0, percent));
 }
 
 /** Pass or fail against the cert threshold, inclusive (EXAM-30). */
-export function isPassed(scaledScore: number, passingScore: number): boolean {
-  return scaledScore >= passingScore;
+export function isPassed(scorePercent: number, passingPercent: number): boolean {
+  return scorePercent >= passingPercent;
 }
 
 /** Percentage of correct answers inside one domain (EXAM-38). */
@@ -38,7 +37,9 @@ export function formatTime(seconds: number): string {
   const minutes = Math.floor(seconds / 60)
     .toString()
     .padStart(2, '0');
-  const remainder = (seconds % 60).toString().padStart(2, '0');
+  const remainder = (seconds % 60)
+    .toString()
+    .padStart(2, '0');
   return `${minutes}:${remainder}`;
 }
 

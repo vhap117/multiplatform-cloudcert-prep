@@ -104,6 +104,28 @@ There is no concept of a guest or a signed-in user. A "new install" is simply an
 empty local database. A "restore" is an explicit import. This removes the entire
 account lifecycle and the web app's cross-account contamination risks.
 
+## Terminology: exams, attempts, and practice
+
+- **certCode** is the certification identifier from the bundled registry, for
+  example `clf-c02` or `aif-c01`. Dashboard exam metrics are scoped to the
+  selected certCode.
+- **Certification exam** is a full-length assessment of a certification,
+  delivered only as a timed mock exam or an untimed study exam. A completed
+  exam produces exactly one exam attempt.
+- **Exam attempt** is a completed mock exam or study exam. Exam attempts are
+  the only records used for pass rate, average score, best score, and the
+  recent exam attempts list.
+- **Practice session** is a short adaptive drill scoped to one exam domain. It
+  is not an exam and does not create an exam attempt. Practice data feeds
+  domain coverage, mastery, and the Next up recommendation only.
+
+Implementation note: a completed mock exam, study exam, or practice session is
+persisted as one `AttemptRow` whose `kind` is `mock`, `study`, or `practice`.
+An exam attempt is an `AttemptRow` filtered to `mock` or `study`; a practice
+session is an `AttemptRow` with `kind: 'practice'`. Practice sessions keep their
+per-domain scores in that row, so the dashboard can derive practice domain
+strength without a separate table or schema change.
+
 ## Migration position
 
 The web app's question bank and scoring rules are the starting point. The Ionic
@@ -111,7 +133,7 @@ app should reuse:
 
 - the question JSON schema, with its explanation object and note,
 - the answer formats and all-or-nothing grading,
-- scaled scoring and per-domain scores,
+- percentage scoring and per-domain scores,
 - the domain mastery definition,
 - the study-exam progress bars and feedback rules,
 - the accessibility and copy constraints.

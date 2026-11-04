@@ -53,7 +53,7 @@ const CERT: Certification = {
   shortName: 'BUILD',
   examQuestionCount: 3,
   examTimeSeconds: 3600,
-  passingScore: 700,
+  passingPercent: 67,
   status: 'active',
   domains: [
     { id: 1, name: 'One', questionCount: 3, examProportion: 0.5 },
@@ -137,7 +137,6 @@ describe('buildAttemptRows', () => {
       totalQuestions: 3,
       correctCount: 2,
       scorePercent: 67,
-      scaledScore: 700,
       passed: true,
       timeTakenSeconds: 95,
       domainScores: [

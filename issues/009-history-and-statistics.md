@@ -3,8 +3,8 @@
 ## Context
 
 History replaces the web app's server-backed activity feed. It lists every
-completed attempt and practice session, opens any of them for full question
-review, and powers a local statistics view. Reset operations live here because
+completed exam attempt and practice session, opens any of them for full
+question review, and powers a local statistics view. Reset operations live here because
 they act on exactly this data.
 
 Spec: `../ionic-requirements/05-progress-and-history.md` (history, reset, and
@@ -18,16 +18,17 @@ Blocks: 013 (history is part of the hardening pass).
 
 ## Tasks
 
-- [ ] History list of local attempts and completed sessions, newest first.
-      (`PROG-16`, `PROG-24`)
+- [ ] History list of local exam attempts and completed practice sessions,
+      newest first. (`PROG-16`, `PROG-24`)
 - [ ] Filters: by cert, all, passed, failed, mock exam, study exam, and domain
       practice. Filter chips expose their selected state to assistive
       technology. (`PROG-17`, `PROG-18`)
 - [ ] Session types stay distinguishable in the list and in records, with
       study exams contributing to the shared best-score dashboard.
       (`PROG-47`, `PROG-48`)
-- [ ] Each attempt expands to show per-domain scores and metadata; expanding
-      loads its question results and offers review. (`PROG-20`, `PROG-21`)
+- [ ] Each exam attempt expands to show per-domain scores and metadata;
+      expanding loads its question results and offers review. (`PROG-20`,
+      `PROG-21`)
 - [ ] Question review filters by all, incorrect, flagged, and domain. Each
       card shows the explanation summary and per-option explanations for the
       recorded answer, plus student answer, correct answer, correctness, and
@@ -37,20 +38,21 @@ Blocks: 013 (history is part of the hardening pass).
 - [ ] Failure handling: a history load failure shows an error with Try again;
       no spinner depends on a network call; offline use never shows a
       connection error. (`PROG-25`, `PROG-26`)
-- [ ] Local statistics view: totals for attempts, questions answered,
-      accuracy, study time, and best score, split by mock exams, study exams,
-      and domain practice, with per-domain accuracy and coverage for the
-      selected cert. A read failure shows a retryable error, never fabricated
-      numbers. (`PROG-35` to `PROG-40`)
+- [ ] Local statistics view: totals for exam attempts, practice sessions,
+      questions answered, accuracy, study time, pass rate, average score, and
+      best score, split by mock exams, study exams, and domain practice, with
+      per-domain accuracy and coverage for the selected cert. Practice
+      sessions are not counted as exam attempts. A read failure shows a
+      retryable error, never fabricated numbers. (`PROG-35` to `PROG-40`)
 - [ ] The statistics view states plainly that the numbers are personal and
       device-local. No community stats, leaderboards, or other-user data, and
       no calls to any public-stats endpoint. (`PROG-39`, `PROG-41`,
       `PROG-42`)
 - [ ] Reset per cert: scoped to the active cert when a cert filter is
       selected, gated by a destructive confirmation, and stating that other
-      certs are unaffected. It deletes attempts, question results, domain
-      aggregates, per-question mastery, and in-progress sessions for that
-      scope. (`PROG-29` to `PROG-31`)
+      certs are unaffected. It deletes exam attempts, practice session records, question
+      results, domain aggregates, per-question mastery, and in-progress
+      sessions for that scope. (`PROG-29` to `PROG-31`)
 - [ ] Delete all local data: gated by an explicit destructive confirmation,
       removes all study data, and never touches the bundled question bank.
       Reset failures surface an error instead of success. (`PROG-32` to

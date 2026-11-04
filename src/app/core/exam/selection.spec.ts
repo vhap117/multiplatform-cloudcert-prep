@@ -20,7 +20,7 @@ const FLAT_CERT: Certification = {
   status: 'active',
   examQuestionCount: 65,
   examTimeSeconds: 90 * 60,
-  passingScore: 700,
+  passingPercent: 67,
   domains: [
     { id: 1, name: 'D1', examProportion: 0.24, questionCount: 100 },
     { id: 2, name: 'D2', examProportion: 0.3, questionCount: 100 },

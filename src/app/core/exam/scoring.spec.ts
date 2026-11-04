@@ -1,54 +1,52 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  calculateScaledScore,
+  calculateScorePercent,
   formatTime,
   formatTotalTime,
   getDomainScore,
   isPassed,
 } from './scoring';
 
-/** Ported from `ionic-requirements/cert-banks/reference/scoring.test.ts`. */
-
-describe('calculateScaledScore', () => {
-  it('returns 100 when nothing is correct', () => {
-    expect(calculateScaledScore(0, 65)).toBe(100);
+describe('calculateScorePercent', () => {
+  it('returns 0 when nothing is correct', () => {
+    expect(calculateScorePercent(0, 65)).toBe(0);
   });
 
-  it('returns 1000 when everything is correct', () => {
-    expect(calculateScaledScore(65, 65)).toBe(1000);
+  it('returns 100 when everything is correct', () => {
+    expect(calculateScorePercent(65, 65)).toBe(100);
   });
 
-  it('scales linearly between 100 and 1000', () => {
-    expect(calculateScaledScore(33, 65)).toBeCloseTo(557, 0);
+  it('rounds the correct fraction to a whole percent', () => {
+    expect(calculateScorePercent(33, 65)).toBe(51);
   });
 
-  it('clamps to the floor with negative input', () => {
-    expect(calculateScaledScore(-5, 65)).toBe(100);
+  it('clamps to zero with negative input', () => {
+    expect(calculateScorePercent(-5, 65)).toBe(0);
   });
 
-  it('clamps to the ceiling with overflowing input', () => {
-    expect(calculateScaledScore(70, 65)).toBe(1000);
+  it('caps at 100 with overflowing input', () => {
+    expect(calculateScorePercent(70, 65)).toBe(100);
   });
 
-  it('returns the floor for an empty exam instead of NaN', () => {
-    expect(calculateScaledScore(0, 0)).toBe(100);
+  it('returns 0 for an empty exam instead of NaN', () => {
+    expect(calculateScorePercent(0, 0)).toBe(0);
   });
 });
 
 describe('isPassed', () => {
   it('passes exactly at the CLF-C02 threshold', () => {
-    expect(isPassed(700, 700)).toBe(true);
+    expect(isPassed(67, 67)).toBe(true);
   });
 
-  it('fails one point below the threshold', () => {
-    expect(isPassed(699, 700)).toBe(false);
+  it('fails one percent below the threshold', () => {
+    expect(isPassed(66, 67)).toBe(false);
   });
 
   it('respects cert-specific thresholds', () => {
-    expect(isPassed(700, 720)).toBe(false);
-    expect(isPassed(720, 720)).toBe(true);
-    expect(isPassed(721, 720)).toBe(true);
+    expect(isPassed(67, 69)).toBe(false);
+    expect(isPassed(69, 69)).toBe(true);
+    expect(isPassed(70, 69)).toBe(true);
   });
 });
 

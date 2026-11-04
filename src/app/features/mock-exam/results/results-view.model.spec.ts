@@ -45,7 +45,7 @@ const CERT: Certification = {
   shortName: 'TEST',
   examQuestionCount: 6,
   examTimeSeconds: 3600,
-  passingScore: 700,
+  passingPercent: 67,
   status: 'active',
   domains: [
     { id: 1, name: 'Alpha', questionCount: 3, examProportion: 0.5 },
@@ -188,7 +188,6 @@ function makeAttempt(overrides: Partial<AttemptRow> = {}): AttemptRow {
     totalQuestions: 4,
     correctCount: 3,
     scorePercent: 75,
-    scaledScore: 775,
     passed: true,
     timeTakenSeconds: 3123,
     domainScores,
@@ -197,13 +196,12 @@ function makeAttempt(overrides: Partial<AttemptRow> = {}): AttemptRow {
 }
 
 describe('buildScoreFacts (S8, EXAM-37)', () => {
-  it('reports pass, scaled score, threshold, percentage, counts and elapsed time', () => {
+  it('reports pass, threshold percentage, score percentage, counts and elapsed time', () => {
     const facts = buildScoreFacts(makeAttempt(), CERT);
 
     expect(facts.passed).toBe(true);
     expect(facts.outcomeText).toBe('You passed');
-    expect(facts.scaledScore).toBe(775);
-    expect(facts.passingScore).toBe(700);
+    expect(facts.passingPercent).toBe(67);
     expect(facts.scorePercent).toBe(75);
     expect(facts.correctCount).toBe(3);
     expect(facts.totalQuestions).toBe(4);
@@ -214,7 +212,7 @@ describe('buildScoreFacts (S8, EXAM-37)', () => {
     const facts = buildScoreFacts(makeAttempt({ passed: false }), null);
 
     expect(facts.outcomeText).toBe('You did not pass');
-    expect(facts.passingScore).toBeNull();
+    expect(facts.passingPercent).toBeNull();
   });
 });
 

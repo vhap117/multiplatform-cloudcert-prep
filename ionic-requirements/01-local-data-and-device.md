@@ -40,7 +40,7 @@ exist in some form.
 
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
-| DATA-16 | The app SHALL store completed attempts with cert code, started and finished timestamps, score percentage, scaled score, pass flag, time taken, total questions, correct count, and per-domain scores. | Required | `02-mock-exam.md` |
+| DATA-16 | The app SHALL store completed attempts with cert code, started and finished timestamps, score percentage, pass flag, time taken, total questions, correct count, and per-domain scores. | Required | `02-mock-exam.md` |
 | DATA-17 | The app SHALL store one question-result row per answered question, linked to its attempt where applicable, with cert, domain, question id, user answer, correct answer, correctness, and flag state. | Required | `05-progress-and-history.md` |
 | DATA-18 | Domain practice rows SHALL be stored without a parent mock-exam attempt. | Required | `03-practice-by-subject.md` |
 | DATA-19 | The app SHALL store per-domain aggregates: attempted count, correct count, mastery percentage, and update time. | Required | `04-spaced-repetition.md` |

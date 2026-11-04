@@ -125,7 +125,7 @@ const TYPES_CERT: Certification = {
   shortName: 'TYPES',
   examQuestionCount: 4,
   examTimeSeconds: 3600,
-  passingScore: 700,
+  passingPercent: 67,
   status: 'active',
   domains: [{ id: 1, name: 'Everything', questionCount: 4, examProportion: 1 }],
 };
@@ -146,7 +146,7 @@ const THRESHOLD_CERT: Certification = {
   shortName: 'THRESH',
   examQuestionCount: 3,
   examTimeSeconds: 3600,
-  passingScore: 700,
+  passingPercent: 67,
   status: 'active',
   domains: [{ id: 1, name: 'Only', questionCount: 4, examProportion: 1 }],
 };
@@ -395,7 +395,7 @@ describe('MockExamSessionService', () => {
       expect(input.mastery).toEqual([]);
       expect(input.progress).toHaveLength(4);
       expect(attempt.correctCount).toBe(65);
-      expect(attempt.scaledScore).toBe(1000);
+      expect(attempt.scorePercent).toBe(100);
       expect(attempt.passed).toBe(true);
       expect(attempt.domainScores.every((domain) => domain.percent === 100)).toBe(true);
       expect(input.results.find((row) => row.questionId === flagged.id)?.wasFlagged).toBe(true);
@@ -482,7 +482,7 @@ describe('MockExamSessionService', () => {
   });
 
   describe('scoring edges (S7)', () => {
-    it('passes with a scaled score exactly at the passing threshold', async () => {
+    it('passes with a score exactly at the passing threshold', async () => {
       const service = freshService();
       await service.start('test-threshold', { cert: THRESHOLD_CERT, bank: THRESHOLD_BANK });
       expect(service.totalQuestions()).toBe(3);
@@ -497,10 +497,10 @@ describe('MockExamSessionService', () => {
       const attempt = await service.submit();
 
       expect(attempt.correctCount).toBe(2);
-      expect(attempt.scaledScore).toBe(700);
+      expect(attempt.scorePercent).toBe(67);
       expect(attempt.passed).toBe(true);
       const stored = await repository.getAttempt(attempt.id);
-      expect(stored?.scaledScore).toBe(700);
+      expect(stored?.scorePercent).toBe(67);
       expect(stored?.passed).toBe(true);
     });
 

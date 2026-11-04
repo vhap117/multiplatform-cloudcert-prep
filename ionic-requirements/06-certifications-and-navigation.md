@@ -50,7 +50,7 @@ but the destinations SHALL exist.
 
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
-| CERT-25 | The Practice screen SHALL list the active cert's practice exam, domain practice, and study exam actions. | Required | This document |
+| CERT-25 | The Practice screen SHALL list the active cert's mock exam, domain practice, and study exam actions. | Required | This document |
 | CERT-26 | The Practice screen SHALL show the last session and a Resume action when a session is in progress. | Required | `DATA-21` |
 | CERT-27 | A signed-in or guest distinction SHALL NOT exist in the navigation. | Required | `IONIC-1`, `DATA-5` |
 | CERT-28 | The app SHALL NOT show a login, account, profile, or sign-out entry. | Required | `IONIC-1` |

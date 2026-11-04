@@ -92,7 +92,6 @@ function makeAttempt(): AttemptRow {
     totalQuestions: 4,
     correctCount: 1,
     scorePercent: 25,
-    scaledScore: 250,
     passed: false,
     timeTakenSeconds: 60,
     domainScores: [],

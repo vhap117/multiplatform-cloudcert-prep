@@ -153,18 +153,13 @@ type LoadState =
                   <h2 id="score-heading" class="ccp-card-heading">Score</h2>
                   <dl class="facts">
                     <div class="fact">
-                      <dt>Scaled score</dt>
+                      <dt>Score</dt>
                       <dd>
-                        <span class="fact-value">{{ view.facts.scaledScore }}</span>
-                        of 1000
-                        @if (view.facts.passingScore !== null) {
-                          <span class="ccp-muted">(pass mark {{ view.facts.passingScore }})</span>
+                        <span class="fact-value">{{ view.facts.scorePercent }}%</span>
+                        @if (view.facts.passingPercent !== null) {
+                          <span class="ccp-muted">(pass mark {{ view.facts.passingPercent }}%)</span>
                         }
                       </dd>
-                    </div>
-                    <div class="fact">
-                      <dt>Score</dt>
-                      <dd><span class="fact-value">{{ view.facts.scorePercent }}%</span></dd>
                     </div>
                     <div class="fact">
                       <dt>Correct</dt>

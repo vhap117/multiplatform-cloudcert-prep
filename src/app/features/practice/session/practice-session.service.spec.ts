@@ -200,7 +200,7 @@ const PRACTICE_CERT: Certification = {
   shortName: 'PRACT',
   examQuestionCount: 12,
   examTimeSeconds: 3600,
-  passingScore: 700,
+  passingPercent: 67,
   status: 'active',
   domains: [{ id: 1, name: 'Everything', questionCount: 12, examProportion: 1 }],
 };
@@ -579,7 +579,6 @@ describe('mastery sources (SR-7, EXAM-34A)', () => {
       totalQuestions: 1,
       correctCount: 1,
       scorePercent: 100,
-      scaledScore: 1000,
       passed: true,
       timeTakenSeconds: 100,
       domainScores: [],
@@ -590,7 +589,6 @@ describe('mastery sources (SR-7, EXAM-34A)', () => {
       kind: 'mock',
       correctCount: 0,
       scorePercent: 0,
-      scaledScore: 100,
       passed: false,
     };
     const resultFor = (attemptId: string, isCorrect: boolean): QuestionResultRow => ({

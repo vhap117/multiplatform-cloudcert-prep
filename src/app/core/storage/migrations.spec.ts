@@ -23,7 +23,6 @@ function attempt(): AttemptRow {
     totalQuestions: 65,
     correctCount: 52,
     scorePercent: 80,
-    scaledScore: 820,
     passed: true,
     timeTakenSeconds: 1_000,
     domainScores: [{ domainId: 1, correct: 13, total: 16, percent: 81 }],

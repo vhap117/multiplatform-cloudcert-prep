@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {
-  calculateScaledScore,
+  calculateScorePercent,
   isPassed,
   getDomainScore,
   formatTime,
@@ -14,26 +14,25 @@ import { MIN_VALID_EXAM_SECONDS } from './constants'
 import type { Certification } from '../data/certifications'
 import type { Question } from '../types'
 
-describe('calculateScaledScore', () => {
+describe('calculateScorePercent', () => {
   it('returns 100 when no questions are answered correctly', () => {
-    expect(calculateScaledScore(0, 65)).toBe(100)
+    expect(calculateScorePercent(0, 65)).toBe(0)
   })
 
-  it('returns 1000 when all questions are answered correctly', () => {
-    expect(calculateScaledScore(65, 65)).toBe(1000)
+  it('returns 100 when all questions are answered correctly', () => {
+    expect(calculateScorePercent(65, 65)).toBe(100)
   })
 
-  it('scales linearly between 100 and 1000', () => {
-    // 50% correct -> roughly midpoint of the 100-1000 scale
-    expect(calculateScaledScore(33, 65)).toBeCloseTo(557, 0)
+  it('rounds the correct fraction to a whole percent', () => {
+    expect(calculateScorePercent(33, 65)).toBe(51)
   })
 
-  it('clamps to 100 floor even with negative inputs (defensive)', () => {
-    expect(calculateScaledScore(-5, 65)).toBe(100)
+  it('clamps to zero with negative inputs (defensive)', () => {
+    expect(calculateScorePercent(-5, 65)).toBe(0)
   })
 
-  it('clamps to 1000 ceiling even with overflowing inputs (defensive)', () => {
-    expect(calculateScaledScore(70, 65)).toBe(1000)
+  it('caps at 100 with overflowing inputs (defensive)', () => {
+    expect(calculateScorePercent(70, 65)).toBe(100)
   })
 })
 
@@ -88,7 +87,7 @@ describe('getExamDomainTargets', () => {
       status: 'active',
       examQuestionCount: 65,
       examTimeSeconds: 90 * 60,
-      passingScore: 700,
+      passingPercent: 67,
       domains: [
         { id: 1, name: 'D1', examProportion: 0.24, questionCount: 100 },
         { id: 2, name: 'D2', examProportion: 0.30, questionCount: 100 },

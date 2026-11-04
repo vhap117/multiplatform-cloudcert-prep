@@ -34,7 +34,6 @@ export interface AttemptRow {
   totalQuestions: number;
   correctCount: number;
   scorePercent: number;
-  scaledScore: number;
   passed: boolean;
   timeTakenSeconds: number;
   domainScores: DomainScoreRow[];

@@ -88,7 +88,6 @@ function makeAttempt(): AttemptRow {
     totalQuestions: 4,
     correctCount: 3,
     scorePercent: 75,
-    scaledScore: 775,
     passed: true,
     timeTakenSeconds: 60,
     domainScores: [],
@@ -451,7 +450,7 @@ describe('MockExamRunnerPage', () => {
 
     fixture.detectChanges();
     expect(el.textContent).toContain('Passed');
-    expect(el.textContent).toContain('775');
+    expect(el.textContent).toContain('75 percent');
   });
 
   it('does not submit when the Ready to submit dialog is dismissed', async () => {
@@ -505,7 +504,7 @@ describe('MockExamRunnerPage', () => {
 
     expect(stub.endIfExpired).toHaveBeenCalled();
     expect(el.textContent).toContain('Passed');
-    expect(el.textContent).toContain('775');
+    expect(el.textContent).toContain('75 percent');
   });
 
   it('resumes a stored session when the runner opens without an active exam', async () => {

@@ -37,9 +37,8 @@ export interface ScoreFacts {
   passed: boolean;
   /** Screen reader friendly outcome phrase, never colour alone (ACC-6). */
   outcomeText: string;
-  scaledScore: number;
-  /** Cert passing threshold, null when the cert is unknown. */
-  passingScore: number | null;
+  /** Cert passing threshold percentage, null when the cert is unknown. */
+  passingPercent: number | null;
   scorePercent: number;
   correctCount: number;
   totalQuestions: number;
@@ -135,8 +134,7 @@ export function buildScoreFacts(attempt: AttemptRow, cert: Certification | null)
   return {
     passed: attempt.passed,
     outcomeText: attempt.passed ? 'You passed' : 'You did not pass',
-    scaledScore: attempt.scaledScore,
-    passingScore: cert?.passingScore ?? null,
+    passingPercent: cert?.passingPercent ?? null,
     scorePercent: attempt.scorePercent,
     correctCount: attempt.correctCount,
     totalQuestions: attempt.totalQuestions,

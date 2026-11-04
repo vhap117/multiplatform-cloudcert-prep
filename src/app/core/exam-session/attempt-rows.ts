@@ -28,7 +28,7 @@ import type { Certification } from '../content/certification-types';
 import type { Question } from '../content/question-types';
 import {
   calculateDomainMastery,
-  calculateScaledScore,
+  calculateScorePercent,
   getDomainScore,
   isPassed,
   type DomainResult,
@@ -94,14 +94,14 @@ export interface AttemptRows {
  * Build every row for one completed session.
  *
  * The shapes mirror what the mock exam writes today field for field: composed
- * ids, rounded percents, the AWS scaled band, engine mastery weights, and
- * bank-coverage mastery percentages.
+ * ids, rounded score percentages, engine mastery weights, and bank-coverage
+ * mastery percentages.
  */
 export function buildAttemptRows(input: BuildAttemptRowsInput): AttemptRows {
   const { cert, kind, startedAt, finishedAt, timeTakenSeconds, graded } = input;
   const total = graded.length;
   const correctCount = graded.filter((entry) => entry.isCorrect).length;
-  const scaledScore = calculateScaledScore(correctCount, total);
+  const scorePercent = calculateScorePercent(correctCount, total);
 
   const attempt: AttemptRow = {
     id: `${cert.code}:${kind}:${startedAt}`,
@@ -111,9 +111,8 @@ export function buildAttemptRows(input: BuildAttemptRowsInput): AttemptRows {
     finishedAt,
     totalQuestions: total,
     correctCount,
-    scorePercent: total === 0 ? 0 : Math.round((correctCount / total) * 100),
-    scaledScore,
-    passed: isPassed(scaledScore, cert.passingScore),
+    scorePercent,
+    passed: isPassed(scorePercent, cert.passingPercent),
     timeTakenSeconds,
     domainScores: domainScores(cert, graded),
   };

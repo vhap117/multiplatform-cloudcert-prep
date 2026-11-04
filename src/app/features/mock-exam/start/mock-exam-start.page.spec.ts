@@ -80,10 +80,10 @@ describe('MockExamStartPage facts (EXAM-1, EXAM-4)', () => {
 
     expect(root.querySelectorAll('h1')).toHaveLength(1);
     expect(text).toContain('AWS Cloud Practitioner (CLF-C02)');
-    expect(text).toContain('Timed mock exam, scaled score 100 to 1000');
+    expect(text).toContain('Timed mock exam, scored by percentage');
     expect(text).toContain('65');
     expect(text).toContain('1h 30m');
-    expect(text).toContain('700 of 1000');
+    expect(text).toContain('67 percent');
 
     const start = ionButton(root, 'Start exam');
     expect(start).not.toBeNull();
@@ -108,7 +108,7 @@ describe('MockExamStartPage facts (EXAM-1, EXAM-4)', () => {
 
     expect(text).toContain('AWS Solutions Architect Associate (SAA-C03)');
     expect(text).toContain('2h 10m');
-    expect(text).toContain('720 of 1000');
+    expect(text).toContain('69 percent');
   });
 });
 

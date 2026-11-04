@@ -4,7 +4,7 @@
  * The service works against the bundled registry and question bank by
  * default. The options below are test seams: they let a spec pin selection
  * randomness, a small synthetic bank, or a synthetic cert so scoring edges
- * (such as a scaled score exactly at the passing threshold) become
+ * (such as a score exactly at the passing threshold) become
  * deterministic. Production callers pass nothing.
  */
 

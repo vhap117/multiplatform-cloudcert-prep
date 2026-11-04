@@ -45,7 +45,7 @@ on screen with a retry and never claims success. (`EXAM-27` to `EXAM-34`,
 S7. Exactly at the passing threshold passes, and there is no 60-second minimum:
 a completed short attempt still saves. (`EXAM-30`, `EXAM-33`)
 
-S8. Results show pass or fail, scaled score, percentage, correct count, total
+S8. Results show pass or fail, score percentage, correct count, total
 questions, elapsed time, and a per-domain breakdown. (`EXAM-37`, `EXAM-38`)
 
 S9. Review supports all, incorrect, flagged, and per-domain filters. Each card
@@ -136,14 +136,14 @@ mock exams self-heal the next time a practice session folds that question.
 - [x] Low-time warning below a documented threshold, announced to assistive
       technology at sensible intervals without noise. (`EXAM-25`, `EXAM-26`)
 - [x] Submit flow: Ready to submit dialog summarizing answered and flagged
-      counts; on confirm compute raw score, scaled score, per-domain scores,
+      counts; on confirm compute score percentage, per-domain scores,
       pass or fail, and elapsed time in one local transaction that also marks
       the session complete. (`EXAM-27` to `EXAM-34`, `EXAM-36`)
 - [x] Exactly at the passing threshold passes. No 60-second minimum: a short
       completed attempt still saves. (`EXAM-30`, `EXAM-33`)
 - [x] Failed save keeps the results on screen with a retry action and never
       claims success. (`EXAM-35`)
-- [x] Results screen: pass or fail, scaled score, percentage, correct count,
+- [x] Results screen: pass or fail, score percentage, correct count,
       total questions, elapsed time, and per-domain breakdown. (`EXAM-37`,
       `EXAM-38`)
 - [x] Review mode with all, incorrect, flagged, and per-domain filters; each
@@ -165,7 +165,7 @@ mock exams self-heal the next time a practice session folds that question.
       states, and correct remaining time.
 - A completed 2-minute attempt still saves to history. (`EXAM-33`)
 - Scoring matches the engine unit tests: 65-question CLF-C02 exam, known
-      answer pattern, expected scaled score and per-domain percentages.
+      answer pattern, expected score percentage and per-domain percentages.
 - In-app back during the exam opens the leave modal instead of discarding.
 - The whole flow runs with the browser offline and produces zero network
       errors.
@@ -240,7 +240,7 @@ no tab bar once inside.
    correct answers, owned by the shared mastery writer that study and
    practice use. The mock exam's inline rule was removed with log L5.
 3. **Exam format wording.** The registry has no format field, so the start
-   screen reads "Timed mock exam, scaled score 100 to 1000".
+   screen reads "Timed mock exam, scored by percentage".
 4. **Coming-soon refusal is composed screen-side** because the session service
    does not validate `status`. Moving it into the service is the cleaner home.
 5. **Hardware back is deferred** to the native phase and must reuse

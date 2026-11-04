@@ -166,7 +166,7 @@ export class HomePage {
   readonly examSummary = this.cert
     ? `${this.cert.examQuestionCount} questions, ${formatTotalTime(
         Math.round(this.cert.examTimeSeconds / 60),
-      )}, pass at ${this.cert.passingScore}`
+      )}, pass at ${this.cert.passingPercent}%`
     : 'No active certification is bundled.';
 }
 

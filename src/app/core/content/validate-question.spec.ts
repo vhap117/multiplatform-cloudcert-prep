@@ -15,7 +15,7 @@ const CERT: Certification = {
   shortName: 'TEST-01',
   examQuestionCount: 10,
   examTimeSeconds: 600,
-  passingScore: 700,
+  passingPercent: 67,
   status: 'active',
   domains: [
     { id: 1, name: 'Domain One', questionCount: 3, examProportion: 0.5 },

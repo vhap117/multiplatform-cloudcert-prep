@@ -45,7 +45,6 @@ function attempt(overrides: Partial<AttemptRow> = {}): AttemptRow {
     totalQuestions: 65,
     correctCount: 52,
     scorePercent: 80,
-    scaledScore: 820,
     passed: true,
     timeTakenSeconds: 1_000,
     domainScores: [
@@ -140,7 +139,7 @@ describe('StudyRepository contract (IndexedDB)', () => {
       const stored = await repository.getAttempt('attempt-1');
 
       expect(stored).not.toBeNull();
-      expect(stored?.scaledScore).toBe(820);
+      expect(stored?.scorePercent).toBe(80);
       expect(stored?.domainScores).toHaveLength(2);
       expect(stored?.domainScores[1].percent).toBe(80);
     });
@@ -395,7 +394,7 @@ describe('StudyRepository contract (IndexedDB)', () => {
         id: 'broken',
         cert: 'clf-c02',
         kind: 'mock',
-        scaledScore: 'not a number',
+        scorePercent: 'not a number',
       });
 
       const rows = await repository.listAttempts();

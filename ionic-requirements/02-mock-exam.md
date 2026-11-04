@@ -50,8 +50,8 @@ server save path.
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
 | EXAM-27 | Submitting SHALL require confirmation through a Ready to submit dialog that summarizes answered and flagged counts. | Required | Web `EXAM-33` |
-| EXAM-28 | Confirming submission SHALL compute raw score, scaled score, per-domain scores, pass/fail, and elapsed time. | Required | Web `EXAM-35` |
-| EXAM-29 | The scaled score SHALL map raw percentage to the AWS 100 to 1000 scale and clamp to that range. | Required | Web `EXAM-36` |
+| EXAM-28 | Confirming submission SHALL compute the score percentage, per-domain scores, pass/fail, and elapsed time. | Required | Web `EXAM-35` |
+| EXAM-29 | Pass/fail SHALL compare the score percentage with the cert's configured passing percentage, inclusive. | Required | Web `EXAM-36` |
 | EXAM-30 | Pass/fail SHALL use the cert-specific passing score from the bundled registry. Exactly at the threshold SHALL pass. | Required | Web `EXAM-37` |
 | EXAM-31 | Elapsed time SHALL be derived from wall-clock timestamps and clamped to the exam length. A forward clock jump SHALL NOT inflate saved time. | Required | Web `EXAM-39` |
 | EXAM-32 | A backward clock jump SHALL NOT cause a completed attempt to be discarded as too short. | Required | Web `EXAM-39` |
@@ -65,7 +65,7 @@ server save path.
 
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
-| EXAM-37 | The results screen SHALL show pass/fail, scaled score, percentage, correct count, total questions, and elapsed time. | Required | Web `EXAM-49` |
+| EXAM-37 | The results screen SHALL show pass/fail, score percentage, correct count, total questions, and elapsed time. | Required | Web `EXAM-49` |
 | EXAM-38 | The results screen SHALL show a per-domain breakdown. | Required | Web `EXAM-50` |
 | EXAM-39 | Review questions SHALL be available when question data is available locally. | Required | Web `EXAM-51` |
 | EXAM-40 | Review SHALL support all, incorrect, flagged, and per-domain filters. | Required | Web `EXAM-52` |

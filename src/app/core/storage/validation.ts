@@ -54,7 +54,6 @@ export function isAttemptRow(value: unknown): value is AttemptRow {
     isFiniteNumber(value['totalQuestions']) &&
     isFiniteNumber(value['correctCount']) &&
     isFiniteNumber(value['scorePercent']) &&
-    isFiniteNumber(value['scaledScore']) &&
     typeof value['passed'] === 'boolean' &&
     isFiniteNumber(value['timeTakenSeconds']) &&
     Array.isArray(value['domainScores']) &&

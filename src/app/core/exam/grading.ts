@@ -3,7 +3,7 @@
  * EXAM-10).
  *
  * AWS grades these formats with no partial credit, which is why the persisted
- * model is a single `isCorrect` boolean that the scaled score and domain
+ * model is a single `isCorrect` boolean that the score percentage and domain
  * mastery both derive from. Each type compares differently:
  *
  * - single: strict key equality

@@ -183,7 +183,7 @@ const TYPES_CERT: Certification = {
   shortName: 'TYPES',
   examQuestionCount: 4,
   examTimeSeconds: 3600,
-  passingScore: 700,
+  passingPercent: 67,
   status: 'active',
   domains: [{ id: 1, name: 'Everything', questionCount: 4, examProportion: 1 }],
 };
@@ -200,7 +200,7 @@ const SPARSE_CERT: Certification = {
   shortName: 'SPARSE',
   examQuestionCount: 2,
   examTimeSeconds: 3600,
-  passingScore: 700,
+  passingPercent: 67,
   status: 'active',
   domains: [
     { id: 1, name: 'One', questionCount: 1, examProportion: 0.5 },
@@ -656,7 +656,6 @@ describe('StudyExamSessionService', () => {
         totalQuestions: 4,
         correctCount: 2,
         scorePercent: 50,
-        scaledScore: 550,
         passed: false,
         timeTakenSeconds: 95,
         domainScores: [{ domainId: 1, correct: 2, total: 4, percent: 50 }],

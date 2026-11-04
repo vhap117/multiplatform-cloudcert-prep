@@ -28,8 +28,8 @@ describe('certification registry', () => {
     for (const cert of Object.values(CERTIFICATIONS)) {
       expect(cert.examQuestionCount).toBeGreaterThan(0);
       expect(cert.examTimeSeconds).toBeGreaterThan(0);
-      expect(cert.passingScore).toBeGreaterThanOrEqual(100);
-      expect(cert.passingScore).toBeLessThanOrEqual(1000);
+      expect(cert.passingPercent).toBeGreaterThanOrEqual(0);
+      expect(cert.passingPercent).toBeLessThanOrEqual(100);
       expect(cert.domains.length).toBeGreaterThan(0);
       expect(new Set(cert.domains.map((domain) => domain.id)).size).toBe(
         cert.domains.length,

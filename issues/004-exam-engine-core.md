@@ -41,7 +41,7 @@ Blocks: 005, 006, 007, 008.
       all-or-nothing grading: strict equality for single, set equality for
       multi and matching, positional equality for ordering. (`EXAM-8`,
       `EXAM-9`, `EXAM-10`)
-- [x] Port `calculateScaledScore` (100 to 1000, clamped) and `isPassed`
+- [x] Port `calculateScorePercent` (0 to 100, clamped) and `isPassed`
       (threshold inclusive) and per-domain percentages. (`EXAM-28` to
       `EXAM-30`)
 - [x] Port timing: absolute `startedAt` plus deadline, remaining time from

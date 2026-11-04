@@ -85,7 +85,7 @@ function resolveCert(): Certification | null {
               <dl class="fact-list">
                 <div class="fact">
                   <dt class="ccp-small ccp-muted">Format</dt>
-                  <dd class="ccp-body">Timed mock exam, scaled score 100 to 1000</dd>
+                  <dd class="ccp-body">Timed mock exam, scored by percentage</dd>
                 </div>
                 <div class="fact">
                   <dt class="ccp-small ccp-muted">Questions</dt>
@@ -97,7 +97,7 @@ function resolveCert(): Certification | null {
                 </div>
                 <div class="fact">
                   <dt class="ccp-small ccp-muted">Passing score</dt>
-                  <dd class="ccp-body">{{ activeCert.passingScore }} of 1000</dd>
+                  <dd class="ccp-body">{{ activeCert.passingPercent }} percent</dd>
                 </div>
               </dl>
             </div>

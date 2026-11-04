@@ -13,7 +13,7 @@ export type {
  * The bundled certification registry.
  *
  * This is the single source of truth for exam logistics: question count, time
- * limit, passing score, domains, domain proportions, and availability
+ * limit, passing percentage, domains, domain proportions, and availability
  * (CERT-1, CONT-25). Scores, dashboards, and history read from here and never
  * hardcode a number.
  *
@@ -36,7 +36,7 @@ export const CERTIFICATIONS: Readonly<Record<string, Certification>> = {
     shortName: 'CLF-C02',
     examQuestionCount: 65,
     examTimeSeconds: 5400,
-    passingScore: 700,
+    passingPercent: 67,
     status: 'active',
     examGuideVersion: 'CLF-C02',
     examGuideUrl: 'https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02.html',
@@ -76,7 +76,7 @@ export const CERTIFICATIONS: Readonly<Record<string, Certification>> = {
     shortName: 'AIF-C01',
     examQuestionCount: 65,
     examTimeSeconds: 5400,
-    passingScore: 700,
+    passingPercent: 67,
     status: 'active',
     examGuideVersion: 'AIF-C01 (1.1, April 2026)',
     examGuideUrl: 'https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01.html',
@@ -112,7 +112,7 @@ export const CERTIFICATIONS: Readonly<Record<string, Certification>> = {
     shortName: 'SAA-C03',
     examQuestionCount: 65,
     examTimeSeconds: 7800,
-    passingScore: 720,
+    passingPercent: 69,
     status: 'coming-soon',
     examGuideVersion: 'SAA-C03 (2024)',
     domains: [
@@ -189,8 +189,8 @@ export function validateRegistry(
         );
       }
     }
-    if (cert.passingScore < 100 || cert.passingScore > 1000) {
-      problems.push(`${key}: passing score ${cert.passingScore} is outside 100 to 1000`);
+    if (cert.passingPercent < 0 || cert.passingPercent > 100) {
+      problems.push(`${key}: passing percent ${cert.passingPercent} is outside 0 to 100`);
     }
   }
 

@@ -4,25 +4,22 @@ import { fisherYatesShuffle, getQuestionType, matchesToTokens } from './utils'
 import { MIN_VALID_EXAM_SECONDS } from './constants'
 
 /**
- * Calculate AWS scaled score (100-1000 range)
- * AWS uses a scaled scoring system where:
- * - Minimum score: 100
- * - Maximum score: 1000
- * The passing threshold is per-cert (see `Certification.passingScore`); use
+ * Calculate the score percentage
+ * The passing threshold is per-cert (see `Certification.passingPercent`); use
  * `isPassed` to test against it.
  */
-export function calculateScaledScore(correct: number, total: number): number {
-  const rawPercent = correct / total
-  const scaled = Math.round(100 + rawPercent * 900)
-  return Math.min(1000, Math.max(100, scaled))
+export function calculateScorePercent(correct: number, total: number): number {
+  if (total <= 0) return 0
+  const percent = Math.round((correct / total) * 100)
+  return Math.min(100, Math.max(0, percent))
 }
 
 /**
  * Determine if the exam was passed
- * Pass threshold varies by certification (CLF-C02: 700, AIF-C01: 700, SAA-C03: 720)
+ * Pass threshold varies by certification (CLF-C02: 67, AIF-C01: 67, SAA-C03: 69)
  */
-export function isPassed(scaledScore: number, passingScore: number): boolean {
-  return scaledScore >= passingScore
+export function isPassed(scorePercent: number, passingPercent: number): boolean {
+  return scorePercent >= passingPercent
 }
 
 /**
@@ -110,7 +107,7 @@ export function correctAnswerFor(q: Question): string | string[] {
 /**
  * All-or-nothing correctness across every question format (AWS grades these
  * formats with no partial credit, matching the boolean `is_correct` model that
- * scaled score + domain mastery derive from).
+ * score percentage + domain mastery derive from).
  *
  * The third argument accepts a `boolean` (legacy `isMultiAnswer`, kept so the
  * single/multi call sites and their tests need no change) OR an explicit

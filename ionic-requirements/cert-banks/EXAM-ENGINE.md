@@ -39,7 +39,7 @@ choose.
 | `reference/certifications.ts` | Cert registry: counts, times, pass scores, domains, proportions |
 | `reference/questions.ts` | Domain loaders and question cache |
 | `reference/types.ts` | `Question`, `Certification`, domain and attempt shapes |
-| `reference/scoring.ts` | Question selection, grading, scaled score, timing |
+| `reference/scoring.ts` | Question selection, grading, score percentage, timing |
 | `reference/utils.ts` | Shuffle, option remap, answer encoding, multi toggle |
 | `reference/spacedRepetition.ts` | Practice selection, not used by exams |
 | `reference/domainStats.ts` | Mastery and next-domain logic |
@@ -65,7 +65,7 @@ The registry is the single source of truth for exam logistics. Each cert has:
   shortName: 'CLF-C02',
   examQuestionCount: 65,
   examTimeSeconds: 90 * 60,
-  passingScore: 700,
+  passingPercent: 67,
   domains: [
     { id: 1, name: 'Cloud Concepts', examProportion: 0.24, questionCount: 187 },
     // ...
@@ -290,21 +290,21 @@ The correct answer for a question comes from `answer`, `correctOrder`, or
 
 ## Scoring
 
-Scaled score maps raw percentage to the AWS 100 to 1000 scale:
+Score percentage is the rounded share of correct answers:
 
 ```ts
-export function calculateScaledScore(correct: number, total: number): number {
-  const rawPercent = correct / total
-  const scaled = Math.round(100 + rawPercent * 900)
-  return Math.min(1000, Math.max(100, scaled))
+export function calculateScorePercent(correct: number, total: number): number {
+  if (total <= 0) return 0
+  const percent = Math.round((correct / total) * 100)
+  return Math.min(100, Math.max(0, percent))
 }
 ```
 
-Pass or fail uses the cert threshold:
+Pass or fail uses the cert threshold percentage:
 
 ```ts
-export function isPassed(scaledScore: number, passingScore: number): boolean {
-  return scaledScore >= passingScore
+export function isPassed(scorePercent: number, passingPercent: number): boolean {
+  return scorePercent >= passingPercent
 }
 ```
 
@@ -388,7 +388,7 @@ Suggested local entities:
 |---|---|
 | `cert_progress` | cert, domain, attempted, correct, mastery, updated_at |
 | `question_mastery` | cert, domain, question_id, streak, last_was_wrong, last_seen_at, mastered, weight |
-| `attempts` | id, cert, kind, started_at, finished_at, score, scaled_score, passed, time_taken, total, correct, domain_scores |
+| `attempts` | id, cert, kind, started_at, finished_at, score, passed, time_taken, total, correct, domain_scores |
 | `attempt_questions` | attempt_id or null, cert, domain, question_id, user_answer, correct_answer, is_correct, was_flagged |
 | `sessions` | id, cert, kind, question_order, current_index, answers, feedback, started_at, deadline, counters |
 | `settings` | selected_cert, theme, reduced_motion, schema_version |
@@ -447,7 +447,7 @@ Keep the engine pure and framework independent:
 - `getExamDomainTargets(cert)`
 - `shuffleQuestionOptions(question)`
 - `isAnswerCorrect(user, correct, type)`
-- `calculateScaledScore(correct, total)`
+- `calculateScorePercent(correct, total)`
 - `computeExamTiming(start, now, limit)`
 - `selectPracticeQuestions(bank, count, mastery, userId)`
 
