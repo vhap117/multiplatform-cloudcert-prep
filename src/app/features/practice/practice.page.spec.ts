@@ -1,5 +1,7 @@
+import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { SETTINGS_KEYS } from '../../core/settings/local-settings';
@@ -53,5 +55,43 @@ describe('PracticePage domain list (PRACT-1, PRACT-2, PRACT-3)', () => {
     const el = await render();
 
     expect(el.textContent).toContain('AWS Cloud Practitioner');
+  });
+});
+
+
+@Component({ template: '' })
+class PracticeTargetPage {}
+
+describe('PracticePage navigation from the tab URL (PRACT-1)', () => {
+  beforeEach(() => {
+    localStorage.setItem(SETTINGS_KEYS.selectedCert, 'clf-c02');
+  });
+
+  afterEach(() => {
+    localStorage.removeItem(SETTINGS_KEYS.selectedCert);
+    TestBed.resetTestingModule();
+  });
+
+  it('navigates to the absolute config URL even when rendered under /tabs/practice', async () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([
+          { path: 'tabs/practice', component: PracticePage },
+          { path: 'practice/:certCode', component: PracticeTargetPage },
+        ]),
+      ],
+    });
+
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/tabs/practice');
+    const link = harness.routeNativeElement?.querySelector<HTMLAnchorElement>(
+      'a.practice-domain',
+    );
+    expect(link).not.toBeNull();
+
+    link!.click();
+    await harness.fixture.whenStable();
+
+    expect(TestBed.inject(Router).url).toBe('/practice/clf-c02?domain=1');
   });
 });

@@ -6,6 +6,7 @@ import { getCert, listCerts, type Certification } from '../../core/content/cert-
 import { formatTotalTime } from '../../core/exam';
 import { SETTINGS_KEYS, readSetting } from '../../core/settings/local-settings';
 import { mockExamStartPath } from '../mock-exam/mock-exam.routes';
+import { practiceConfigPath } from '../practice/practice.routes';
 import { studyExamStartPath } from '../study-exam/study-exam.routes';
 
 /**
@@ -63,8 +64,13 @@ import { studyExamStartPath } from '../study-exam/study-exam.routes';
               Pick one domain and answer a short adaptive session with instant
               feedback.
             </p>
+            @if (practiceStartPath; as startPath) {
+              <ion-button expand="block" [routerLink]="startPath">
+                Start domain practice
+              </ion-button>
+            }
             <ion-button expand="block" fill="outline" [routerLink]="practicePath">
-              Practice by domain
+              Choose a domain
             </ion-button>
           </div>
 
@@ -147,6 +153,12 @@ export class HomePage {
 
   /** The Practice tab, where the selected cert's domains are listed (PRACT-1). */
   readonly practicePath = '/tabs/practice';
+
+  /**
+   * Direct door into the config screen, where the first domain is preselected
+   * but can still be changed before starting (PRACT-1, PRACT-3).
+   */
+  readonly practiceStartPath = this.cert ? practiceConfigPath(this.cert.code) : null;
 
   readonly studyExamSummary =
     'Untimed, feedback after every answer, saved automatically.';

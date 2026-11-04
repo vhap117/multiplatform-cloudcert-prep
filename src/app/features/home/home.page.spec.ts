@@ -33,14 +33,16 @@ describe('home page', () => {
     expect(fixture.componentInstance.studyExamPath).toMatch(/^\/study-exam\/[a-z0-9-]+$/);
   });
 
-  it('links to the domain practice list (PRACT-1)', async () => {
+  it('links to the domain practice list and a direct start (PRACT-1, PRACT-3)', async () => {
     const fixture = await createPage();
 
     expect(fixture.componentInstance.practicePath).toBe('/tabs/practice');
+    expect(fixture.componentInstance.practiceStartPath).toMatch(/^\/practice\/[a-z0-9-]+$/);
     const labels = [...fixture.nativeElement.querySelectorAll('ion-button')].map((button) =>
       (button.textContent ?? '').replace(/\s+/g, ' ').trim(),
     );
-    expect(labels).toContain('Practice by domain');
+    expect(labels).toContain('Start domain practice');
+    expect(labels).toContain('Choose a domain');
   });
 
   it('summarizes the exam from the registry', async () => {

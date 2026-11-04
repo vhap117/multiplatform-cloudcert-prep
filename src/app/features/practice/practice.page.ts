@@ -87,7 +87,9 @@ export class PracticePage {
   readonly cert: Certification | null = resolveCert();
 
   configSegments(): string[] {
-    return this.cert ? [PRACTICE_SEGMENT, this.cert.code] : ['/tabs/practice'];
+    // Absolute on purpose: the Practice tab lives at /tabs/practice, and a
+    // relative link there would resolve to /tabs/practice/practice/... .
+    return this.cert ? [`/${PRACTICE_SEGMENT}`, this.cert.code] : ['/tabs/practice'];
   }
 }
 
