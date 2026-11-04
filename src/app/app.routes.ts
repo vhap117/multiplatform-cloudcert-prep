@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { mockExamLeaveGuard } from './features/mock-exam/runner/mock-exam-leave.guard';
+import { practiceLeaveGuard } from './features/practice/runner/practice-leave.guard';
 
 /**
  * Tabs are the primary navigation surface (CERT-9 to CERT-12).
@@ -107,6 +108,34 @@ export const routes: Routes = [
             (m) => m.StudyExamRunnerPage,
           ),
         title: 'Study exam in progress',
+      },
+    ],
+  },
+  {
+    /*
+     * Domain practice runs full screen so the leave guard can make walking
+     * away an explicit choice (PRACT-27 to PRACT-30). The config screen also
+     * receives a `domain` query parameter, which preselects the domain for
+     * dashboard deep links (PRACT-3, SR-39).
+     */
+    path: 'practice/:certCode',
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/practice/config/practice-config.page').then(
+            (m) => m.PracticeConfigPage,
+          ),
+        title: 'Domain practice',
+      },
+      {
+        path: 'run',
+        canDeactivate: [practiceLeaveGuard],
+        loadComponent: () =>
+          import('./features/practice/runner/practice-runner.page').then(
+            (m) => m.PracticeRunnerPage,
+          ),
+        title: 'Practice in progress',
       },
     ],
   },

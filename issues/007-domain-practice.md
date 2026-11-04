@@ -44,58 +44,65 @@ mastery rows, and the practice mastery fold excludes mock attempt results.
 Domain-level progress (attempted, correct, coverage percent) still updates
 from mock results per EXAM-34.
 
+L6 (implementation, 2026-11-04): the remaining UI slices landed on this
+branch. The Practice tab lists the selected cert's domains with one
+practice action each, the config screen takes a `domain` query parameter for
+deep links, and the runner is guarded by `practiceLeaveGuard`. The runner
+grades finals through the same service calls the engine tests already cover,
+so the UI specs stub the service and pin visible behaviour only.
+
 ## Tasks
 
-- [ ] Entry points: cert dashboard and Practice tab both reach the domain
+- [x] Entry points: cert dashboard and Practice tab both reach the domain
       list for the selected cert, each domain with a practice action. A deep
       link naming a domain preselects it on the config screen. (`PRACT-1`,
       `PRACT-2`, `PRACT-3`)
-- [ ] Session size control: 10 to 50 questions in steps of 5, default 20,
+- [x] Session size control: 10 to 50 questions in steps of 5, default 20,
       with accessible increase and decrease labels and disabled states at the
       bounds. (`PRACT-4`, `PRACT-5`, `SR-41`)
-- [ ] Selection: load the domain bank locally and call
+- [x] Selection: load the domain bank locally and call
       `selectPracticeQuestions` once at session start. With no history this
       degenerates to uniform random; never reuse the exam selector here.
       (`PRACT-6`, `SR-4`)
-- [ ] Resume rule: starting a session with an in-progress practice session for
+- [x] Resume rule: starting a session with an in-progress practice session for
       the same cert requires an explicit resume-or-discard choice, and the
       session state is saved before the first question renders. (`PRACT-7`,
       `PRACT-8`)
-- [ ] Question flow: Question N of M label, a progress bar that advances the
+- [x] Question flow: Question N of M label, a progress bar that advances the
       moment the current question is answered, and all four question types
       with all-or-nothing grading. (`PRACT-9` to `PRACT-12`)
-- [ ] Instant feedback after grading: correct or incorrect, the explanation
+- [x] Instant feedback after grading: correct or incorrect, the explanation
       summary, and the per-option explanations relevant to the student's
       answer. (`PRACT-13`, `PRACT-14`)
-- [ ] Answered questions are read-only for the rest of the session; returning
+- [x] Answered questions are read-only for the rest of the session; returning
       to one shows the same answer and feedback. (`PRACT-19`, `PRACT-20`)
-- [ ] Multi-answer guard: warn on an incomplete response instead of silently
+- [x] Multi-answer guard: warn on an incomplete response instead of silently
       grading it wrong. (`PRACT-17`)
-- [ ] Save every answer and its derived counters immediately in the shared
+- [x] Save every answer and its derived counters immediately in the shared
       transactional write; recompute mastery for the session's domains on
       completion. (`PRACT-16`, `PRACT-22`, `SR-42`, `SR-43`)
-- [ ] Completion screen: Practice session complete with score and summary;
+- [x] Completion screen: Practice session complete with score and summary;
       the session appears in local history. (`PRACT-21`, `PRACT-23`)
-- [ ] Failure handling: failed save shows a visible retryable error; failed
+- [x] Failure handling: failed save shows a visible retryable error; failed
       bank or session load shows a retryable error and re-enables Start.
       (`PRACT-24`, `PRACT-25`)
-- [ ] Leave practice guard: in-app back opens a Leave practice
+- [x] Leave practice guard: in-app back opens a Leave practice
       confirmation; Keep practicing dismisses it; confirming Leave preserves
       the session for resume. Switching certs routes through the same guard.
       The hardware back handler is deferred to the native phase and must reuse
       this guard. (`PRACT-27` to `PRACT-30`)
-- [ ] Lifecycle: backgrounding preserves the session and current answer;
+- [x] Lifecycle: backgrounding preserves the session and current answer;
       force close and reopen offers Resume practice. Practice never sets the
       timed-exam active state and never locks unrelated navigation.
       (`PRACT-31` to `PRACT-33`)
-- [ ] Next and Finish controls: advance with Next question and finish with
+- [x] Next and Finish controls: advance with Next question and finish with
       Finish session on the last question. (`PRACT-15`)
-- [ ] Optional report-question action: copy the question id or open a
+- [x] Optional report-question action: copy the question id or open a
       configured issue URL, only on explicit tap. (`PRACT-18`)
-- [ ] Presentation: US English, both themes, phone and tablet widths, screen
+- [x] Presentation: US English, both themes, phone and tablet widths, screen
       reader usable, reduced motion respected, and any displayed mastery uses
       the bank-coverage definition. (`PRACT-34` to `PRACT-38`)
-- [ ] No network anywhere in the flow; practice events stay local. (`PRACT-26`,
+- [x] No network anywhere in the flow; practice events stay local. (`PRACT-26`,
       `PRACT-39`)
 
 ## Acceptance criteria

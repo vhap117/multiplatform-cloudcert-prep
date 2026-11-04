@@ -58,6 +58,17 @@ import { studyExamStartPath } from '../study-exam/study-exam.routes';
           }
 
           <div class="ccp-card" style="margin-top: var(--ccp-space-lg)">
+            <h2 class="ccp-card-heading">Domain practice</h2>
+            <p class="ccp-small ccp-muted">
+              Pick one domain and answer a short adaptive session with instant
+              feedback.
+            </p>
+            <ion-button expand="block" fill="outline" [routerLink]="practicePath">
+              Practice by domain
+            </ion-button>
+          </div>
+
+          <div class="ccp-card" style="margin-top: var(--ccp-space-lg)">
             <h2 class="ccp-card-heading">Design tokens</h2>
             <p class="ccp-small ccp-muted">
               Temporary check. Each swatch reads a token from DESIGN.md.
@@ -133,6 +144,9 @@ export class HomePage {
   readonly mockExamPath = this.cert ? mockExamStartPath(this.cert.code) : null;
 
   readonly studyExamPath = this.cert ? studyExamStartPath(this.cert.code) : null;
+
+  /** The Practice tab, where the selected cert's domains are listed (PRACT-1). */
+  readonly practicePath = '/tabs/practice';
 
   readonly studyExamSummary =
     'Untimed, feedback after every answer, saved automatically.';
