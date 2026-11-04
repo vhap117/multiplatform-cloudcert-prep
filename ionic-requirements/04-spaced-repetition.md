@@ -19,11 +19,11 @@ database, not a server view.
 
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
-| SR-7 | Per-question history SHALL be derived from local question-result rows, not from a remote view. | Required | `DATA-17` |
+| SR-7 | Per-question history SHALL be derived from local question-result rows of study exams and domain practice, not from a remote view. Mock-exam question results SHALL NOT contribute to per-question history or mastery. | Required | `DATA-17`, `02-mock-exam.md` EXAM-34A |
 | SR-8 | Each derived mastery row SHALL provide question id, correct streak, last-was-wrong, last-seen time, mastered flag, exclusion state, and weight. | Required | `DATA-20` |
 | SR-9 | A null weight SHALL mean the question is excluded from the active pool and eligible only for backfill. | Required | Web `SR-8` |
 | SR-10 | A missing history row SHALL mean the question is unseen. | Required | Web `SR-9` |
-| SR-11 | The app SHALL recompute or update mastery rows inside the same local transaction that saves an answer. | Required | `DATA-10` |
+| SR-11 | The app SHALL recompute or update mastery rows inside the same local transaction that saves a study-exam or practice answer. A mock-exam submission SHALL NOT write question mastery rows. | Required | `DATA-10`, `02-mock-exam.md` EXAM-34A |
 
 ## Weight bands
 
@@ -34,7 +34,7 @@ database, not a server view.
 | SR-14 | A question in learning state SHALL carry weight 2 to 3. | Required | Web `SR-13` |
 | SR-15 | A mastered question SHALL carry weight 1. | Required | Web `SR-14` |
 | SR-16 | A mastered question inside the exclusion window SHALL carry null weight and be hidden from the active pool. | Required | Web `SR-15` |
-| SR-17 | The exclusion window SHALL be documented in the local schema and tests. Changing it SHALL update the docs and tests together. | Required | Web `SR-16` |
+| SR-17 | The exclusion window SHALL be documented in the local schema and tests. Changing it SHALL update the docs and tests together. Pinned values: a question becomes mastered after 2 consecutive correct answers, and the window is 3 completed practice sessions of the question's domain. Answering the question restarts the window, and only completed practice sessions of its domain advance it. | Required | Web `SR-16` |
 
 ## Selection algorithm
 

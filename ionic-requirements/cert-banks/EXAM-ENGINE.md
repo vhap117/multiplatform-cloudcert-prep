@@ -400,6 +400,11 @@ Use one transaction per answer:
 3. Update the domain aggregate.
 4. Update per-question mastery.
 
+Step 4 applies to study-exam and practice answers only. A mock exam
+submission covers the attempt, its question rows, and the domain aggregate,
+and never writes per-question mastery, so a mock stays pure assessment for
+the adaptive pool (SR-7, EXAM-34A in `02-mock-exam.md`).
+
 If any step fails, roll back. A failed write must be visible.
 
 On native, use Capacitor SQLite. In the browser, use IndexedDB. Both behind one

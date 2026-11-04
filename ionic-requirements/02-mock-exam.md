@@ -57,6 +57,7 @@ server save path.
 | EXAM-32 | A backward clock jump SHALL NOT cause a completed attempt to be discarded as too short. | Required | Web `EXAM-39` |
 | EXAM-33 | There SHALL be no 60-second minimum for saving a mock exam. A completed local attempt SHALL be saved even if it is short. | Required | This document, overrides web `EXAM-42` |
 | EXAM-34 | Saving SHALL be a single local transaction covering the attempt, its question rows, and the derived domain progress. | Required | `DATA-10` |
+| EXAM-34A | A mock exam SHALL NOT create or update per-question mastery state. Its question rows serve history and review only, and domain progress SHALL still update per EXAM-34. Only study exams and domain practice move per-question mastery. | Required | `04-spaced-repetition.md` SR-7, SR-11 |
 | EXAM-35 | A failed local save SHALL keep the results on screen and SHALL offer retry. It SHALL NOT claim success. | Required | Web `EXAM-48` |
 | EXAM-36 | A successful save SHALL mark the in-progress session complete and remove it from resume. | Required | `DATA-39` |
 
