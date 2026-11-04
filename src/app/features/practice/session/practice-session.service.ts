@@ -29,13 +29,16 @@
  *   through `commitAnswers` with `attempt: null`, carrying that question's
  *   result row (null `attemptId`, which is what `listPracticeResults` reads,
  *   DATA-18), the updated domain progress row, and the question's mastery
- *   row. Result ids are deterministic (`cert:practice:startedAt:questionId`),
- *   and both the progress row and the mastery row are recomputed from the
- *   stored history rather than incremented, so retrying after a failed write
- *   rewrites the same rows instead of duplicating or double-counting (S12).
- *   The history commit lands first and the session row second: a crash
- *   between them leaves the question ungraded in the session, and re-answering
- *   overwrites the same deterministic row.
+ *   row. The mastery fold consumes study and practice results only, never
+ *   mock results (SR-7, EXAM-34A), while the progress row consumes every
+ *   stored result (EXAM-34). Result ids are deterministic
+ *   (`cert:practice:startedAt:questionId`), and both the progress row and
+ *   the mastery row are recomputed from the stored history rather than
+ *   incremented, so retrying after a failed write rewrites the same rows
+ *   instead of duplicating or double-counting (S12). The history commit
+ *   lands first and the session row second: a crash between them leaves the
+ *   question ungraded in the session, and re-answering overwrites the same
+ *   deterministic row.
  * - Completion (S9, S11): `complete` builds one `AttemptRow` of kind
  *   `practice` through the shared builder, so history lists the session and
  *   distinguishes it from exams, recomputes the session domain's progress
@@ -660,7 +663,9 @@ export class PracticeSessionService {
    * mastery row, then the session row update that marks the question graded.
    * The history write lands first and every row is recomputed from storage
    * under a deterministic id, so a retry after either write fails rewrites
-   * the same rows instead of duplicating them (S12).
+   * the same rows instead of duplicating them (S12). The mastery fold
+   * consumes study and practice results only (SR-7, EXAM-34A); the progress
+   * row consumes every stored result (EXAM-34).
    */
   private async grade(
     active: ActivePractice,
@@ -672,8 +677,10 @@ export class PracticeSessionService {
     const resultRow = this.buildResultRow(gradedActive, question, now);
 
     let stored: readonly QuestionResultRow[];
+    let storedMastery: readonly QuestionResultRow[];
     try {
       stored = await this.storedResults(active.cert.code);
+      storedMastery = await this.storedMasteryResults(active.cert.code);
     } catch (cause) {
       throw new PracticeLoadError(
         'The practice history could not be read. The answer was not graded and the retry can run.',
@@ -683,8 +690,9 @@ export class PracticeSessionService {
     // The same deterministic id is excluded before recomputing, so a retry
     // never counts one answer twice.
     const rows = [...stored.filter((row) => row.id !== resultRow.id), resultRow];
+    const masteryRows = [...storedMastery.filter((row) => row.id !== resultRow.id), resultRow];
     const progress = this.progressRow(gradedActive, rows, question.domainId, now);
-    const mastery = this.masteryRowsFor(gradedActive, question, rows);
+    const mastery = this.masteryRowsFor(gradedActive, question, masteryRows);
 
     try {
       await this.repository.commitAnswers({
@@ -767,6 +775,8 @@ export class PracticeSessionService {
    * stored result history (S10). Folding the history is the idempotent form
    * of the single-answer fold: a retry replays the same history and lands on
    * the same state, so a retried write never double-counts a streak (S12).
+   * The history passed in is the mastery-eligible subset: study and practice
+   * results, never mock attempt results (SR-7, EXAM-34A).
    */
   private masteryRowsFor(
     active: ActivePractice,
@@ -804,6 +814,20 @@ export class PracticeSessionService {
       attempts.map((attempt: AttemptRow) => this.repository.listQuestionResults(attempt.id)),
     );
     return [...attemptResults.flat(), ...(await this.repository.listPracticeResults(cert))];
+  }
+
+  /**
+   * The mastery-eligible subset of the stored results (SR-7, EXAM-34A): study
+   * exam answers and practice answers are the only sources of per-question
+   * mastery, so results belonging to mock attempts are excluded from the
+   * fold. Domain progress keeps consuming every result (EXAM-34).
+   */
+  private async storedMasteryResults(cert: string): Promise<QuestionResultRow[]> {
+    const studyAttempts = await this.repository.listAttempts({ cert, kind: 'study' });
+    const studyResults = await Promise.all(
+      studyAttempts.map((attempt: AttemptRow) => this.repository.listQuestionResults(attempt.id)),
+    );
+    return [...studyResults.flat(), ...(await this.repository.listPracticeResults(cert))];
   }
 
   /**

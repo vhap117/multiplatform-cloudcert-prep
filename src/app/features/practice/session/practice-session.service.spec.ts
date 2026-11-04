@@ -29,8 +29,10 @@ import { createStudyRepository } from '../../../core/storage/repository-provider
 import { STUDY_REPOSITORY } from '../../../core/storage/repository-provider';
 import type { StudyRepository } from '../../../core/storage/study-repository';
 import type {
+  AttemptRow,
   CommitAnswersInput,
   QuestionMasteryRow,
+  QuestionResultRow,
   SessionRow,
 } from '../../../core/storage/types';
 
@@ -552,6 +554,89 @@ describe('incomplete multi guard (S8, PRACT-17)', () => {
     expect(await service.submitAnswer(multi.id)).toBe('graded');
     expect(service.isCorrect(multi.id)).toBe(true);
     expectConsistentCounts(service);
+  });
+});
+
+describe('mastery sources (SR-7, EXAM-34A)', () => {
+  it('folds mastery from study and practice results only, never mock results', async () => {
+    at(5_000_000);
+    const service = freshService();
+    await service.start('clf-c02', 1, 10, { random: IDENTITY });
+    const target = service.questions()[0];
+    if (!target) {
+      throw new Error('expected a session question');
+    }
+
+    // One prior study correct answer, then one mock wrong answer for the
+    // same question. Only study and practice results may move mastery, so
+    // the practice answer below is the student's second correct answer.
+    const studyAttempt: AttemptRow = {
+      id: 'clf-c02:study:1',
+      cert: 'clf-c02',
+      kind: 'study',
+      startedAt: 100,
+      finishedAt: 200,
+      totalQuestions: 1,
+      correctCount: 1,
+      scorePercent: 100,
+      scaledScore: 1000,
+      passed: true,
+      timeTakenSeconds: 100,
+      domainScores: [],
+    };
+    const mockAttempt: AttemptRow = {
+      ...studyAttempt,
+      id: 'clf-c02:mock:1',
+      kind: 'mock',
+      correctCount: 0,
+      scorePercent: 0,
+      scaledScore: 100,
+      passed: false,
+    };
+    const resultFor = (attemptId: string, isCorrect: boolean): QuestionResultRow => ({
+      id: `${attemptId}:${target.id}`,
+      attemptId,
+      cert: 'clf-c02',
+      domainId: target.domainId,
+      questionId: target.id,
+      userAnswer: isCorrect ? 'right' : 'wrong',
+      correctAnswer: 'right',
+      isCorrect,
+      wasFlagged: false,
+      answeredAt: isCorrect ? 150 : 250,
+    });
+    await repository.commitAnswers({
+      attempt: studyAttempt,
+      results: [resultFor(studyAttempt.id, true)],
+      progress: [],
+      mastery: [],
+    });
+    await repository.commitAnswers({
+      attempt: mockAttempt,
+      results: [resultFor(mockAttempt.id, false)],
+      progress: [],
+      mastery: [],
+    });
+
+    await answerCorrectly(service, target);
+
+    // With the mock result excluded, the fold sees correct then correct:
+    // mastered at streak 2, resting at a null weight. If mock results
+    // counted, the wrong answer would keep the streak at 1.
+    const mastery = await repository.getQuestionMastery('clf-c02');
+    expect(mastery.find((row) => row.questionId === target.id)).toMatchObject({
+      correctStreak: 2,
+      lastWasWrong: false,
+      mastered: true,
+      weight: null,
+    });
+
+    // Domain progress consumes every stored result, mock included (EXAM-34).
+    const progress = await repository.getCertProgress('clf-c02');
+    expect(progress.find((row) => row.domainId === target.domainId)).toMatchObject({
+      attempted: 3,
+      correct: 2,
+    });
   });
 });
 
