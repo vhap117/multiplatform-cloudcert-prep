@@ -201,15 +201,21 @@ the persisted answers.
 
 ## Open gaps
 
-1. **Exclusion window length** (from issue 004) now blocks issue 007 directly,
-   because domain practice writes the same mastery rows.
-2. **Mastered threshold** is still undocumented. The study exam reuses the
-   conservative rule recorded in issue 005.
+1. **Exclusion window length** (from issue 004): resolved 2026-11-04. The
+    window is 3 completed practice sessions of the domain and mastery flips
+    at 2 consecutive correct answers, pinned in `core/exam-session/mastery.ts`
+    and recorded in issue 007 log L2. The study exam already writes through
+    that shared writer, so nothing blocks issue 007 anymore.
+2. **Mastered threshold**: resolved by the same decision. This file earlier
+    claimed the study exam "reuses the conservative rule recorded in issue
+    005"; that claim was stale, because study completion folds mastery
+    through the shared writer (mastered at 2 consecutive correct answers,
+    null weight inside the window).
 3. **The mock exam runner has the same blank-while-loading gap** that was fixed
-   here. It is issue 005 code and was deliberately left alone; a later change
-   should give it the same loading and empty states.
+    here. It is issue 005 code and was deliberately left alone; a later change
+    should give it the same loading and empty states.
 4. **End-to-end verification of index-backed screens** needs a real browser or
-   a CDP harness. `--dump-dom` cannot observe anything behind IndexedDB.
+    a CDP harness. `--dump-dom` cannot observe anything behind IndexedDB.
 
 ## Out of scope
 

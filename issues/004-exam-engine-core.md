@@ -143,6 +143,12 @@ reference derived it in SQL that is not part of this port. Issue 004 therefore
 consumes `weight: null` and does not invent a window. The value has to be fixed
 where the mastery row is written, before issues 006 and 007 save answers.
 
+Resolved 2026-11-04: the window is 3 completed practice sessions of the domain
+and a question becomes mastered after 2 consecutive correct answers. Both
+values are pinned in `src/app/core/exam-session/mastery.ts` (`MASTERED_STREAK`
+and `EXCLUSION_WINDOW_SESSIONS`), tested in `mastery.spec.ts`, recorded in
+issue 007 log L2, and written into `04-spaced-repetition.md` beside SR-17.
+
 ## Out of scope
 
 - Session state, persistence, and resume (issue 002 provides storage; issues

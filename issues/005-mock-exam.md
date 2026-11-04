@@ -35,11 +35,12 @@ remaining time recomputed from `Date.now()`, `timeTaken` clamped to
 
 S5. If the deadline passed while the app was backgrounded, the attempt ends and
 results show, unless the student already submitted. (`EXAM-24`)
-
-S6. Submit is one local transaction covering the attempt, its question rows, the
-derived domain progress, and the mastery rows, and it marks the session complete
-so it leaves Resume. A failed write keeps results on screen with a retry and
-never claims success. (`EXAM-27` to `EXAM-34`, `EXAM-36`, `DATA-10`, `DATA-39`)
+S6. Submit is one local transaction covering the attempt, its question rows,
+and the derived domain progress, and it marks the session complete so it
+leaves Resume. It writes no question mastery rows: a mock exam is pure
+assessment for per-question mastery (EXAM-34A). A failed write keeps results
+on screen with a retry and never claims success. (`EXAM-27` to `EXAM-34`,
+`EXAM-34A`, `EXAM-36`, `DATA-10`, `DATA-39`)
 
 S7. Exactly at the passing threshold passes, and there is no 60-second minimum:
 a completed short attempt still saves. (`EXAM-30`, `EXAM-33`)
@@ -87,6 +88,17 @@ the question id to the clipboard.
 L4 (decision, 2026-11-03): Practice weakest domain (EXAM-44) navigates to the
 practice tab with the domain preselected through a query parameter. Issue 007
 owns the practice session itself.
+
+L5 (decision, 2026-11-04): mock submit no longer writes question mastery
+rows at all. This reverses L2 and decision 3. The exclusion window and
+mastered threshold now exist (issue 007 log L2: mastered at 2 consecutive
+correct answers, window 3 completed practice sessions), and the user decided
+a mock exam must have no effect on question mastery: only study exams and
+practice sessions move it, specified as EXAM-34A in
+`../ionic-requirements/02-mock-exam.md` and SR-7/SR-11 in
+`../ionic-requirements/04-spaced-repetition.md`. Domain progress still
+updates from mock results per EXAM-34. Mastery rows written by earlier dev
+mock exams self-heal the next time a practice session folds that question.
 
 ## Tasks
 
@@ -201,7 +213,8 @@ the parent before its commit instead of trusting the writer report.
    `feedbackShown` for flags would collide with issue 006. `applyOptionKeyMap`
    was added to the engine so a resume re-applies the stored map.
 3. **Mastery rows never carry a null weight** here, because the exclusion
-   window has no documented length. See the open gaps.
+    window has no documented length. See the open gaps. Reversed by log L5:
+    submit writes no mastery rows at all (EXAM-34A).
 4. **Share is not implemented** (EXAM-43 is optional and no target is
    configured). Report question copies the question id (EXAM-42).
 5. **Practice weakest domain navigates to `/tabs/practice?domain=<id>`**, which
@@ -218,13 +231,14 @@ no tab bar once inside.
 
 ## Open gaps
 
-1. **Exclusion window length.** Still absent from every material (issue 004).
-   It must be fixed where mastery rows are written before issues 006 and 007
-   depend on it.
-2. **Mastered threshold.** The rule that flips `mastered` true is also
-   undocumented; the implementation extends the streak on a correct answer,
-   resets it and clears `mastered` on a wrong one, and preserves a prior
-   `mastered` flag otherwise. No number was invented.
+1. **Exclusion window length.** Resolved 2026-11-04: pinned at 3 completed
+   practice sessions of the domain, with mastery flipping at 2 consecutive
+   correct answers, in `core/exam-session/mastery.ts` and recorded in issue
+   007 log L2. Mock submit no longer writes mastery rows at all (log L5),
+   so this gap no longer touches the mock exam.
+2. **Mastered threshold.** Resolved by the same decision: 2 consecutive
+   correct answers, owned by the shared mastery writer that study and
+   practice use. The mock exam's inline rule was removed with log L5.
 3. **Exam format wording.** The registry has no format field, so the start
    screen reads "Timed mock exam, scaled score 100 to 1000".
 4. **Coming-soon refusal is composed screen-side** because the session service

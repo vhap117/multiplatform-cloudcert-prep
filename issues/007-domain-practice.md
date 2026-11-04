@@ -16,6 +16,34 @@ Traces: `PRACT-1` to `PRACT-39`, `SR-4` to `SR-6`, `SR-41` to `SR-43`.
 Depends on: 002, 004.
 Blocks: 008 (dashboard mastery display), 009.
 
+## Log
+
+L1 (user, 2026-11-04): continue with issue 007 on its own branch after
+merging the issue 006 branch.
+
+L2 (user decision, 2026-11-04): a question becomes mastered after 2
+consecutive correct answers and then rests for 3 completed practice sessions
+of its domain at a null weight. The window is counted in sessions of the
+domain, never in days (SR-2, SR-16, SR-17). Pinned as `MASTERED_STREAK` and
+`EXCLUSION_WINDOW_SESSIONS` in `src/app/core/exam-session/mastery.ts`;
+changing either updates the requirements, the docs, and the tests together.
+
+L3 (decision, 2026-11-04): a stored mastery row without `sessionsSinceSeen`
+reads as 0, because rows written before the mastery writer existed do not
+carry the counter.
+
+L4 (decision, 2026-11-04): practice is kind-isolated. Every storage call uses
+the `practice` session kind, and mock or study session rows are never read
+or written.
+
+L5 (user decision, 2026-11-04): mock exams have no effect on question
+mastery. Only study exams and practice sessions move it, specified as
+EXAM-34A in `../ionic-requirements/02-mock-exam.md` and as SR-7 and SR-11 in
+`../ionic-requirements/04-spaced-repetition.md`. Mock submit writes no
+mastery rows, and the practice mastery fold excludes mock attempt results.
+Domain-level progress (attempted, correct, coverage percent) still updates
+from mock results per EXAM-34.
+
 ## Tasks
 
 - [ ] Entry points: cert dashboard and Practice tab both reach the domain
