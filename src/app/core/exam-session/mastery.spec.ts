@@ -23,6 +23,7 @@ import {
   MASTERED_STREAK,
   ageMasteryForSession,
   applyMasteryAnswer,
+  foldMasteryHistory,
   type MasteryRowState,
 } from './mastery';
 
@@ -113,6 +114,64 @@ describe('applyMasteryAnswer', () => {
     expect(next.sessionsSinceSeen).toBe(0);
     expect(next.weight).toBeNull();
     expect(next.lastSeenAt).toBe(SEEN_AT);
+  });
+});
+
+describe('foldMasteryHistory (issue 007, S10)', () => {
+  it('reports no state for an empty history', () => {
+    expect(foldMasteryHistory([])).toBeNull();
+  });
+
+  it('folds one correct answer into the learning band', () => {
+    const state = foldMasteryHistory([{ isCorrect: true, answeredAt: SEEN_AT }]);
+
+    expect(state).toEqual({
+      correctStreak: 1,
+      lastWasWrong: false,
+      mastered: false,
+      sessionsSinceSeen: 0,
+      weight: LEARNING_WEIGHT_MAX,
+      lastSeenAt: SEEN_AT,
+    });
+  });
+
+  it('reaches mastery at two consecutive correct answers through the fold', () => {
+    const state = foldMasteryHistory([
+      { isCorrect: false, answeredAt: 1_000 },
+      { isCorrect: true, answeredAt: 2_000 },
+      { isCorrect: true, answeredAt: 3_000 },
+    ]);
+
+    expect(state).toEqual({
+      correctStreak: 2,
+      lastWasWrong: false,
+      mastered: true,
+      sessionsSinceSeen: 0,
+      // The mastering answer starts the rest, so the weight is already null.
+      weight: null,
+      lastSeenAt: 3_000,
+    });
+  });
+
+  it('is order safe and idempotent: any replay of the same history agrees', () => {
+    const history = [
+      { isCorrect: true, answeredAt: 2_000 },
+      { isCorrect: true, answeredAt: 1_000 },
+      { isCorrect: false, answeredAt: 3_000 },
+    ];
+
+    const once = foldMasteryHistory(history);
+    const replay = foldMasteryHistory([...history].reverse());
+
+    expect(replay).toEqual(once);
+    expect(once).toEqual({
+      correctStreak: 0,
+      lastWasWrong: true,
+      mastered: false,
+      sessionsSinceSeen: 0,
+      weight: LAST_WRONG_WEIGHT,
+      lastSeenAt: 3_000,
+    });
   });
 });
 

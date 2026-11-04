@@ -237,14 +237,35 @@ function masteryRows(input: BuildAttemptRowsInput): QuestionMasteryRow[] {
   }
   const asked = new Set(graded.map((entry) => entry.question.id));
   const sessionDomains = new Set(graded.map((entry) => entry.question.domainId));
-  for (const row of input.priorMastery) {
+  rows.push(...agePracticeSessionMastery(input.priorMastery, asked, sessionDomains));
+  return rows;
+}
+
+/**
+ * Age every prior mastery row of a completed practice session's domains that
+ * the session did not ask (issue 007, S10, SR-16).
+ *
+ * The caller owns the asked set: the builder passes the questions it graded,
+ * while the practice service passes the whole session question order, because
+ * a question the session asked was part of it whether or not it was answered.
+ * Rows of other domains are excluded untouched: the window counts practice
+ * sessions of the question's own domain. Only the counter and the derived
+ * weight move; every identity and history field is preserved.
+ */
+export function agePracticeSessionMastery(
+  priorMastery: readonly QuestionMasteryRow[],
+  asked: ReadonlySet<string>,
+  sessionDomains: ReadonlySet<number>,
+): QuestionMasteryRow[] {
+  const aged: QuestionMasteryRow[] = [];
+  for (const row of priorMastery) {
     if (asked.has(row.questionId) || !sessionDomains.has(row.domainId)) {
       continue;
     }
-    const aged = ageMasteryForSession(toMasteryState(row));
-    rows.push({ ...row, sessionsSinceSeen: aged.sessionsSinceSeen, weight: aged.weight });
+    const next = ageMasteryForSession(toMasteryState(row));
+    aged.push({ ...row, sessionsSinceSeen: next.sessionsSinceSeen, weight: next.weight });
   }
-  return rows;
+  return aged;
 }
 
 /** Map a stored row to the writer state; a missing counter reads as 0 (issue 007 log L3). */

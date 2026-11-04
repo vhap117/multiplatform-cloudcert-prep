@@ -15,7 +15,14 @@ import type { Question } from '../content/question-types';
 import { LAST_WRONG_WEIGHT, LEARNING_WEIGHT_MAX, MASTERED_WEIGHT } from '../exam';
 import type { QuestionMasteryRow, QuestionResultRow } from '../storage/types';
 
-import { buildAttemptRows, type BuildAttemptRowsInput, type GradedAnswer } from './attempt-rows';
+import { EXCLUSION_WINDOW_SESSIONS, foldMasteryHistory } from './mastery';
+
+import {
+  agePracticeSessionMastery,
+  buildAttemptRows,
+  type BuildAttemptRowsInput,
+  type GradedAnswer,
+} from './attempt-rows';
 
 const OPTIONS = { A: 'Alpha', B: 'Beta', C: 'Gamma', D: 'Delta' };
 
@@ -446,5 +453,71 @@ describe('buildAttemptRows', () => {
     );
 
     expect(mastery.map((row) => row.questionId)).toEqual(['q-a']);
+  });
+});
+
+describe('agePracticeSessionMastery (issue 007, S10, SR-16)', () => {
+  it('ages only the unasked rows of the session domains and preserves identity', () => {
+    const prior: QuestionMasteryRow[] = [
+      // Asked by the session: excluded, the answer path owns it.
+      masteryRow('q-asked', { correctStreak: 1 }),
+      // Same domain, not asked, still resting: the counter advances inside the window.
+      masteryRow('q-resting', { correctStreak: 2, mastered: true, sessionsSinceSeen: 2, weight: null }),
+      // Same domain, not asked, on the window boundary: the rest ends here.
+      masteryRow('q-ending', { correctStreak: 4, mastered: true, sessionsSinceSeen: 3, weight: null }),
+      // Another domain: the session did not touch it, so it is excluded.
+      masteryRow('q-other-domain', { domainId: 2, correctStreak: 1, weight: LEARNING_WEIGHT_MAX }),
+    ];
+
+    const aged = agePracticeSessionMastery(prior, new Set(['q-asked']), new Set([1]));
+
+    expect(aged.map((row) => row.questionId)).toEqual(['q-resting', 'q-ending']);
+    expect(aged[0]).toEqual({ ...prior[1], sessionsSinceSeen: 3, weight: null });
+    expect(aged[1]).toEqual({
+      ...prior[2],
+      sessionsSinceSeen: EXCLUSION_WINDOW_SESSIONS + 1,
+      weight: MASTERED_WEIGHT,
+    });
+  });
+
+  it('is the same aging the practice builder applies to its own unasked rows', () => {
+    const priorMastery: QuestionMasteryRow[] = [
+      masteryRow('q-b', { correctStreak: 2, mastered: true, sessionsSinceSeen: 2, weight: null }),
+    ];
+
+    const { mastery } = buildAttemptRows(
+      baseInput({ kind: 'practice', graded: [graded('q-a', 1, true)], priorMastery }),
+    );
+    const direct = agePracticeSessionMastery(priorMastery, new Set(['q-a']), new Set([1]));
+
+    expect(mastery.filter((row) => row.questionId === 'q-b')).toEqual(direct);
+  });
+});
+
+describe('the mastery folds agree (issue 007, S10)', () => {
+  it('foldMasteryHistory and the builder land on the same state for the same answers', () => {
+    // Two consecutive correct answers: reached through the full-history fold,
+    // and through the builder folding a prior streak of one plus one answer.
+    const folded = foldMasteryHistory([
+      { isCorrect: true, answeredAt: 1_000 },
+      { isCorrect: true, answeredAt: 96_000 },
+    ]);
+    const { mastery } = buildAttemptRows(
+      baseInput({
+        graded: [graded('q-a', 1, true)],
+        priorMastery: [masteryRow('q-a', { correctStreak: 1 })],
+      }),
+    );
+
+    const expected = {
+      correctStreak: 2,
+      lastWasWrong: false,
+      mastered: true,
+      sessionsSinceSeen: 0,
+      weight: null,
+      lastSeenAt: 96_000,
+    };
+    expect(folded).toEqual(expected);
+    expect(mastery[0]).toMatchObject(expected);
   });
 });

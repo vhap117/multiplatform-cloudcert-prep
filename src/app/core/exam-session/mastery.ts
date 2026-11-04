@@ -95,6 +95,30 @@ export function applyMasteryAnswer(
 }
 
 /**
+ * Fold a whole answer history into one state (issue 007, S10, S12).
+ *
+ * The history is the question's stored study and practice results. The caller
+ * sorts by `answeredAt` ascending; sorting again here keeps the fold safe
+ * standalone and never mutates the caller's list. Replaying the same history
+ * always lands on the same state, which is what makes a retried write
+ * idempotent: the state is derived from facts, never incremented. An empty
+ * history is no state at all, reported as null.
+ */
+export function foldMasteryHistory(
+  history: readonly MasteryAnswer[],
+): MasteryRowState | null {
+  if (history.length === 0) {
+    return null;
+  }
+  const ordered = [...history].sort((a, b) => a.answeredAt - b.answeredAt);
+  let state: MasteryRowState | undefined;
+  for (const answer of ordered) {
+    state = applyMasteryAnswer(state, answer);
+  }
+  return state ?? null;
+}
+
+/**
  * Age a question by one completed practice session of its domain that the
  * question was not part of: the counter advances and the weight is
  * recomputed, so a mastered question leaves the exclusion window on the
