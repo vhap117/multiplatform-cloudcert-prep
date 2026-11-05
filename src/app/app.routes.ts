@@ -1,3 +1,4 @@
+import { isDevMode } from '@angular/core';
 import { Routes } from '@angular/router';
 
 import { mockExamLeaveGuard } from './features/mock-exam/runner/mock-exam-leave.guard';
@@ -139,6 +140,15 @@ export const routes: Routes = [
       },
     ],
   },
+  ...(isDevMode()
+    ? [
+        {
+          path: '__dev/seed',
+          loadComponent: () => import('./dev/seed/seed.page').then((m) => m.SeedPage),
+          title: 'Development seed',
+        },
+      ]
+    : []),
   {
     path: '**',
     redirectTo: 'tabs/home',

@@ -17,56 +17,58 @@ PROG-1 to PROG-15) and `../ionic-requirements/04-spaced-repetition.md`
 (next-domain rows SR-35 to SR-40). Engine from issue 004, storage from issue
 002.
 
-Traces: `PROG-1` to `PROG-15`, `SR-35` to `SR-40`, `DATA-21`, `CERT-26`.
+Traces: `PROG-1` to `PROG-15`, `SR-35` to `SR-40`, `DATA-21`.
 
-Depends on: 002, 004.
+Depends on: 002, 004, 005, 006, 007.
 Blocks: 010 (dashboard is the cert-switching surface).
 
 ## Tasks
 
-- [ ] Header of the selected cert: name, short name, level, and question
+- [x] Header of the selected cert: name, short name, level, and question
       count from the bundled registry. (`PROG-2`)
-- [ ] Exam performance tile: pass rate, average score percentage, and best
-      score percentage across completed mock and study exam attempts for the
-      selected certCode, or N/A with a baseline hint when there are no exam
-      attempts. Study exams and mock exams feed the same metrics. Practice
+- [x] Exam performance tile: all-time pass rate, average score percentage,
+      and best score percentage across completed mock and study exam attempts
+      for the selected certCode, or N/A with a baseline hint when there are no
+      exam attempts. Study exams and mock exams feed the same metrics. Practice
       sessions SHALL NOT appear in these metrics. (`PROG-3`, `PROG-3A`,
       `PROG-3B`, `PROG-3C`, `STUDY-50`, `PROG-48`)
-- [ ] Two primary actions: mock exam and domain practice, both scoped to
+- [x] Two primary actions: mock exam and domain practice, both scoped to
       the selected cert. (`PROG-4`)
-- [ ] Practice coverage list: one progress bar per domain, bank coverage
-      capped at 100, with an accessible label and value on every bar. Derive
-      practice domain strength from completed practice session rows
-      (`AttemptRow` with `kind: 'practice'`) and their per-domain scores.
-      Practice sessions are what move this coverage. (`PROG-5`, `PROG-6`)
-- [ ] Exam domain performance list: per-domain accuracy from completed mock
-      and study exam attempts, ordered strongest to weakest, so the student can
-      see which exam domains need more study. Domains with no exam data show an
-      explicit no-exam-data state, never a fabricated 0 percent. (`PROG-3D`)
-- [ ] Next up action using the issue 004 recommendation: first unstarted
+- [x] Combined domain view: one row per domain with practice coverage and
+      exam accuracy. Practice coverage is bank coverage capped at 100, derived
+      from completed practice session rows (`AttemptRow` with
+      `kind: 'practice'`) and their per-domain scores. Exam accuracy comes from
+      completed mock and study exam attempts. Order rows by lowest practice
+      coverage, then lowest exam accuracy, then cert order. Every bar needs an
+      accessible label and value. Domains with no exam data show an explicit
+      no-exam-data state, never a fabricated 0 percent. (`PROG-5`, `PROG-6`,
+      `PROG-3D`)
+- [x] Next up action using the issue 004 recommendation: first unstarted
       domain in cert order, else lowest-percent practiced domain labelled
       Weakest domain. Unstarted domains are phrased You have not practiced X
       yet and are never called weakest. The action opens domain practice with
       the domain preselected. (`PROG-7`, `SR-35` to `SR-39`)
-- [ ] Zero-exam-attempt state: pass rate, average score, and best score show
+- [x] Zero-exam-attempt state: pass rate, average score, and best score show
       N/A with a baseline hint, and Next up points at the first domain. A
       practice session does not clear this state or change the exam metrics.
       (`SR-40`, `PROG-3C`)
-- [ ] Recent exam attempts list of completed mock and study exams with pass or
-      fail, score percentage, and a link to history; empty state shows
-      No exam attempts yet with a start action. Practice sessions never appear
-      in this list. (`PROG-8`, `PROG-9`)
-- [ ] Resume card when any session is in progress for any cert: session kind,
-      cert name, answered count, and last activity time. Tapping resumes the
-      right session kind. (`PROG-13`, `PROG-14`, `DATA-21`)
-- [ ] Load states: skeletons and an accessible busy state while reading.
+- [x] Recent exam attempts list: the latest three completed mock and study
+      exams, newest first, with pass or fail, score percentage, date, and a
+      link to history; empty state shows No exam attempts yet with a start
+      action. Practice sessions never appear in this list. (`PROG-8`, `PROG-9`)
+- [x] Resume cards for the selected cert: one per in-progress kind (mock,
+      study, practice), naming the kind, cert, answered count, and last
+      activity time. Tapping a card resumes that kind directly in its runner.
+      (`PROG-13`, `PROG-14`, `DATA-21`)
+- [x] Load states: skeletons and an accessible busy state while reading.
       (`PROG-12`)
-- [ ] Failure states: a failed local read shows an inline error with Try
-      again; a successful retry clears the error and renders the mastery
-      section. (`PROG-10`, `PROG-11`)
-- [ ] No Export backup action here: backup lives in Settings (issue 012).
-      (`PROG-15`)
-- [ ] Cert context: the dashboard clearly names the active cert on every
+- [x] Failure states: each data section loads independently. A failed local
+      read shows an inline error with Try again in that section only, while the
+      header and other sections keep rendering; a successful retry clears the
+      error and renders the failed section. (`PROG-10`, `PROG-11`)
+- [x] No Export backup action here: backup lives in Settings and is
+      implemented by issue 011. (`PROG-15`)
+- [x] Cert context: the dashboard clearly names the active cert on every
       view, including tablet width. (`CERT-20`)
 
 ## Acceptance criteria
@@ -74,13 +76,13 @@ Blocks: 010 (dashboard is the cert-switching surface).
 - Fresh install: no exam attempts, pass rate, average score, and best score
       are N/A with a baseline hint, Next up points at domain 1, and no mastery
       number is fabricated.
-- After a completed practice session, the practised domain's practice coverage
+- After a completed practice session, the practiced domain's practice coverage
       bar moves by exactly the coverage delta, capped at 100, while pass rate,
-      average score, best score, recent exam attempts, and exam domain
-      performance stay unchanged.
+      average score, best score, recent exam attempts, and exam accuracy stay
+      unchanged.
 - After a completed mock or study exam, pass rate, average score, best score,
-      recent exam attempts, and exam domain performance update for the selected
-      certCode only. Another certCode's metrics are untouched.
+      recent exam attempts, and exam accuracy update for the selected certCode
+      only. Another certCode's metrics are untouched.
 - With a study exam in progress, the resume card names it, shows answered
       count, and tapping resumes at the saved position.
 - Corrupt a row in a test fixture: the dashboard shows the Try again error,

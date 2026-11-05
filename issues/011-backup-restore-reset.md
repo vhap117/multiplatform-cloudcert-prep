@@ -4,7 +4,7 @@
 
 The device is the source of truth, so the backup file is the student's only
 bridge to a new phone and the only protection against accidental data loss.
-Export, import, and the destructive reset actions from issue 009 all live
+Export, import, and the destructive reset and delete-all actions all live
 here, fully offline.
 
 Spec: `../ionic-requirements/01-local-data-and-device.md` (backup and restore
@@ -54,11 +54,10 @@ Blocks: 013 (export and import are in the hardening pass).
 - [ ] Export works even when the database is partially corrupted, by
       exporting the raw file or the valid subset so data can still be
       recovered. Optional. (`OFF-30`)
-- [ ] Integrate the issue 009 reset and delete-all actions so they surface in
-      Settings under Data: per-cert reset and delete all local data, both
-      gated by explicit destructive confirmations that name the scope. Neither
-      removes the bundled question bank or the app itself. (`DATA-31`,
-      `DATA-32`, `PROG-29` to `PROG-34`)
+- [ ] Implement per-cert reset and delete-all local data in Settings under
+      Data, both gated by explicit destructive confirmations that name the
+      scope. Neither removes the bundled question bank or the app itself.
+      (`DATA-31`, `DATA-32`, `PROG-29` to `PROG-34`)
 - [ ] Privacy guarantees: the backup contains no advertising identifiers,
       crash logs, or device identifiers beyond schema and app versions; the
       app never stores a copy of the backup off device; import never triggers

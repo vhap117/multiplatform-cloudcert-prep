@@ -1,0 +1,256 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Home</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="ccp-page">
+    <div class="ccp-content">
+      @if (cert; as activeCert) {
+        <p class="ccp-kicker">Your dashboard</p>
+        <h1 class="ccp-display">{{ activeCert.name }}</h1>
+        <p class="ccp-body ccp-muted cert-context">
+          {{ activeCert.shortName }} · {{ levelLabel(activeCert) }} ·
+          {{ activeCert.examQuestionCount }} questions
+        </p>
+        <p class="ccp-small ccp-muted">{{ examSummary(activeCert) }}</p>
+
+        <div class="primary-actions">
+          <ion-button expand="block" (click)="goMockExam()">Start mock exam</ion-button>
+          <ion-button expand="block" fill="outline" (click)="goDomainPractice()">
+            Start domain practice
+          </ion-button>
+          <ion-button expand="block" fill="clear" (click)="goStudyExam()">
+            Study exam
+          </ion-button>
+        </div>
+
+        <section class="ccp-card dashboard-section" aria-labelledby="exam-performance-heading">
+          <h2 id="exam-performance-heading" class="ccp-card-heading">Exam performance</h2>
+
+          @switch (examState()) {
+            @case ('loading') {
+              <div class="section-loading" role="status" aria-busy="true">
+                <ion-skeleton-text [animated]="true" style="width: 60%" />
+                <ion-skeleton-text [animated]="true" style="width: 80%" />
+                <ion-skeleton-text [animated]="true" style="width: 45%" />
+                <span class="ccp-small ccp-muted">Loading exam performance.</span>
+              </div>
+            }
+            @case ('error') {
+              <div role="alert">
+                <p class="ccp-body section-error">{{ examError() }}</p>
+                <ion-button fill="outline" (click)="loadExamSection()">Try again</ion-button>
+              </div>
+            }
+            @case ('ready') {
+              @if (metrics(); as values) {
+                <dl class="metric-grid">
+                  <div class="metric">
+                    <dt>Pass rate</dt>
+                    <dd>{{ values.passRate }}%</dd>
+                  </div>
+                  <div class="metric">
+                    <dt>Average score</dt>
+                    <dd>{{ values.averageScore }}%</dd>
+                  </div>
+                  <div class="metric">
+                    <dt>Best score</dt>
+                    <dd>{{ values.bestScore }}%</dd>
+                  </div>
+                </dl>
+                <p class="ccp-small ccp-muted">
+                  Across {{ values.attemptCount }} completed mock and study exam attempts.
+                </p>
+              } @else {
+                <dl class="metric-grid">
+                  <div class="metric">
+                    <dt>Pass rate</dt>
+                    <dd>N/A</dd>
+                  </div>
+                  <div class="metric">
+                    <dt>Average score</dt>
+                    <dd>N/A</dd>
+                  </div>
+                  <div class="metric">
+                    <dt>Best score</dt>
+                    <dd>N/A</dd>
+                  </div>
+                </dl>
+                <p class="ccp-small ccp-muted baseline-hint">
+                  Complete a mock or study exam to build your baseline. Practice sessions do not
+                  count as exam attempts.
+                </p>
+              }
+            }
+          }
+        </section>
+
+        <section class="ccp-card dashboard-section" aria-labelledby="domains-heading">
+          <h2 id="domains-heading" class="ccp-card-heading">Domains</h2>
+          <p class="ccp-small ccp-muted">
+            Practice coverage shows what you have covered in practice. Exam accuracy comes from
+            completed mock and study exams.
+          </p>
+
+          @switch (domainState()) {
+            @case ('loading') {
+              <div class="section-loading" role="status" aria-busy="true">
+                <ion-skeleton-text [animated]="true" style="width: 90%" />
+                <ion-skeleton-text [animated]="true" style="width: 65%" />
+                <span class="ccp-small ccp-muted">Loading domains.</span>
+              </div>
+            }
+            @case ('error') {
+              <div role="alert">
+                <p class="ccp-body section-error">{{ domainError() }}</p>
+                <ion-button fill="outline" (click)="loadDomainSection()">Try again</ion-button>
+              </div>
+            }
+            @case ('ready') {
+              @if (nextUp(); as next) {
+                <div class="next-up">
+                  <h3 class="next-up-heading">Next up</h3>
+                  <p class="ccp-body">{{ next.text }}</p>
+                  <ion-button (click)="goNextUp()">Practice {{ next.domainName }}</ion-button>
+                </div>
+              }
+
+              <ul class="domain-list">
+                @for (row of domainRows(); track row.domainId) {
+                  <li class="domain-row">
+                    <h3 class="domain-name">{{ row.name }}</h3>
+
+                    <div class="domain-metric">
+                      <span class="domain-metric-label">Practice coverage</span>
+                      <span
+                        class="domain-track"
+                        role="progressbar"
+                        [attr.aria-label]="row.name + ' practice coverage'"
+                        [attr.aria-valuenow]="row.practicePercent"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        [attr.aria-valuetext]="row.practicePercent + ' percent practice coverage'"
+                      >
+                        <span
+                          class="domain-fill practice"
+                          [style.width.%]="row.practicePercent"
+                        ></span>
+                      </span>
+                      <span class="domain-metric-value">{{ row.practicePercent }}%</span>
+                    </div>
+
+                    <div class="domain-metric">
+                      <span class="domain-metric-label">Exam accuracy</span>
+                      @if (row.examPercent === null) {
+                        <span class="domain-no-data">No exam data</span>
+                      } @else {
+                        <span
+                          class="domain-track"
+                          role="progressbar"
+                          [attr.aria-label]="row.name + ' exam accuracy'"
+                          [attr.aria-valuenow]="row.examPercent"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                          [attr.aria-valuetext]="row.examPercent + ' percent exam accuracy'"
+                        >
+                          <span class="domain-fill exam" [style.width.%]="row.examPercent"></span>
+                        </span>
+                        <span class="domain-metric-value">{{ row.examPercent }}%</span>
+                      }
+                    </div>
+                  </li>
+                }
+              </ul>
+            }
+          }
+        </section>
+
+        <section class="ccp-card dashboard-section" aria-labelledby="recent-heading">
+          <div class="section-heading-row">
+            <h2 id="recent-heading" class="ccp-card-heading">Recent exam attempts</h2>
+            <button type="button" class="link-button" (click)="goHistory()">View history</button>
+          </div>
+
+          @if (examState() === 'ready') {
+            @if (recentAttempts().length > 0) {
+              <ul class="attempt-list">
+                @for (attempt of recentAttempts(); track attempt.id) {
+                  <li class="attempt-row">
+                    <div>
+                      <p class="attempt-kind">{{ recentKindLabel(attempt.kind) }}</p>
+                      <p class="ccp-small ccp-muted">{{ formatDate(attempt.finishedAt) }}</p>
+                    </div>
+                    <div class="attempt-score">
+                      <span
+                        class="attempt-verdict"
+                        [class.passed]="attempt.passed"
+                        [class.failed]="!attempt.passed"
+                      >
+                        {{ attempt.passed ? 'Passed' : 'Not passed' }}
+                      </span>
+                      <span class="ccp-small">{{ attempt.scorePercent }}%</span>
+                    </div>
+                  </li>
+                }
+              </ul>
+            } @else {
+              <p class="ccp-body ccp-muted">
+                No exam attempts yet. Start with a mock exam to build your baseline.
+              </p>
+            }
+          } @else if (examState() === 'loading') {
+            <div class="section-loading" role="status" aria-busy="true">
+              <ion-skeleton-text [animated]="true" style="width: 75%" />
+              <span class="ccp-small ccp-muted">Loading recent exam attempts.</span>
+            </div>
+          }
+        </section>
+
+        @if (resumeState() === 'loading') {
+          <section class="ccp-card dashboard-section" aria-labelledby="resume-heading">
+            <h2 id="resume-heading" class="ccp-card-heading">In progress</h2>
+            <div class="section-loading" role="status" aria-busy="true">
+              <ion-skeleton-text [animated]="true" style="width: 70%" />
+              <span class="ccp-small ccp-muted">Checking saved sessions.</span>
+            </div>
+          </section>
+        } @else if (resumeState() === 'error') {
+          <section class="ccp-card dashboard-section" aria-labelledby="resume-heading">
+            <h2 id="resume-heading" class="ccp-card-heading">In progress</h2>
+            <div role="alert">
+              <p class="ccp-body section-error">{{ resumeError() }}</p>
+              <ion-button fill="outline" (click)="loadResumeSection()">Try again</ion-button>
+            </div>
+          </section>
+        } @else if (resumeCards().length > 0) {
+          <section class="ccp-card dashboard-section" aria-labelledby="resume-heading">
+            <h2 id="resume-heading" class="ccp-card-heading">In progress</h2>
+            <ul class="resume-list">
+              @for (card of resumeCards(); track card.kind) {
+                <li class="resume-card">
+                  <h3 class="resume-kind">{{ kindLabel(card.kind) }}</h3>
+                  <p class="ccp-small ccp-muted">
+                    {{ card.certName }} · {{ card.answeredCount }} answered · Last activity
+                    {{ formatDateTime(card.updatedAt) }}
+                  </p>
+                  <ion-button fill="outline" (click)="resume(card)">
+                    Resume {{ kindLabel(card.kind) }}
+                  </ion-button>
+                </li>
+              }
+            </ul>
+            @if (resumeActionError(); as message) {
+              <p class="ccp-body section-error" role="alert">{{ message }}</p>
+            }
+          </section>
+        }
+      } @else {
+        <p class="ccp-body ccp-muted" role="alert">
+          No active certification is available for the dashboard yet.
+        </p>
+      }
+    </div>
+  </div>
+</ion-content>

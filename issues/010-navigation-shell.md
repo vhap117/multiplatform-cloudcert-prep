@@ -11,8 +11,8 @@ replacing the placeholder tabs from issue 001).
 
 Traces: `CERT-1` to `CERT-36`, `ACC-31`, `ACC-32`.
 
-Depends on: 001, 005 (the exam leave guard is the main back-handling
-consumer).
+Depends on: 001, 005, 006, 007, 008 (the leave guards and the dashboard
+surface).
 Blocks: 013 (navigation is part of the hardening pass).
 
 ## Tasks

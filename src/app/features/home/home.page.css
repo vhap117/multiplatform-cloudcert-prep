@@ -1,0 +1,236 @@
+.cert-context {
+  margin-bottom: var(--ccp-space-xs);
+}
+
+.primary-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ccp-space-md);
+  margin-top: var(--ccp-space-lg);
+}
+
+.primary-actions ion-button {
+  margin: 0;
+}
+
+.dashboard-section {
+  margin-top: var(--ccp-space-lg);
+}
+
+.metric-grid {
+  display: grid;
+  gap: var(--ccp-space-md);
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  margin: var(--ccp-space-base) 0 0;
+}
+
+.metric {
+  background: rgb(var(--ccp-bg-card-hover));
+  border-radius: var(--ccp-radius-input);
+  padding: var(--ccp-space-md);
+}
+
+.metric dt {
+  color: rgb(var(--ccp-text-muted));
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.metric dd {
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  margin: var(--ccp-space-xs) 0 0;
+}
+
+.baseline-hint {
+  margin-top: var(--ccp-space-base);
+}
+
+.section-loading {
+  display: grid;
+  gap: var(--ccp-space-sm);
+  margin-top: var(--ccp-space-base);
+}
+
+.section-error {
+  color: rgb(var(--ccp-danger));
+}
+
+.next-up {
+  background: rgb(var(--ccp-bg-card-hover));
+  border-radius: var(--ccp-radius-input);
+  margin-top: var(--ccp-space-base);
+  padding: var(--ccp-space-base);
+}
+
+.next-up-heading {
+  font-size: 1rem;
+  margin: 0 0 var(--ccp-space-xs);
+}
+
+.next-up ion-button {
+  margin-top: var(--ccp-space-sm);
+}
+
+.domain-list,
+.attempt-list,
+.resume-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ccp-space-md);
+  list-style: none;
+  margin: var(--ccp-space-base) 0 0;
+  padding: 0;
+}
+
+.domain-row {
+  border-top: 1px solid rgb(var(--ccp-border));
+  padding-top: var(--ccp-space-md);
+}
+
+.domain-row:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.domain-name {
+  font-size: 1rem;
+  margin: 0 0 var(--ccp-space-sm);
+}
+
+.domain-metric {
+  align-items: center;
+  display: flex;
+  gap: var(--ccp-space-sm);
+  margin-top: var(--ccp-space-sm);
+}
+
+.domain-metric-label {
+  color: rgb(var(--ccp-text-muted));
+  flex: none;
+  font-size: 0.8125rem;
+  width: 8rem;
+}
+
+.domain-track {
+  background: rgb(var(--ccp-border));
+  border-radius: var(--ccp-radius-pill);
+  display: block;
+  flex: 1 1 auto;
+  height: 8px;
+  min-width: 3rem;
+  overflow: hidden;
+}
+
+.domain-fill {
+  border-radius: var(--ccp-radius-pill);
+  display: block;
+  height: 100%;
+  transition: width var(--ccp-dur-gentle) var(--ccp-ease-out);
+}
+
+.domain-fill.practice {
+  background: rgb(var(--ccp-brand));
+}
+
+.domain-fill.exam {
+  background: rgb(var(--ccp-success));
+}
+
+.domain-metric-value,
+.domain-no-data {
+  flex: none;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  text-align: right;
+  width: 4.5rem;
+}
+
+.domain-no-data {
+  color: rgb(var(--ccp-text-muted));
+  font-weight: 400;
+}
+
+.section-heading-row {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ccp-space-sm);
+  justify-content: space-between;
+}
+
+.link-button {
+  background: none;
+  border: 0;
+  color: rgb(var(--ccp-link));
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.attempt-row {
+  align-items: center;
+  border-top: 1px solid rgb(var(--ccp-border));
+  display: flex;
+  gap: var(--ccp-space-md);
+  justify-content: space-between;
+  padding-top: var(--ccp-space-md);
+}
+
+.attempt-row:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.attempt-kind,
+.attempt-row p {
+  margin: 0;
+}
+
+.attempt-score {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ccp-space-xs);
+}
+
+.attempt-verdict {
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.attempt-verdict.passed {
+  color: rgb(var(--ccp-success));
+}
+
+.attempt-verdict.failed {
+  color: rgb(var(--ccp-danger));
+}
+
+.resume-card {
+  border-top: 1px solid rgb(var(--ccp-border));
+  padding-top: var(--ccp-space-md);
+}
+
+.resume-card:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.resume-kind {
+  font-size: 1rem;
+  margin: 0 0 var(--ccp-space-xs);
+}
+
+.resume-card ion-button {
+  margin-top: var(--ccp-space-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .domain-fill {
+    transition: none;
+  }
+}

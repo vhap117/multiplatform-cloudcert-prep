@@ -77,7 +77,7 @@ exist in some form.
 
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
-| DATA-38 | There SHALL be exactly one active in-progress session per cert at a time. | Required | `STUDY-35`, `02-mock-exam.md` |
+| DATA-38 | There SHALL be at most one active in-progress session per kind per cert at a time. | Required | `STUDY-35`, `02-mock-exam.md` |
 | DATA-39 | Completing a session SHALL mark it complete and remove it from the resume list. | Required | `10-study-exams.md` |
 | DATA-40 | Starting a new session for a cert with an existing in-progress session SHALL require an explicit choice to resume or discard. | Required | `10-study-exams.md` |
 | DATA-41 | A discarded session SHALL be removed from local storage and SHALL NOT contribute to history or mastery. | Required | This document |

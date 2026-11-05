@@ -13,7 +13,7 @@ statistics. Community statistics and server reads are removed.
 | PROG-3A | The dashboard SHALL show the pass rate and average score percentage across completed mock and study exam attempts for the selected certCode, or N/A when there are no exam attempts. | Required | This document |
 | PROG-3B | Pass rate SHALL be the number of passed exam attempts divided by all completed mock and study exam attempts, rounded to a whole percent. Average score SHALL be the mean score percentage of those attempts, rounded to a whole percent. | Required | This document |
 | PROG-3C | Practice sessions SHALL NOT contribute to pass rate, average score, best score, exam attempt counts, or the recent exam attempts list. | Required | This document, `03-practice-by-subject.md` |
-| PROG-3D | The dashboard SHALL show per-domain exam performance from completed mock and study exam attempts for the selected certCode, ordered strongest to weakest, so the student can see which exam domains need more study. Each percentage SHALL be correct answers divided by questions asked in that domain across those attempts. A domain with no exam data SHALL NOT be fabricated as 0 percent. | Required | This document |
+| PROG-3D | The dashboard SHALL show one combined domain view with one row per domain containing practice coverage and exam accuracy from completed mock and study exam attempts for the selected certCode. Rows SHALL be ordered by lowest practice coverage, then lowest exam accuracy, then cert order. Each exam percentage SHALL be correct answers divided by questions asked in that domain across those attempts. A domain with no exam data SHALL show an explicit no-exam-data state, never a fabricated 0 percent. | Required | This document, `04-spaced-repetition.md` |
 | PROG-4 | The dashboard SHALL show two primary actions: mock exam and domain practice. | Required | Web `PROG-4` |
 | PROG-5 | The dashboard SHALL show domain mastery per domain, derived from local bank coverage and capped at 100. | Required | `04-spaced-repetition.md` |
 | PROG-6 | Each mastery row SHALL be a progress bar with an accessible value and label. | Required | `08-accessibility-and-resilience.md` |
@@ -23,7 +23,7 @@ statistics. Community statistics and server reads are removed.
 | PROG-10 | A failed local read SHALL show an inline error with Try again. | Required | Web `PROG-10` |
 | PROG-11 | A successful retry SHALL clear the error and render the mastery section. | Required | Web `PROG-11` |
 | PROG-12 | Loading SHALL show skeletons and an accessible busy state. | Required | Web `PROG-12` |
-| PROG-13 | The dashboard SHALL show a Resume card when an in-progress mock exam, practice session, or study exam exists. | Required | `DATA-21` |
+| PROG-13 | The dashboard SHALL show one Resume card per in-progress session kind for the selected cert: mock exam, study exam, or practice session. | Required | `DATA-21` |
 | PROG-14 | The Resume card SHALL name the session kind, cert, answered count, and last activity time. | Required | This document |
 | PROG-15 | The dashboard SHALL show an Export backup action in settings, not as a primary dashboard action. | Required | `01-local-data-and-device.md` |
 
@@ -31,8 +31,8 @@ statistics. Community statistics and server reads are removed.
 
 | ID | Requirement | Status | Evidence |
 |---|---|---|---|
-| PROG-16 | History SHALL list local exam attempts and completed practice sessions. | Required | This document |
-| PROG-17 | History SHALL support filtering by cert, all, passed, failed, mock exam, study exam, and domain practice. | Required | Web `PROG-15`, extended for Ionic |
+| PROG-16 | History SHALL list local exam attempts and completed practice sessions for the selected cert. | Required | This document |
+| PROG-17 | History SHALL use the selected cert context, then support filtering by all, passed, failed, mock exam, study exam, and domain practice. | Required | Web `PROG-15`, extended for Ionic |
 | PROG-18 | Filter chips SHALL expose their selected state to assistive technology. | Required | Web `PROG-15` |
 | PROG-19 | History SHALL paginate or virtualize long lists so a large local history stays responsive. | Required | This document |
 | PROG-20 | Each exam attempt SHALL be expandable to show per-domain scores and metadata. | Required | Web `PROG-17` |
@@ -82,7 +82,7 @@ community, so this becomes a local statistics view.
 | PROG-45 | A completed domain practice session SHALL record per-domain accuracy and update mastery. | Required | `03-practice-by-subject.md` |
 | PROG-46 | A domain with no questions in a session SHALL NOT be fabricated as 0 percent. | Required | Web `STUDY-47` |
 | PROG-47 | History records SHALL remain distinguishable by session type. | Required | `STUDY-46` |
-| PROG-48 | A completed study exam SHALL contribute to the same best-score dashboard as a mock exam. | Required | `STUDY-46A` |
+| PROG-48 | A completed study exam SHALL contribute to the same best-score dashboard as a mock exam. | Required | `STUDY-50` |
 | PROG-49 | History and dashboard reads SHALL NOT depend on a network connection. | Required | `IONIC-2` |
 
 ## Removed web behaviour

@@ -93,7 +93,7 @@ None of these exist yet. They are listed so the return path is explicit:
 | 1 Study core | [007](./007-domain-practice.md) | Domain practice with adaptive selection | 002, 004 |
 | 2 Progress | [008](./008-dashboard.md) | Cert dashboard and resume card | 002, 004 |
 | 2 Progress | [009](./009-history-and-statistics.md) | History, attempt review, local statistics | 002, 005 |
-| 3 Shell and data | [010](./010-navigation-shell.md) | Navigation, cert switching, back behaviour | 001, 005 |
+| 3 Shell and data | [010](./010-navigation-shell.md) | Navigation, cert switching, back behaviour | 001, 005, 006, 007, 008 |
 | 3 Shell and data | [011](./011-backup-restore-reset.md) | Backup export, import, reset | 002 |
 | 3 Shell and data | [012](./012-settings-and-privacy.md) | Settings screen and privacy statement | 001, 002 |
 | 4 Hardening | [013](./013-hardening-and-release.md) | Accessibility, offline, release checklist | 005, 006, 007, 008, 009, 010, 011, 012 |

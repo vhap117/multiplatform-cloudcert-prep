@@ -1,0 +1,344 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>History</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="ccp-page">
+    <div class="ccp-content">
+      @if (cert; as activeCert) {
+        <p class="ccp-kicker">Progress</p>
+        <h1 class="ccp-display">History</h1>
+        <p class="ccp-small ccp-muted">
+          {{ activeCert.name }} ({{ activeCert.shortName }})
+        </p>
+
+        <div class="segments" role="tablist" aria-label="History views">
+          <button
+            type="button"
+            role="tab"
+            class="segment"
+            [class.active]="segment() === 'history'"
+            [attr.aria-selected]="segment() === 'history'"
+            (click)="setSegment('history')"
+          >
+            History
+          </button>
+          <button
+            type="button"
+            role="tab"
+            class="segment"
+            [class.active]="segment() === 'statistics'"
+            [attr.aria-selected]="segment() === 'statistics'"
+            (click)="setSegment('statistics')"
+          >
+            Statistics
+          </button>
+        </div>
+
+        @if (segment() === 'history') {
+          <div class="filter-chips" role="group" aria-label="Filter history">
+            @for (option of historyFilters; track option.value) {
+              <button
+                type="button"
+                class="chip"
+                [class.active]="filter() === option.value"
+                [attr.aria-pressed]="filter() === option.value"
+                (click)="setFilter(option.value)"
+              >
+                {{ option.label }}
+              </button>
+            }
+          </div>
+
+          @switch (historyState()) {
+            @case ('loading') {
+              <div class="section-loading" role="status" aria-busy="true">
+                <ion-skeleton-text [animated]="true" style="width: 85%" />
+                <ion-skeleton-text [animated]="true" style="width: 65%" />
+                <span class="ccp-small ccp-muted">Loading history.</span>
+              </div>
+            }
+            @case ('error') {
+              <div role="alert">
+                <p class="ccp-body section-error">{{ historyError() }}</p>
+                <ion-button fill="outline" (click)="loadHistory()">Try again</ion-button>
+              </div>
+            }
+            @case ('ready') {
+              @if (visibleAttempts().length === 0) {
+                <p class="ccp-body ccp-muted">
+                  No attempts yet for this certification.
+                </p>
+              } @else {
+                <ul class="attempt-list">
+                  @for (attempt of visibleAttempts(); track attempt.id) {
+                    <li class="attempt-card">
+                      <div class="attempt-summary">
+                        <div>
+                          <h2 class="attempt-kind">{{ kindLabel(attempt.kind) }}</h2>
+                          <p class="ccp-small ccp-muted">
+                            {{ formatDate(attempt.finishedAt) }} ·
+                            {{ attempt.totalQuestions }} questions ·
+                            {{ formatDuration(attempt.timeTakenSeconds) }}
+                          </p>
+                        </div>
+                        <div class="attempt-score">
+                          @if (attempt.kind === 'practice') {
+                            <span class="attempt-verdict">Completed</span>
+                          } @else {
+                            <span
+                              class="attempt-verdict"
+                              [class.passed]="attempt.passed"
+                              [class.failed]="!attempt.passed"
+                            >
+                              {{ attempt.passed ? 'Passed' : 'Not passed' }}
+                            </span>
+                          }
+                          <span class="ccp-small">{{ attempt.scorePercent }}%</span>
+                        </div>
+                      </div>
+
+                      @if (attempt.kind !== 'practice') {
+                        <button
+                          type="button"
+                          class="ccp-button details-button"
+                          [attr.aria-expanded]="expandedId() === attempt.id"
+                          (click)="toggleAttempt(attempt)"
+                        >
+                          {{ expandedId() === attempt.id ? 'Hide details' : 'Show details' }}
+                        </button>
+                      }
+
+                      @if (expandedId() === attempt.id) {
+                        <div class="attempt-details">
+                          <h3 class="details-heading">Results by domain</h3>
+                          <ul class="domain-summary">
+                            @for (domain of expandedDomains(); track domain.domainId) {
+                              <li>
+                                <span>{{ domain.name }}</span>
+                                <span>{{ domain.correct }} of {{ domain.total }} ({{ domain.percent }}%)</span>
+                              </li>
+                            }
+                          </ul>
+
+                          <h3 class="details-heading">Review answers</h3>
+                          @switch (reviewState()) {
+                            @case ('loading') {
+                              <div class="section-loading" role="status" aria-busy="true">
+                                <span class="ccp-small ccp-muted">Loading question review.</span>
+                              </div>
+                            }
+                            @case ('error') {
+                              <div role="alert">
+                                <p class="ccp-body section-error">{{ reviewError() }}</p>
+                                <ion-button fill="outline" (click)="retryReview(attempt)">
+                                  Try again
+                                </ion-button>
+                              </div>
+                            }
+                            @case ('ready') {
+                              <div class="filter-chips" role="group" aria-label="Filter questions">
+                                <button
+                                  type="button"
+                                  class="chip"
+                                  [class.active]="reviewFilter() === 'all'"
+                                  [attr.aria-pressed]="reviewFilter() === 'all'"
+                                  (click)="setReviewFilter('all')"
+                                >
+                                  All
+                                </button>
+                                <button
+                                  type="button"
+                                  class="chip"
+                                  [class.active]="reviewFilter() === 'incorrect'"
+                                  [attr.aria-pressed]="reviewFilter() === 'incorrect'"
+                                  (click)="setReviewFilter('incorrect')"
+                                >
+                                  Incorrect
+                                </button>
+                                <button
+                                  type="button"
+                                  class="chip"
+                                  [class.active]="reviewFilter() === 'flagged'"
+                                  [attr.aria-pressed]="reviewFilter() === 'flagged'"
+                                  (click)="setReviewFilter('flagged')"
+                                >
+                                  Flagged
+                                </button>
+                                @for (domain of reviewDomains(); track domain.id) {
+                                  <button
+                                    type="button"
+                                    class="chip"
+                                    [class.active]="reviewFilter() === domain.id"
+                                    [attr.aria-pressed]="reviewFilter() === domain.id"
+                                    (click)="setReviewFilter(domain.id)"
+                                  >
+                                    {{ domain.name }}
+                                  </button>
+                                }
+                              </div>
+
+                              @if (filteredReviewCards().length === 0) {
+                                <p class="ccp-body ccp-muted">No questions match this filter.</p>
+                              } @else {
+                                <ol class="review-list">
+                                  @for (card of filteredReviewCards(); track card.resultId) {
+                                    <li><app-review-card [card]="card" /></li>
+                                  }
+                                </ol>
+                              }
+                            }
+                          }
+                        </div>
+                      }
+                    </li>
+                  }
+                </ul>
+
+                @if (hasMore()) {
+                  <ion-button expand="block" fill="outline" (click)="loadMore()">
+                    Load more
+                  </ion-button>
+                }
+              }
+            }
+          }
+        } @else {
+          @switch (statisticsState()) {
+            @case ('loading') {
+              <div class="section-loading" role="status" aria-busy="true">
+                <ion-skeleton-text [animated]="true" style="width: 80%" />
+                <span class="ccp-small ccp-muted">Loading statistics.</span>
+              </div>
+            }
+            @case ('error') {
+              <div role="alert">
+                <p class="ccp-body section-error">{{ statisticsError() }}</p>
+                <ion-button fill="outline" (click)="loadStatistics()">Try again</ion-button>
+              </div>
+            }
+            @case ('ready') {
+              @if (statistics(); as stats) {
+                <p class="ccp-small ccp-muted personal-note">
+                  These numbers are personal and stored only on this device.
+                </p>
+
+                <dl class="totals-grid">
+                  <div class="total">
+                    <dt>Exam attempts</dt>
+                    <dd>{{ stats.examAttempts }}</dd>
+                  </div>
+                  <div class="total">
+                    <dt>Practice sessions</dt>
+                    <dd>{{ stats.practiceSessions }}</dd>
+                  </div>
+                  <div class="total">
+                    <dt>Questions answered</dt>
+                    <dd>{{ stats.questionsAnswered }}</dd>
+                  </div>
+                  <div class="total">
+                    <dt>Accuracy</dt>
+                    <dd>{{ stats.accuracy }}%</dd>
+                  </div>
+                  <div class="total">
+                    <dt>Study time</dt>
+                    <dd>{{ formatDuration(stats.studyTimeSeconds) }}</dd>
+                  </div>
+                </dl>
+
+                @if (stats.examMetrics; as metrics) {
+                  <section class="ccp-card stats-card" aria-labelledby="exam-stats-heading">
+                    <h2 id="exam-stats-heading" class="ccp-card-heading">Exam performance</h2>
+                    <dl class="totals-grid">
+                      <div class="total">
+                        <dt>Pass rate</dt>
+                        <dd>{{ metrics.passRate }}%</dd>
+                      </div>
+                      <div class="total">
+                        <dt>Average score</dt>
+                        <dd>{{ metrics.averageScore }}%</dd>
+                      </div>
+                      <div class="total">
+                        <dt>Best score</dt>
+                        <dd>{{ metrics.bestScore }}%</dd>
+                      </div>
+                    </dl>
+                  </section>
+                }
+
+                <section class="ccp-card stats-card" aria-labelledby="kind-stats-heading">
+                  <h2 id="kind-stats-heading" class="ccp-card-heading">By session type</h2>
+                  <ul class="kind-list">
+                    @for (row of stats.byKind; track row.kind) {
+                      <li class="kind-row">
+                        <h3>{{ kindStatsLabel(row.kind) }}</h3>
+                        <p class="ccp-small ccp-muted">
+                          {{ row.sessions }} sessions · {{ row.questionsAnswered }} questions ·
+                          {{ row.accuracy }}% accuracy · {{ formatDuration(row.studyTimeSeconds) }}
+                        </p>
+                      </li>
+                    }
+                  </ul>
+                </section>
+
+                <section class="ccp-card stats-card" aria-labelledby="domain-stats-heading">
+                  <h2 id="domain-stats-heading" class="ccp-card-heading">Domains</h2>
+                  <ul class="domain-list">
+                    @for (row of stats.domains; track row.domainId) {
+                      <li class="domain-row">
+                        <h3 class="domain-name">{{ row.name }}</h3>
+                        <div class="domain-metric">
+                          <span class="domain-metric-label">Practice coverage</span>
+                          <span
+                            class="domain-track"
+                            role="progressbar"
+                            [attr.aria-label]="row.name + ' practice coverage'"
+                            [attr.aria-valuenow]="row.practicePercent"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            [attr.aria-valuetext]="row.practicePercent + ' percent practice coverage'"
+                          >
+                            <span
+                              class="domain-fill practice"
+                              [style.width.%]="row.practicePercent"
+                            ></span>
+                          </span>
+                          <span class="domain-metric-value">{{ row.practicePercent }}%</span>
+                        </div>
+                        <div class="domain-metric">
+                          <span class="domain-metric-label">Exam accuracy</span>
+                          @if (row.examPercent === null) {
+                            <span class="domain-no-data">No exam data</span>
+                          } @else {
+                            <span
+                              class="domain-track"
+                              role="progressbar"
+                              [attr.aria-label]="row.name + ' exam accuracy'"
+                              [attr.aria-valuenow]="row.examPercent"
+                              aria-valuemin="0"
+                              aria-valuemax="100"
+                              [attr.aria-valuetext]="row.examPercent + ' percent exam accuracy'"
+                            >
+                              <span class="domain-fill exam" [style.width.%]="row.examPercent"></span>
+                            </span>
+                            <span class="domain-metric-value">{{ row.examPercent }}%</span>
+                          }
+                        </div>
+                      </li>
+                    }
+                  </ul>
+                </section>
+              }
+            }
+          }
+        }
+      } @else {
+        <p class="ccp-body ccp-muted" role="alert">
+          Select a certification before opening history.
+        </p>
+      }
+    </div>
+  </div>
+</ion-content>
