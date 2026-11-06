@@ -81,6 +81,47 @@ module.exports = defineConfig([
           name: 'XMLHttpRequest',
           message: 'Core study flows must not use the network (DATA-15, OFF-3).',
         },
+        {
+          name: 'Notification',
+          message: 'The app must not request notification permission (PRIV-20).',
+        },
+      ],
+    },
+  },
+  {
+    /*
+     * Privacy boundary (PRIV-11, PRIV-12, PRIV-14, PRIV-15, PRIV-18).
+     *
+     * App code must not log study data to the console, read the clipboard on
+     * its own, or touch permission-gated device APIs. The bootstrap entry point
+     * (src/main.ts) is outside this scope; it logs only a startup failure and
+     * carries no study data.
+     */
+    files: ['src/app/**/*.ts'],
+    rules: {
+      'no-console': 'error',
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "MemberExpression[object.object.name='navigator'][object.property.name='clipboard'][property.name='readText']",
+          message: 'The app must not read the clipboard on its own (PRIV-18).',
+        },
+        {
+          selector:
+            "MemberExpression[object.object.name='navigator'][object.property.name='clipboard'][property.name='read']",
+          message: 'The app must not read the clipboard on its own (PRIV-18).',
+        },
+        {
+          selector:
+            "MemberExpression[object.name='navigator'][property.name='geolocation']",
+          message: 'The app must not request location (PRIV-15).',
+        },
+        {
+          selector:
+            "MemberExpression[object.name='navigator'][property.name='mediaDevices']",
+          message: 'The app must not request camera or microphone access (PRIV-15).',
+        },
       ],
     },
   },

@@ -21,49 +21,50 @@ Blocks: 013 (export and import are in the hardening pass).
 
 ## Tasks
 
-- [ ] Export action writes one backup file containing schema version, export
+- [x] Export action writes one backup file containing schema version, export
       timestamp, app version, settings, attempts, question results, domain
       progress, per-question mastery, and any in-progress sessions. The format
       is human-readable JSON or a documented archive containing JSON.
       (`DATA-24`, `DATA-25`)
-- [ ] Define a backup transport interface with two responsibilities: write a
+- [x] Define a backup transport interface with two responsibilities: write a
       backup file and read a backup file. The web implementation downloads a
       file and reads one through a file input. The native implementation, when
       it arrives, uses the Capacitor Filesystem and Share plugins behind the
       same interface. No screen may call a download API or a Capacitor plugin
       directly. (`DATA-26`, `CERT-36`, `PRIV-19`, `IONIC-20`)
-- [ ] Degrade gracefully when the transport is unavailable: if a write or read
+- [x] Degrade gracefully when the transport is unavailable: if a write or read
       cannot start, surface a clear local error instead of failing silently.
       (`PRIV-19`)
-- [ ] Import validates schema version and contents before touching anything;
+- [x] Import validates schema version and contents before touching anything;
       an incompatible version or malformed file is rejected with the existing
       database untouched. (`DATA-27`, `DATA-29`)
-- [ ] Import replaces local data only after an explicit confirmation that
+- [x] Import replaces local data only after an explicit confirmation that
       names what will be replaced; it never silently merges two devices'
       data. (`DATA-28`, `OFF-19`)
-- [ ] Restore rebuilds history, dashboard, mastery, and in-progress session
+- [x] Restore rebuilds history, dashboard, mastery, and in-progress session
       state with no network request, including the resume card on the next
       launch. (`DATA-30`, `OFF-17`)
-- [ ] Browser and native adapters interoperate: a backup exported from
+- [x] Browser and native adapters interoperate: a backup exported from
       IndexedDB imports into SQLite and the reverse, subject to schema
       compatibility. Prove it with a round-trip contract test. (`DATA-9D`,
-      `CONT-49`)
-- [ ] Import tolerates and reports unknown rows from a newer minor version
+      `CONT-49`) The browser contract test landed; the SQLite leg repeats when
+      the native adapter arrives, as the acceptance criteria state.
+- [x] Import tolerates and reports unknown rows from a newer minor version
       while importing the compatible subset, if implemented. Optional.
       (`OFF-31`)
-- [ ] Export works even when the database is partially corrupted, by
+- [x] Export works even when the database is partially corrupted, by
       exporting the raw file or the valid subset so data can still be
       recovered. Optional. (`OFF-30`)
-- [ ] Implement per-cert reset and delete-all local data in Settings under
+- [x] Implement per-cert reset and delete-all local data in Settings under
       Data, both gated by explicit destructive confirmations that name the
       scope. Neither removes the bundled question bank or the app itself.
       (`DATA-31`, `DATA-32`, `PROG-29` to `PROG-34`)
-- [ ] Privacy guarantees: the backup contains no advertising identifiers,
+- [x] Privacy guarantees: the backup contains no advertising identifiers,
       crash logs, or device identifiers beyond schema and app versions; the
       app never stores a copy of the backup off device; import never triggers
       a network request; imported data is treated as the student's own local
       data. (`PRIV-22` to `PRIV-24`, `OFF-20`, `PRIV-21`)
-- [ ] The Settings screen warns plainly that clearing app data or uninstalling
+- [x] The Settings screen warns plainly that clearing app data or uninstalling
       deletes study data and points to the backup export. (`OFF-29`,
       `PRIV-30`)
 

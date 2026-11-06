@@ -19,28 +19,30 @@ Blocks: 013 (Settings is part of the hardening pass).
 
 ## Tasks
 
-- [ ] Build the Settings screen: theme choice, reduced-motion override, data
+- [x] Build the Settings screen: theme choice, reduced-motion override, data
       management (backup export, import, reset from issue 011), app info, and
       the privacy statement. (`CERT-12`)
-- [ ] Theme control: system default, light, or dark, persisted in the local
+- [x] Theme control: system default, light, or dark, persisted in the local
       settings store; explicit choice overrides the system preference.
       (`ACC-16`, `DATA-22`)
-- [ ] Reduced-motion control: in-app override mirroring the system
+- [x] Reduced-motion control: in-app override mirroring the system
       preference, persisted the same way. (`IONIC-16`, `ACC-21`)
-- [ ] App info: app version, content version, and database schema version,
+- [x] App info: app version, content version, and database schema version,
       all visible in Settings. (`CONT-36`, `CONT-37`, `PROG-15`)
-- [ ] Privacy statement, reachable from Settings, stating that all data stays
+- [x] Privacy statement, reachable from Settings, stating that all data stays
       on the device, nothing is uploaded, and deleting the app deletes the
       data; pointing at the backup export as the way to keep data across
       reinstalls. (`PRIV-29`, `PRIV-30`)
-- [ ] No cookie consent banner, no cloud backup claim, no sync claim, no
+- [x] No cookie consent banner, no cloud backup claim, no sync claim, no
       account recovery claim, and no server-side community statistics
       anywhere. (`PRIV-31` to `PRIV-33`)
-- [ ] Permission hygiene: declare only permissions the app uses; no camera,
+- [x] Permission hygiene: declare only permissions the app uses; no camera,
       microphone, contacts, location, or storage-wide access; access only the
       app's private data directory through the repository adapter. Verify the
-      installed manifest. (`PRIV-14` to `PRIV-16`)
-- [ ] Share and clipboard rules: sharing or copying happens only on an
+      installed manifest. (`PRIV-14` to `PRIV-16`) Web scope is enforced by the
+      privacy lint rules; the installed manifest check is deferred to the
+      native phase, as the acceptance criteria state.
+- [x] Share and clipboard rules: sharing or copying happens only on an
       explicit user action, never automatically. The app never reads the
       clipboard on its own. The web build has no system share sheet; when the
       native phase adds one, it plugs into the same explicit-action rule.
@@ -48,15 +50,15 @@ Blocks: 013 (Settings is part of the hardening pass).
 - [ ] Optional device lock: if offered, a biometric or passcode gate that is
       purely local, is not an account identity, never creates a remote
       profile, and falls back cleanly to no-lock when unavailable without
-      corrupting data. (`DATA-33` to `DATA-35`)
+      corrupting data. (`DATA-33` to `DATA-35`) Skipped by decision; optional.
 - [ ] Optional diagnostics: off by default, exportable by the student for
       inspection and deletion, excluding answers, question text, and study
       content by default. If skipped, do not ship any diagnostic capture.
-      (`PRIV-9`, `PRIV-10`)
-- [ ] Log hygiene: error logs are trimmed and contain no PII, answers, or
+      (`PRIV-9`, `PRIV-10`) Skipped by decision; no diagnostic capture ships.
+- [x] Log hygiene: error logs are trimmed and contain no PII, answers, or
       per-question data; study content never reaches the system console or
       crash output. (`PRIV-11`, `PRIV-12`, `DATA-36`)
-- [ ] Copy rules across the screen: US English, no em dashes or en dashes,
+- [x] Copy rules across the screen: US English, no em dashes or en dashes,
       both themes, accessible. (`PRIV-34`)
 
 ## Acceptance criteria

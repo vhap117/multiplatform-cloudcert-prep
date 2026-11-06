@@ -3,10 +3,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { BackupTransportError } from './backup-transport';
 import { WebBackupTransport } from './web-backup-transport';
 
-type UrlStatics = {
+interface UrlStatics {
   createObjectURL?: (blob: Blob) => string;
   revokeObjectURL?: (url: string) => void;
-};
+}
 
 const urlStatics = URL as unknown as UrlStatics;
 const originalCreate = urlStatics.createObjectURL;
