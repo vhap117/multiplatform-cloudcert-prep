@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
 import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular';
 
+import { DataManagementComponent } from './data-management/data-management.component';
+
 /**
- * Placeholder for Settings (issue 012).
+ * Settings (issue 011 adds data management; issue 012 adds theme, motion,
+ * app info, and the privacy statement around it).
  */
 @Component({
   selector: 'app-settings',
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent],
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, DataManagementComponent],
   template: `
     <ion-header>
       <ion-toolbar>
@@ -20,9 +23,11 @@ import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular';
           <p class="ccp-kicker">Settings</p>
           <h1 class="ccp-display">Settings</h1>
           <p class="ccp-body ccp-muted">
-            Theme and motion controls, versions, backup and the privacy
-            statement arrive in issue 012.
+            Theme and motion controls, versions, and the privacy statement
+            arrive in issue 012.
           </p>
+
+          <app-data-management />
         </div>
       </div>
     </ion-content>

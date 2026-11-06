@@ -9,6 +9,7 @@ import type {
   QuestionMasteryRow,
   QuestionResultRow,
   SessionRow,
+  StudyRows,
 } from './types';
 
 let databaseCounter = 0;
@@ -485,5 +486,134 @@ describe('StudyRepository contract (IndexedDB)', () => {
     it('reports the schema version it expects', async () => {
       expect(repository.schemaVersion).toBe(1);
     });
+  });
+});
+
+describe('StudyRepository bulk reads and restore (DATA-24, DATA-28, DATA-29)', () => {
+  it('lists every question result, progress row, and mastery row across certs', async () => {
+    const repository = await freshRepository();
+    await repository.commitAnswers({
+      attempt: attempt(),
+      results: [
+        result(),
+        result({ id: 'practice-1', attemptId: null, cert: 'aif-c01', questionId: 'q900' }),
+      ],
+      progress: [progress(), progress({ id: 'aif-c01:1', cert: 'aif-c01' })],
+      mastery: [mastery(), mastery({ id: 'aif-c01:q900', cert: 'aif-c01' })],
+    });
+
+    const results = await repository.listAllQuestionResults();
+    const progressRows = await repository.listAllCertProgress();
+    const masteryRows = await repository.listAllQuestionMastery();
+
+    expect(results.map((row) => row.id).sort()).toEqual(['practice-1', 'result-1']);
+    expect(progressRows.map((row) => row.id).sort()).toEqual(['aif-c01:1', 'clf-c02:1']);
+    expect(masteryRows.map((row) => row.id).sort()).toEqual([
+      'aif-c01:q900',
+      'clf-c02:q001',
+    ]);
+    await repository.close();
+  });
+
+  it('replaces every study store in one transaction', async () => {
+    const repository = await freshRepository();
+    await repository.commitAnswers({
+      attempt: attempt(),
+      results: [result()],
+      progress: [progress()],
+      mastery: [mastery()],
+    });
+    await repository.putSession(session());
+
+    const replacement: StudyRows = {
+      attempts: [attempt({ id: 'aif-attempt', cert: 'aif-c01' })],
+      questionResults: [
+        result({ id: 'aif-result', attemptId: 'aif-attempt', cert: 'aif-c01' }),
+      ],
+      certProgress: [progress({ id: 'aif-c01:1', cert: 'aif-c01' })],
+      questionMastery: [mastery({ id: 'aif-c01:q001', cert: 'aif-c01' })],
+      sessions: [session({ id: 'aif-c01:study', cert: 'aif-c01' })],
+    };
+
+    await repository.replaceAll(replacement);
+
+    expect(await repository.getAttempt('attempt-1')).toBeNull();
+    expect(await repository.getAttempt('aif-attempt')).not.toBeNull();
+    expect((await repository.listAllQuestionResults()).map((row) => row.id)).toEqual([
+      'aif-result',
+    ]);
+    expect((await repository.listAllCertProgress()).map((row) => row.id)).toEqual([
+      'aif-c01:1',
+    ]);
+    expect((await repository.listAllQuestionMastery()).map((row) => row.id)).toEqual([
+      'aif-c01:q001',
+    ]);
+    expect((await repository.listSessions()).map((row) => row.id)).toEqual([
+      'aif-c01:study',
+    ]);
+    await repository.close();
+  });
+
+  it('rejects invalid rows before clearing anything', async () => {
+    const repository = await freshRepository();
+    await repository.commitAnswers({
+      attempt: attempt(),
+      results: [result()],
+      progress: [progress()],
+      mastery: [mastery()],
+    });
+    await repository.putSession(session());
+
+    const invalid: StudyRows = {
+      attempts: [attempt()],
+      questionResults: [{ id: 'bad' } as QuestionResultRow],
+      certProgress: [],
+      questionMastery: [],
+      sessions: [],
+    };
+
+    await expect(repository.replaceAll(invalid)).rejects.toBeInstanceOf(StorageWriteError);
+    expect(await repository.getAttempt('attempt-1')).not.toBeNull();
+    expect(await repository.getSession('clf-c02', 'study')).not.toBeNull();
+    await repository.close();
+  });
+
+  it('leaves the previous database intact when the restore transaction aborts', async () => {
+    const name = uniqueName();
+    const seeded = new IndexedDbStudyRepository({ databaseName: name });
+    await seeded.open();
+    await seeded.commitAnswers({
+      attempt: attempt(),
+      results: [result()],
+      progress: [progress()],
+      mastery: [mastery()],
+    });
+    await seeded.close();
+
+    const failing = new IndexedDbStudyRepository({
+      databaseName: name,
+      hooks: {
+        beforeCommit: () => {
+          throw new Error('injected storage failure');
+        },
+      },
+    });
+    await failing.open();
+    await expect(
+      failing.replaceAll({
+        attempts: [attempt({ id: 'replacement' })],
+        questionResults: [],
+        certProgress: [],
+        questionMastery: [],
+        sessions: [],
+      }),
+    ).rejects.toBeInstanceOf(StorageWriteError);
+    await failing.close();
+
+    const verified = new IndexedDbStudyRepository({ databaseName: name });
+    await verified.open();
+    expect(await verified.getAttempt('attempt-1')).not.toBeNull();
+    expect(await verified.getAttempt('replacement')).toBeNull();
+    await verified.close();
   });
 });

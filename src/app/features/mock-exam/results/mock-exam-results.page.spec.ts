@@ -57,10 +57,19 @@ class FakeRepository implements StudyRepository {
   async listPracticeResults(): Promise<QuestionResultRow[]> {
     return [];
   }
+  async listAllQuestionResults(): Promise<QuestionResultRow[]> {
+    return [];
+  }
   async getCertProgress(): Promise<CertProgressRow[]> {
     return [];
   }
   async getQuestionMastery(): Promise<QuestionMasteryRow[]> {
+    return [];
+  }
+  async listAllCertProgress(): Promise<CertProgressRow[]> {
+    return [];
+  }
+  async listAllQuestionMastery(): Promise<QuestionMasteryRow[]> {
     return [];
   }
   async getSession(): Promise<SessionRow | null> {
@@ -79,6 +88,9 @@ class FakeRepository implements StudyRepository {
     return Promise.resolve();
   }
   async resetAll(): Promise<void> {
+    return Promise.resolve();
+  }
+  async replaceAll(): Promise<void> {
     return Promise.resolve();
   }
 }

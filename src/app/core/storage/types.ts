@@ -153,3 +153,17 @@ export interface CommitAnswersInput {
   /** Session to clear once its attempt is committed (DATA-39). */
   clearSession?: { cert: CertCode; kind: SessionKind } | null;
 }
+
+/**
+ * Every study row, used by backup restore and reset flows (DATA-24, DATA-28).
+ *
+ * The shape is deliberately flat and row-oriented: the backup module owns the
+ * file format, the repository only stores and returns rows (IONIC-20).
+ */
+export interface StudyRows {
+  attempts: AttemptRow[];
+  questionResults: QuestionResultRow[];
+  certProgress: CertProgressRow[];
+  questionMastery: QuestionMasteryRow[];
+  sessions: SessionRow[];
+}

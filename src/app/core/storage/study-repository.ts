@@ -8,6 +8,7 @@ import type {
   QuestionResultRow,
   SessionKind,
   SessionRow,
+  StudyRows,
 } from './types';
 
 /**
@@ -39,14 +40,29 @@ export interface StudyRepository {
   listQuestionResults(attemptId: string): Promise<QuestionResultRow[]>;
   /** Domain practice results, which have no parent attempt (DATA-18). */
   listPracticeResults(cert: CertCode): Promise<QuestionResultRow[]>;
+  /** Every question result across certs, for backup export (DATA-24). */
+  listAllQuestionResults(): Promise<QuestionResultRow[]>;
 
   getCertProgress(cert: CertCode): Promise<CertProgressRow[]>;
   getQuestionMastery(cert: CertCode): Promise<QuestionMasteryRow[]>;
+  /** Every domain aggregate across certs, for backup export (DATA-24). */
+  listAllCertProgress(): Promise<CertProgressRow[]>;
+  /** Every mastery row across certs, for backup export (DATA-24). */
+  listAllQuestionMastery(): Promise<QuestionMasteryRow[]>;
 
   getSession(cert: CertCode, kind: SessionKind): Promise<SessionRow | null>;
   listSessions(): Promise<SessionRow[]>;
   putSession(session: SessionRow): Promise<void>;
   deleteSession(cert: CertCode, kind: SessionKind): Promise<void>;
+
+  /**
+   * Replace every study row atomically (DATA-28, DATA-29).
+   *
+   * Rows are validated before anything is touched, and the clear plus all puts
+   * commit in one transaction, so a rejected or failed restore leaves the
+   * existing database unchanged.
+   */
+  replaceAll(rows: StudyRows): Promise<void>;
 
   /** Delete every study row for one cert, leaving other certs untouched. */
   resetCert(cert: CertCode): Promise<void>;

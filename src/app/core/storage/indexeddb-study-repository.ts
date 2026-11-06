@@ -24,6 +24,7 @@ import type {
   QuestionResultRow,
   SessionKind,
   SessionRow,
+  StudyRows,
 } from './types';
 import {
   isAttemptRow,
@@ -267,6 +268,12 @@ export class IndexedDbStudyRepository implements StudyRepository {
       .sort((a, b) => a.answeredAt - b.answeredAt || a.id.localeCompare(b.id));
   }
 
+  async listAllQuestionResults(): Promise<QuestionResultRow[]> {
+    await this.open();
+    const rows = await this.readAll(STORES.questionResults, isQuestionResultRow);
+    return rows.sort((a, b) => a.id.localeCompare(b.id));
+  }
+
   async getCertProgress(cert: CertCode): Promise<CertProgressRow[]> {
     await this.open();
     const rows = await this.readAll(STORES.certProgress, isCertProgressRow);
@@ -281,6 +288,18 @@ export class IndexedDbStudyRepository implements StudyRepository {
     return rows
       .filter((row) => row.cert === cert)
       .sort((a, b) => a.questionId.localeCompare(b.questionId));
+  }
+
+  async listAllCertProgress(): Promise<CertProgressRow[]> {
+    await this.open();
+    const rows = await this.readAll(STORES.certProgress, isCertProgressRow);
+    return rows.sort((a, b) => a.id.localeCompare(b.id));
+  }
+
+  async listAllQuestionMastery(): Promise<QuestionMasteryRow[]> {
+    await this.open();
+    const rows = await this.readAll(STORES.questionMastery, isQuestionMasteryRow);
+    return rows.sort((a, b) => a.id.localeCompare(b.id));
   }
 
   async getSession(cert: CertCode, kind: SessionKind): Promise<SessionRow | null> {
@@ -310,6 +329,73 @@ export class IndexedDbStudyRepository implements StudyRepository {
       await done;
     } catch (cause) {
       throw new StorageWriteError('Could not clear the saved session', cause);
+    }
+  }
+
+  async replaceAll(rows: StudyRows): Promise<void> {
+    if (
+      !rows.attempts.every(isAttemptRow) ||
+      !rows.questionResults.every(isQuestionResultRow) ||
+      !rows.certProgress.every(isCertProgressRow) ||
+      !rows.questionMastery.every(isQuestionMasteryRow) ||
+      !rows.sessions.every(isSessionRow)
+    ) {
+      throw new StorageWriteError(
+        'Could not restore the backup. The study data is unchanged.',
+      );
+    }
+
+    await this.open();
+    const database = this.requireDatabase();
+    const transaction = database.transaction(STUDY_STORES, 'readwrite');
+    const done = transactionDone(transaction);
+
+    try {
+      for (const store of STUDY_STORES) {
+        transaction.objectStore(store).clear();
+      }
+      const attempts = transaction.objectStore(STORES.attempts);
+      for (const row of rows.attempts) {
+        attempts.put(row);
+      }
+      const results = transaction.objectStore(STORES.questionResults);
+      for (const row of rows.questionResults) {
+        results.put(row);
+      }
+      const progress = transaction.objectStore(STORES.certProgress);
+      for (const row of rows.certProgress) {
+        progress.put(row);
+      }
+      const mastery = transaction.objectStore(STORES.questionMastery);
+      for (const row of rows.questionMastery) {
+        mastery.put(row);
+      }
+      const sessions = transaction.objectStore(STORES.sessions);
+      for (const row of rows.sessions) {
+        sessions.put(row);
+      }
+
+      this.hooks?.beforeCommit?.();
+    } catch (cause) {
+      try {
+        transaction.abort();
+      } catch {
+        // Already aborting.
+      }
+      await done.catch(() => undefined);
+      throw new StorageWriteError(
+        'Could not restore the backup. The study data is unchanged.',
+        cause,
+      );
+    }
+
+    try {
+      await done;
+    } catch (cause) {
+      throw new StorageWriteError(
+        'Could not restore the backup. The study data is unchanged.',
+        cause,
+      );
     }
   }
 
