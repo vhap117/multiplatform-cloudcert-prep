@@ -1,12 +1,12 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { IonButton, IonContent, IonHeader, IonSkeletonText, IonTitle, IonToolbar } from '@ionic/angular';
 
-import { getCert, listCerts, type Certification } from '../../core/content/cert-registry';
 import { loadAllQuestions } from '../../core/content/question-loader';
+import { SelectedCertService } from '../../core/content/selected-cert.service';
 import { formatTotalTime } from '../../core/exam';
-import { SETTINGS_KEYS, readSetting } from '../../core/settings/local-settings';
 import { STUDY_REPOSITORY } from '../../core/storage/repository-provider';
 import type { AttemptRow } from '../../core/storage/types';
+import { CertSwitcherComponent } from '../../layout/cert-switcher/cert-switcher.component';
 import {
   ReviewCardComponent,
 } from '../mock-exam/results/review-card.component';
@@ -44,14 +44,15 @@ const PAGE_SIZE = 10;
  */
 @Component({
   selector: 'app-history',
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonSkeletonText, ReviewCardComponent],
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonSkeletonText, ReviewCardComponent, CertSwitcherComponent],
   templateUrl: './history.page.html',
   styleUrl: './history.page.css',
 })
 export class HistoryPage implements OnInit {
   private readonly repository = inject(STUDY_REPOSITORY);
+  private readonly selectedCert = inject(SelectedCertService);
 
-  protected readonly cert: Certification | null = resolveCert();
+  protected readonly cert = this.selectedCert.cert;
   protected readonly segment = signal<Segment>('history');
   protected readonly historyFilters: readonly { value: HistoryFilter; label: string }[] = [
     { value: 'all', label: 'All' },
@@ -96,7 +97,25 @@ export class HistoryPage implements OnInit {
   );
   protected readonly expandedDomains = computed<readonly DomainBreakdownRow[]>(() => {
     const attempt = this.expandedAttempt();
-    return attempt ? buildDomainBreakdown(attempt, this.cert) : [];
+    return attempt ? buildDomainBreakdown(attempt, this.cert()) : [];
+  });
+
+  /**
+   * Re-scope history and statistics when the selected cert changes (CERT-21).
+   * The first effect run is skipped because `ngOnInit` owns the initial load.
+   */
+  private loadedCode: string | null | undefined = undefined;
+  private readonly certChange = effect(() => {
+    const code = this.selectedCert.code();
+    if (this.loadedCode === undefined) {
+      this.loadedCode = code;
+      return;
+    }
+    if (code === this.loadedCode) {
+      return;
+    }
+    this.loadedCode = code;
+    void Promise.all([this.loadHistory(), this.loadStatistics()]);
   });
 
   async ngOnInit(): Promise<void> {
@@ -104,7 +123,7 @@ export class HistoryPage implements OnInit {
   }
 
   protected async loadHistory(): Promise<void> {
-    const cert = this.cert;
+    const cert = this.cert();
     if (!cert) {
       this.historyState.set('ready');
       return;
@@ -121,7 +140,7 @@ export class HistoryPage implements OnInit {
   }
 
   protected async loadStatistics(): Promise<void> {
-    const cert = this.cert;
+    const cert = this.cert();
     if (!cert) {
       this.statisticsState.set('ready');
       return;
@@ -183,9 +202,14 @@ export class HistoryPage implements OnInit {
         this.repository.listQuestionResults(attempt.id),
         loadAllQuestions(attempt.cert),
       ]);
-      const cards = buildReviewCards(results, bank, this.cert);
+      const cert = this.cert();
+      if (!cert) {
+        this.reviewState.set('ready');
+        return;
+      }
+      const cards = buildReviewCards(results, bank, cert);
       this.reviewCards.set(cards);
-      this.reviewDomains.set(domainFilters(cards, this.cert));
+      this.reviewDomains.set(domainFilters(cards, cert));
       this.reviewState.set('ready');
     } catch (error) {
       this.reviewError.set(messageOf(error));
@@ -232,12 +256,6 @@ export class HistoryPage implements OnInit {
   protected kindStatsLabel(kind: KindStatistics['kind']): string {
     return this.kindLabel(kind);
   }
-}
-
-function resolveCert(): Certification | null {
-  const selected = readSetting(SETTINGS_KEYS.selectedCert);
-  const chosen = selected ? getCert(selected) : null;
-  return chosen ?? listCerts({ activeOnly: true })[0] ?? null;
 }
 
 function messageOf(error: unknown): string {

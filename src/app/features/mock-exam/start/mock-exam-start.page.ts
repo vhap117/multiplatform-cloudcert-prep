@@ -2,9 +2,9 @@ import { Component, ElementRef, HostListener, OnInit, inject, signal } from '@an
 import { Router } from '@angular/router';
 import { IonButton, IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular';
 
-import { getCert, listCerts, type Certification } from '../../../core/content/cert-registry';
+import { type Certification } from '../../../core/content/cert-registry';
 import { formatTotalTime } from '../../../core/exam';
-import { SETTINGS_KEYS, readSetting } from '../../../core/settings/local-settings';
+import { SelectedCertService } from '../../../core/content/selected-cert.service';
 import { HomeButtonComponent } from '../../../layout/home-button/home-button.component';
 import { mockExamRunPath } from '../mock-exam.routes';
 import { MockExamSessionService } from '../session/mock-exam-session.service';
@@ -38,16 +38,6 @@ import { MockExamSessionService } from '../session/mock-exam-session.service';
  * The cert this screen serves: the settings selection when it resolves,
  * otherwise the first active cert in registry order.
  */
-function resolveCert(): Certification | null {
-  const selected = readSetting(SETTINGS_KEYS.selectedCert);
-  if (selected) {
-    const cert = getCert(selected);
-    if (cert) {
-      return cert;
-    }
-  }
-  return listCerts({ activeOnly: true })[0] ?? null;
-}
 
 @Component({
   selector: 'app-mock-exam-start',
@@ -247,12 +237,13 @@ function resolveCert(): Certification | null {
   ],
 })
 export class MockExamStartPage implements OnInit {
+  private readonly selectedCert = inject(SelectedCertService);
   private readonly router = inject(Router);
   private readonly sessions = inject(MockExamSessionService);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   /** The cert this screen serves, resolved once from settings and the registry. */
-  protected readonly cert: Certification | null = resolveCert();
+  protected readonly cert: Certification | null = this.selectedCert.cert();
 
   /** Registry duration, formatted by the engine (EXAM-1, EXAM-4). */
   protected readonly durationLabel = this.cert

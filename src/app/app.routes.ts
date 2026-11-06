@@ -1,6 +1,7 @@
 import { isDevMode } from '@angular/core';
 import { Routes } from '@angular/router';
 
+import { selectedTabRedirect } from './core/navigation/selected-tab.service';
 import { mockExamLeaveGuard } from './features/mock-exam/runner/mock-exam-leave.guard';
 import { practiceLeaveGuard } from './features/practice/runner/practice-leave.guard';
 
@@ -14,8 +15,8 @@ import { practiceLeaveGuard } from './features/practice/runner/practice-leave.gu
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'tabs/home',
     pathMatch: 'full',
+    redirectTo: () => selectedTabRedirect(),
   },
   {
     path: 'tabs',
@@ -151,6 +152,6 @@ export const routes: Routes = [
     : []),
   {
     path: '**',
-    redirectTo: 'tabs/home',
+    redirectTo: () => selectedTabRedirect(),
   },
 ];

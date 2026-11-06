@@ -9,7 +9,7 @@
 
 import { computed, signal } from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
-import { provideRouter, type ActivatedRouteSnapshot, type RouterStateSnapshot } from '@angular/router';
+import { Router, provideRouter, type ActivatedRouteSnapshot, type RouterStateSnapshot } from '@angular/router';
 import { AlertController, provideIonicAngular } from '@ionic/angular';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -527,5 +527,33 @@ describe('MockExamRunnerPage', () => {
     const { el } = await render();
 
     expect(el.textContent).toContain('No exam running');
+  });
+
+  it('confirms before restoring a timed attempt on a cold entry (CERT-32)', async () => {
+    stub.active.set(false);
+    stub.hasInProgress.mockResolvedValue(true);
+    stub.resume.mockImplementation(() => {
+      stub.active.set(true);
+      return Promise.resolve(true);
+    });
+    dismissRole = 'confirm';
+
+    await render();
+
+    expect(createdAlerts.some((alert) => alert.header === 'Resume timed exam?')).toBe(true);
+    expect(stub.resume).toHaveBeenCalledWith('clf-c02');
+  });
+
+  it('leaves for the start screen when the resume confirmation is declined', async () => {
+    stub.active.set(false);
+    stub.hasInProgress.mockResolvedValue(true);
+    dismissRole = 'cancel';
+    const router = TestBed.inject(Router);
+    const navigate = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+
+    await render();
+
+    expect(navigate).toHaveBeenCalledWith('/mock-exam/clf-c02');
+    expect(stub.resume).not.toHaveBeenCalled();
   });
 });

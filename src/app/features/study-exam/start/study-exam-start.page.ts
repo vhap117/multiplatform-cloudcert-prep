@@ -2,9 +2,9 @@ import { Component, ElementRef, HostListener, OnInit, inject, signal } from '@an
 import { Router } from '@angular/router';
 import { IonButton, IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular';
 
-import { getCert, listCerts, type Certification } from '../../../core/content/cert-registry';
+import { type Certification } from '../../../core/content/cert-registry';
 import { getExamDomainTargets } from '../../../core/exam';
-import { SETTINGS_KEYS, readSetting } from '../../../core/settings/local-settings';
+import { SelectedCertService } from '../../../core/content/selected-cert.service';
 import { HomeButtonComponent } from '../../../layout/home-button/home-button.component';
 import { StudyExamSessionService } from '../session/study-exam-session.service';
 import { studyExamRunPath } from '../study-exam.routes';
@@ -55,16 +55,6 @@ interface DomainFact {
  * The cert this screen serves: the settings selection when it resolves,
  * otherwise the first active cert in registry order.
  */
-function resolveCert(): Certification | null {
-  const selected = readSetting(SETTINGS_KEYS.selectedCert);
-  if (selected) {
-    const cert = getCert(selected);
-    if (cert) {
-      return cert;
-    }
-  }
-  return listCerts({ activeOnly: true })[0] ?? null;
-}
 
 /**
  * The domain split the exam will use, from the engine composition rules:
@@ -335,12 +325,13 @@ function buildDomainFacts(cert: Certification): readonly DomainFact[] {
   ],
 })
 export class StudyExamStartPage implements OnInit {
+  private readonly selectedCert = inject(SelectedCertService);
   private readonly router = inject(Router);
   private readonly sessions = inject(StudyExamSessionService);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   /** The cert this screen serves, resolved once from settings and the registry. */
-  protected readonly cert: Certification | null = resolveCert();
+  protected readonly cert: Certification | null = this.selectedCert.cert();
 
   /** The exact per-domain split the exam will draw, from the engine (S2). */
   protected readonly domainFacts: readonly DomainFact[] = this.cert

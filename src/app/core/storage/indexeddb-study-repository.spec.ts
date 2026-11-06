@@ -316,6 +316,18 @@ describe('StudyRepository contract (IndexedDB)', () => {
       expect((await repository.getSession('clf-c02', 'study'))?.deadlineAt).toBeNull();
     });
 
+    it('never replaces another cert session when a different cert starts (CERT-23)', async () => {
+      await repository.putSession(session({ id: 'clf-c02:mock', kind: 'mock' }));
+
+      await repository.putSession(
+        session({ id: 'aif-c01:mock', cert: 'aif-c01', kind: 'mock' }),
+      );
+      await repository.deleteSession('aif-c01', 'mock');
+
+      expect(await repository.getSession('clf-c02', 'mock')).not.toBeNull();
+      expect(await repository.getSession('aif-c01', 'mock')).toBeNull();
+    });
+
     it('clears the session as part of the same commit', async () => {
       await repository.putSession(session());
 

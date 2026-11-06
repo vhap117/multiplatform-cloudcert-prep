@@ -25,6 +25,7 @@ describe('local settings', () => {
 
   it('exposes a key for every preference the app stores', () => {
     expect(Object.keys(SETTINGS_KEYS).sort()).toEqual([
+      'lastTab',
       'motion',
       'selectedCert',
       'theme',

@@ -51,7 +51,7 @@ import {
 
 import { questionType, type Question } from '../../../core/content/question-types';
 import { MAX_MULTI_ANSWER, formatTime } from '../../../core/exam';
-import { mockExamResultsPath } from '../mock-exam.routes';
+import { mockExamResultsPath, mockExamStartPath } from '../mock-exam.routes';
 import { MockExamSessionService } from '../session/mock-exam-session.service';
 
 interface OptionEntry {
@@ -154,6 +154,12 @@ export class MockExamRunnerPage implements OnInit, OnDestroy {
   private async initialise(): Promise<void> {
     if (!this.session.isActive()) {
       const cert = this.certCode();
+      if (cert !== undefined && cert !== '' && (await this.hasResumableSession(cert))) {
+        if (!(await this.confirmResume())) {
+          await this.router.navigateByUrl(mockExamStartPath(cert));
+          return;
+        }
+      }
       let resumed = false;
       if (cert !== undefined && cert !== '') {
         try {
@@ -171,6 +177,35 @@ export class MockExamRunnerPage implements OnInit, OnDestroy {
     this.refreshClock();
     await this.endIfExpiredQuietly();
     this.startClock();
+  }
+
+  private async hasResumableSession(cert: string): Promise<boolean> {
+    try {
+      return await this.session.hasInProgress(cert);
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * CERT-32: opening directly into a timed attempt asks before resuming. The
+   * timer keeps running while the attempt is saved, so the student chooses
+   * whether to jump back into it. Explicit Resume actions on the dashboard and
+   * the start screen resume before navigating, so they never reach this path.
+   */
+  private async confirmResume(): Promise<boolean> {
+    const alert = await this.alerts.create({
+      header: 'Resume timed exam?',
+      message:
+        'A timed attempt is saved on this device and its timer has kept running. Resume it now, or go back to the exam start screen.',
+      buttons: [
+        { text: 'Not now', role: 'cancel' },
+        { text: 'Resume', role: 'confirm' },
+      ],
+    });
+    await alert.present();
+    const { role } = await alert.onDidDismiss();
+    return role === 'confirm';
   }
 
   async retryInitialise(): Promise<void> {

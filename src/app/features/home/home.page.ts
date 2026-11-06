@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   IonButton,
@@ -9,11 +9,12 @@ import {
   IonToolbar,
 } from '@ionic/angular';
 
-import { getCert, listCerts, type Certification } from '../../core/content/cert-registry';
+import { type Certification } from '../../core/content/cert-registry';
 import { loadAllQuestions } from '../../core/content/question-loader';
+import { SelectedCertService } from '../../core/content/selected-cert.service';
 import { formatTotalTime } from '../../core/exam';
-import { SETTINGS_KEYS, readSetting } from '../../core/settings/local-settings';
 import { STUDY_REPOSITORY } from '../../core/storage/repository-provider';
+import { CertSwitcherComponent } from '../../layout/cert-switcher/cert-switcher.component';
 import { mockExamStartPath, mockExamRunPath } from '../mock-exam/mock-exam.routes';
 import { MockExamSessionService } from '../mock-exam/session/mock-exam-session.service';
 import { practiceConfigPath, practiceRunPath } from '../practice/practice.routes';
@@ -51,7 +52,15 @@ type SectionState = 'loading' | 'ready' | 'error';
  */
 @Component({
   selector: 'app-home',
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonSkeletonText],
+  imports: [
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonButton,
+    IonSkeletonText,
+    CertSwitcherComponent,
+  ],
   templateUrl: './home.page.html',
   styleUrl: './home.page.css',
 })
@@ -61,8 +70,9 @@ export class HomePage implements OnInit {
   private readonly mockSessions = inject(MockExamSessionService);
   private readonly studySessions = inject(StudyExamSessionService);
   private readonly practiceSessions = inject(PracticeSessionService);
+  private readonly selectedCert = inject(SelectedCertService);
 
-  protected readonly cert: Certification | null = resolveCert();
+  protected readonly cert = this.selectedCert.cert;
 
   protected readonly examState = signal<SectionState>('loading');
   protected readonly domainState = signal<SectionState>('loading');
@@ -79,6 +89,28 @@ export class HomePage implements OnInit {
   protected readonly nextUp = signal<NextUpView | null>(null);
   protected readonly resumeCards = signal<readonly ResumeCardView[]>([]);
 
+  /**
+   * Re-scope every section when the selected cert changes (CERT-21). The
+   * first effect run is skipped because `ngOnInit` owns the initial load.
+   */
+  private loadedCode: string | null | undefined = undefined;
+  private readonly certChange = effect(() => {
+    const code = this.selectedCert.code();
+    if (this.loadedCode === undefined) {
+      this.loadedCode = code;
+      return;
+    }
+    if (code === this.loadedCode) {
+      return;
+    }
+    this.loadedCode = code;
+    void Promise.all([
+      this.loadExamSection(),
+      this.loadDomainSection(),
+      this.loadResumeSection(),
+    ]);
+  });
+
   async ngOnInit(): Promise<void> {
     await Promise.all([
       this.loadExamSection(),
@@ -88,7 +120,7 @@ export class HomePage implements OnInit {
   }
 
   protected async loadExamSection(): Promise<void> {
-    const cert = this.cert;
+    const cert = this.cert();
     if (!cert) {
       this.examState.set('ready');
       return;
@@ -107,7 +139,7 @@ export class HomePage implements OnInit {
   }
 
   protected async loadDomainSection(): Promise<void> {
-    const cert = this.cert;
+    const cert = this.cert();
     if (!cert) {
       this.domainState.set('ready');
       return;
@@ -131,7 +163,7 @@ export class HomePage implements OnInit {
   }
 
   protected async loadResumeSection(): Promise<void> {
-    const cert = this.cert;
+    const cert = this.cert();
     if (!cert) {
       this.resumeState.set('ready');
       return;
@@ -163,7 +195,7 @@ export class HomePage implements OnInit {
   }
 
   private resumeForKind(kind: ResumeCardView['kind']): Promise<boolean> {
-    const cert = this.cert;
+    const cert = this.cert();
     if (!cert) {
       return Promise.resolve(false);
     }
@@ -178,7 +210,7 @@ export class HomePage implements OnInit {
   }
 
   private runnerPath(kind: ResumeCardView['kind']): string {
-    const cert = this.cert;
+    const cert = this.cert();
     if (!cert) {
       return '/tabs/home';
     }
@@ -193,28 +225,28 @@ export class HomePage implements OnInit {
   }
 
   protected async goMockExam(): Promise<void> {
-    if (this.cert) {
-      await this.router.navigateByUrl(mockExamStartPath(this.cert.code));
+    if (this.cert()) {
+      await this.router.navigateByUrl(mockExamStartPath(this.cert()!.code));
     }
   }
 
   protected async goDomainPractice(): Promise<void> {
-    if (this.cert) {
-      await this.router.navigateByUrl(practiceConfigPath(this.cert.code));
+    if (this.cert()) {
+      await this.router.navigateByUrl(practiceConfigPath(this.cert()!.code));
     }
   }
 
   /** Secondary door until issue 010 expands the Practice screen entry points. */
   protected async goStudyExam(): Promise<void> {
-    if (this.cert) {
-      await this.router.navigateByUrl(studyExamStartPath(this.cert.code));
+    if (this.cert()) {
+      await this.router.navigateByUrl(studyExamStartPath(this.cert()!.code));
     }
   }
 
   protected async goNextUp(): Promise<void> {
     const next = this.nextUp();
-    if (this.cert && next) {
-      await this.router.navigateByUrl(practiceConfigPath(this.cert.code, next.domainId));
+    if (this.cert() && next) {
+      await this.router.navigateByUrl(practiceConfigPath(this.cert()!.code, next.domainId));
     }
   }
 
@@ -263,12 +295,6 @@ export class HomePage implements OnInit {
       minute: '2-digit',
     }).format(new Date(timestamp));
   }
-}
-
-function resolveCert(): Certification | null {
-  const selected = readSetting(SETTINGS_KEYS.selectedCert);
-  const chosen = selected ? getCert(selected) : null;
-  return chosen ?? listCerts({ activeOnly: true })[0] ?? null;
 }
 
 function messageOf(error: unknown): string {

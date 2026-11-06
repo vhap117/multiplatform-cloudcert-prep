@@ -1,13 +1,14 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Home</ion-title>
+    <app-cert-switcher />
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <div class="ccp-page">
     <div class="ccp-content">
-      @if (cert; as activeCert) {
+      @if (cert(); as activeCert) {
         <p class="ccp-kicker">Your dashboard</p>
         <h1 class="ccp-display">{{ activeCert.name }}</h1>
         <p class="ccp-body ccp-muted cert-context">

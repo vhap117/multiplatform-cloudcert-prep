@@ -1,4 +1,5 @@
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { provideIonicAngular } from '@ionic/angular';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
@@ -75,6 +76,7 @@ async function render(): Promise<HTMLElement> {
   await TestBed.configureTestingModule({
     imports: [HistoryPage],
     providers: [
+      provideRouter([]),
       provideIonicAngular(),
       { provide: STUDY_REPOSITORY, useValue: repository },
     ],

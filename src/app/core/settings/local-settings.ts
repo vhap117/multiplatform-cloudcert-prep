@@ -10,6 +10,7 @@ export const SETTINGS_KEYS = {
   theme: 'ccp.theme',
   motion: 'ccp.motion',
   selectedCert: 'ccp.selectedCert',
+  lastTab: 'ccp.lastTab',
 } as const;
 
 export function readSetting(key: string): string | null {

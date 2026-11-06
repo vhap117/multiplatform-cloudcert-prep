@@ -24,7 +24,9 @@
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
+  IonBackButton,
   IonButton,
+  IonButtons,
   IonContent,
   IonHeader,
   IonSpinner,
@@ -75,7 +77,9 @@ type LoadState =
 @Component({
   selector: 'app-mock-exam-results',
   imports: [
+    IonBackButton,
     IonButton,
+    IonButtons,
     IonContent,
     IonHeader,
     IonSpinner,
@@ -87,6 +91,9 @@ type LoadState =
   template: `
     <ion-header>
       <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button defaultHref="/tabs/home" text="Back"></ion-back-button>
+        </ion-buttons>
         <ion-title>Mock exam results</ion-title>
       </ion-toolbar>
     </ion-header>

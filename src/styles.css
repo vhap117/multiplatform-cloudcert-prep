@@ -447,3 +447,19 @@ h4 {
     transition-duration: 1ms !important;
   }
 }
+
+/*
+ * Visually hidden but available to assistive technology. Used by the app shell
+ * live region that announces screen changes (CERT-34, ACC-18).
+ */
+.ccp-visually-hidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}

@@ -19,6 +19,7 @@ import {
 
 import { practiceRunPath } from '../practice.routes';
 import { PracticeSessionService } from '../session/practice-session.service';
+import { hasAvailableQuestions } from './practice-availability';
 
 const SIZE_STEP = 5;
 
@@ -65,6 +66,7 @@ const SIZE_STEP = 5;
               and a session size. Questions adapt to your local history.
             </p>
 
+            @if (hasQuestions()) {
             <fieldset class="domain-picker">
               <legend class="ccp-card-heading">Domain</legend>
               @for (domain of activeCert.domains; track domain.id) {
@@ -136,6 +138,11 @@ const SIZE_STEP = 5;
                 >Start practice</ion-button
               >
             </div>
+            } @else {
+              <p class="ccp-body ccp-muted" role="alert">
+                No questions are available for this certification yet.
+              </p>
+            }
           } @else {
             <p class="ccp-body ccp-muted" role="alert">
               Cert "{{ certCode() }}" is not bundled, so practice cannot start.
@@ -206,6 +213,7 @@ export class PracticeConfigPage implements OnInit {
   readonly domain = input<string>();
 
   readonly cert = computed<Certification | null>(() => getCert(this.certCode()));
+  readonly hasQuestions = computed(() => hasAvailableQuestions(this.cert()));
 
   readonly selectedDomainId = signal(1);
   readonly size = signal(DEFAULT_PRACTICE_QUESTIONS);
