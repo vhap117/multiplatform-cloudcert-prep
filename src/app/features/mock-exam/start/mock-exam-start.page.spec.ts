@@ -1,6 +1,7 @@
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { expectNoA11yViolations } from '../../../core/a11y/axe-scan';
 import { SETTINGS_KEYS } from '../../../core/settings/local-settings';
 import { MockExamSessionError } from '../session/mock-exam-session.errors';
 import { MockExamSessionService } from '../session/mock-exam-session.service';
@@ -238,5 +239,15 @@ describe('MockExamStartPage refusals (EXAM-1)', () => {
     expect(stub.start).not.toHaveBeenCalled();
     expect(stub.resume).not.toHaveBeenCalled();
     expect(stub.hasInProgress).not.toHaveBeenCalled();
+  });
+});
+
+describe('MockExamStartPage accessibility', () => {
+  it('has no axe violations in either theme', async () => {
+    const fixture = await renderPage(makeStub());
+    const el = fixture.nativeElement as HTMLElement;
+
+    await expectNoA11yViolations(el, 'light');
+    await expectNoA11yViolations(el, 'dark');
   });
 });

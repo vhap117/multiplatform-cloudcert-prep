@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { expectNoA11yViolations } from '../../../core/a11y/axe-scan';
 import { practiceRunPath } from '../practice.routes';
 import { PracticeSessionService } from '../session/practice-session.service';
 
@@ -120,6 +121,16 @@ beforeEach(() => {
 
 afterEach(() => {
   TestBed.resetTestingModule();
+});
+
+describe('PracticeConfigPage accessibility', () => {
+  it('has no axe violations in either theme', async () => {
+    const fixture = await render();
+    const el = fixture.nativeElement as HTMLElement;
+
+    await expectNoA11yViolations(el, 'light');
+    await expectNoA11yViolations(el, 'dark');
+  });
 });
 
 describe('PracticeConfigPage domain preselect (PRACT-2, PRACT-3)', () => {

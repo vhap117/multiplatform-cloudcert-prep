@@ -1,7 +1,7 @@
-import { isDevMode } from '@angular/core';
 import { Routes } from '@angular/router';
 
 import { selectedTabRedirect } from './core/navigation/selected-tab.service';
+import { devRoutes } from './dev/dev.routes';
 import { mockExamLeaveGuard } from './features/mock-exam/runner/mock-exam-leave.guard';
 import { practiceLeaveGuard } from './features/practice/runner/practice-leave.guard';
 
@@ -141,15 +141,7 @@ export const routes: Routes = [
       },
     ],
   },
-  ...(isDevMode()
-    ? [
-        {
-          path: '__dev/seed',
-          loadComponent: () => import('./dev/seed/seed.page').then((m) => m.SeedPage),
-          title: 'Development seed',
-        },
-      ]
-    : []),
+  ...devRoutes,
   {
     path: '**',
     redirectTo: () => selectedTabRedirect(),

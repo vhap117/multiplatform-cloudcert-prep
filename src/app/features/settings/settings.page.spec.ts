@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideIonicAngular } from '@ionic/angular';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { expectNoA11yViolations } from '../../core/a11y/axe-scan';
 import { AppReloader } from '../../core/backup/app-reloader';
 import { BACKUP_TRANSPORT } from '../../core/backup/backup-transport';
 import { SETTINGS_KEYS } from '../../core/settings/local-settings';
@@ -66,5 +67,12 @@ describe('SettingsPage (CERT-12, issue 012)', () => {
     expect(text).toContain('App version');
     expect(text).toContain('Database schema version');
     expect(text).toContain('Content versions');
+  });
+
+  it('has no axe violations in either theme', async () => {
+    const el = await render();
+
+    await expectNoA11yViolations(el, 'light');
+    await expectNoA11yViolations(el, 'dark');
   });
 });

@@ -2,6 +2,7 @@ import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { expectNoA11yViolations } from '../../../core/a11y/axe-scan';
 import { SETTINGS_KEYS } from '../../../core/settings/local-settings';
 import { StudyExamSessionError } from '../session/study-exam-session.errors';
 import { StudyExamSessionService } from '../session/study-exam-session.service';
@@ -363,5 +364,15 @@ describe('StudyExamStartPage refusals', () => {
     expect(stub.resume).not.toHaveBeenCalled();
     expect(stub.hasInProgress).not.toHaveBeenCalled();
     expect(router.navigateByUrl).not.toHaveBeenCalled();
+  });
+});
+
+describe('StudyExamStartPage accessibility', () => {
+  it('has no axe violations in either theme', async () => {
+    const fixture = await renderPage(makeStub(), makeRouter());
+    const el = fixture.nativeElement as HTMLElement;
+
+    await expectNoA11yViolations(el, 'light');
+    await expectNoA11yViolations(el, 'dark');
   });
 });

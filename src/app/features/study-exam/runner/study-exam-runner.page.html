@@ -4,7 +4,7 @@
       <ion-back-button
         [defaultHref]="backHref()"
         [text]="summary() ? 'Close' : 'Exit'"
-        [attr.aria-label]="summary() ? 'Close the summary' : 'Leave the study exam'"
+        [attr.aria-label]="summary() ? 'Close the summary' : 'Exit the study exam'"
       ></ion-back-button>
     </ion-buttons>
     <ion-title>{{ summary() ? 'Study exam summary' : 'Study exam' }}</ion-title>

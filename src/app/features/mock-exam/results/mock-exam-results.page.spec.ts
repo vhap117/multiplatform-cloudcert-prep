@@ -13,6 +13,7 @@ import { provideRouter, Router, type UrlTree } from '@angular/router';
 import { signal, type WritableSignal } from '@angular/core';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { expectNoA11yViolations } from '../../../core/a11y/axe-scan';
 import { loadAllQuestions } from '../../../core/content/question-loader';
 import { questionType, type Question } from '../../../core/content/question-types';
 import { correctAnswerFor, encodeAnswerForDb } from '../../../core/exam';
@@ -253,6 +254,15 @@ function chip(fixture: ComponentFixture<MockExamResultsPage>, label: string): HT
 }
 
 describe('MockExamResultsPage', () => {
+  it('has no axe violations in either theme', async () => {
+    setResult(PASS_ATTEMPT, true);
+    const fixture = await createPage();
+    const el = fixture.nativeElement as HTMLElement;
+
+    await expectNoA11yViolations(el, 'light');
+    await expectNoA11yViolations(el, 'dark');
+  });
+
   it('renders the score facts and the per-domain breakdown (S8, EXAM-37, EXAM-38)', async () => {
     setResult(PASS_ATTEMPT, true);
     const fixture = await createPage();

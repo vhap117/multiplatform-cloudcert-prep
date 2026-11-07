@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideIonicAngular } from '@ionic/angular';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { expectNoA11yViolations } from '../../core/a11y/axe-scan';
 import { loadAllQuestions } from '../../core/content/question-loader';
 import type { Question } from '../../core/content/question-types';
 import { SETTINGS_KEYS } from '../../core/settings/local-settings';
@@ -93,6 +94,15 @@ async function flush(): Promise<void> {
     await Promise.resolve();
   }
 }
+
+describe('HistoryPage accessibility', () => {
+  it('has no axe violations in either theme', async () => {
+    const el = await render();
+
+    await expectNoA11yViolations(el, 'light');
+    await expectNoA11yViolations(el, 'dark');
+  });
+});
 
 function textOf(el: HTMLElement): string {
   return (el.textContent ?? '').replace(/\s+/g, ' ');

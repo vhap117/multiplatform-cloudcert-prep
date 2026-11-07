@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    name: Release gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # The same gate used locally: the em dash and bank lints, ESLint, the
+      # unit and contract suites (content validator, IndexedDB contract,
+      # storage drills, axe scans, contrast, privacy audit), the production
+      # build, and the dist checks (CONT-42 to CONT-47, CONT-50).
+      - name: Release gate
+        run: npm run verify:release

@@ -13,6 +13,7 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot, provideRouter } from '@ang
 import { AlertController, provideIonicAngular } from '@ionic/angular';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { expectNoA11yViolations } from '../../../core/a11y/axe-scan';
 import { questionType, type Question } from '../../../core/content/question-types';
 import { correctAnswerFor, isAnswerCorrect } from '../../../core/exam';
 import type { AttemptRow } from '../../../core/storage/types';
@@ -317,6 +318,15 @@ beforeEach(async () => {
 
 afterEach(() => {
   TestBed.resetTestingModule();
+});
+
+describe('PracticeRunnerPage accessibility', () => {
+  it('has no axe violations in either theme', async () => {
+    const { el } = await render();
+
+    await expectNoA11yViolations(el, 'light');
+    await expectNoA11yViolations(el, 'dark');
+  });
 });
 
 describe('PracticeRunnerPage question flow (PRACT-9 to PRACT-15)', () => {

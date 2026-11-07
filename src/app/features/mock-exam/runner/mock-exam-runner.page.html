@@ -4,7 +4,7 @@
       <ion-back-button
         defaultHref="/tabs/home"
         [text]="session.result() ? 'Close' : 'Exit'"
-        [attr.aria-label]="session.result() ? 'Close the result' : 'Leave the exam'"
+        [attr.aria-label]="session.result() ? 'Close the result' : 'Exit the exam'"
       ></ion-back-button>
     </ion-buttons>
     <ion-title>{{ session.result() ? 'Exam result' : 'Mock exam' }}</ion-title>

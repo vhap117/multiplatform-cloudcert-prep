@@ -5,6 +5,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { provideIonicAngular } from '@ionic/angular';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { expectNoA11yViolations } from '../../core/a11y/axe-scan';
 import { SelectedCertService } from '../../core/content/selected-cert.service';
 import { SETTINGS_KEYS } from '../../core/settings/local-settings';
 import { STUDY_REPOSITORY } from '../../core/storage/repository-provider';
@@ -81,6 +82,15 @@ async function render(): Promise<{ el: HTMLElement; fixture: ComponentFixture<Pr
   fixture.detectChanges();
   return { el: fixture.nativeElement as HTMLElement, fixture };
 }
+
+describe('PracticePage accessibility', () => {
+  it('has no axe violations in either theme', async () => {
+    const { el } = await render();
+
+    await expectNoA11yViolations(el, 'light');
+    await expectNoA11yViolations(el, 'dark');
+  });
+});
 
 function buttonByText(el: HTMLElement, text: string): HTMLElement {
   const button = [...el.querySelectorAll('button, ion-button')].find(

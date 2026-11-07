@@ -30,6 +30,7 @@ curves, and typography are preserved on the phone.
 |---|---|---|---|---|
 | brand | `255 153 0` | `255 153 0` | `--ion-color-primary` | Primary CTA, active state, accents |
 | brand-hover | `236 114 17` | `236 114 17` | `--ion-color-primary-shade` | Brand hover and pressed state |
+| brand-text | `180 83 9` | `255 153 0` | `--ccp-brand-text` | Brand-coloured text and icons on surfaces, AA safe |
 | on-brand | `22 25 31` | `22 25 31` | `--ion-color-primary-contrast` | Text on brand fills |
 | cta | `22 29 38` | `244 246 248` | `--ion-color-secondary` | Secondary CTA and solid buttons |
 | on-cta | `255 255 255` | `22 25 31` | `--ion-color-secondary-contrast` | Text on CTA fills |

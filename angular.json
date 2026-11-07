@@ -37,6 +37,12 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/app/dev/dev.routes.ts",
+                  "with": "src/app/dev/dev.routes.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -76,7 +82,8 @@
           "options": {
             "setupFiles": [
               "src/test-setup.ts"
-            ]
+            ],
+            "runnerConfig": "vitest.config.ts"
           }
         },
         "lint": {

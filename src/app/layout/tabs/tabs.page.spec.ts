@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideIonicAngular } from '@ionic/angular';
 import { afterEach, describe, expect, it } from 'vitest';
 
+import { expectNoA11yViolations } from '../../core/a11y/axe-scan';
 import { TabsPage } from './tabs.page';
 
 describe('TabsPage shell (CERT-9 to CERT-12, CERT-27, CERT-28)', () => {
@@ -37,5 +38,12 @@ describe('TabsPage shell (CERT-9 to CERT-12, CERT-27, CERT-28)', () => {
     const el = await render();
 
     expect(el.textContent ?? '').not.toMatch(/login|sign in|sign out|account|profile/i);
+  });
+
+  it('has no axe violations in either theme', async () => {
+    const el = await render();
+
+    await expectNoA11yViolations(el, 'light');
+    await expectNoA11yViolations(el, 'dark');
   });
 });

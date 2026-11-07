@@ -44,7 +44,7 @@
 .chip.active {
   background: rgb(var(--ccp-brand));
   border-color: rgb(var(--ccp-brand));
-  color: rgb(var(--ccp-bg-card));
+  color: rgb(var(--ccp-on-brand));
 }
 
 .section-loading {
@@ -221,22 +221,23 @@
 .domain-metric {
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
   gap: var(--ccp-space-sm);
   margin-top: var(--ccp-space-sm);
 }
 
 .domain-metric-label {
   color: rgb(var(--ccp-text-muted));
-  flex: none;
+  flex: 1 1 8rem;
   font-size: 0.8125rem;
-  width: 8rem;
+  min-width: 0;
 }
 
 .domain-track {
   background: rgb(var(--ccp-border));
   border-radius: var(--ccp-radius-pill);
   display: block;
-  flex: 1 1 auto;
+  flex: 1 1 4rem;
   height: 8px;
   min-width: 3rem;
   overflow: hidden;
@@ -259,12 +260,12 @@
 
 .domain-metric-value,
 .domain-no-data {
-  flex: none;
+  flex: 0 0 auto;
   font-size: 0.8125rem;
   font-variant-numeric: tabular-nums;
   font-weight: 600;
+  margin-left: auto;
   text-align: right;
-  width: 4.5rem;
 }
 
 .domain-no-data {

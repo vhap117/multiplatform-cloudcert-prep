@@ -34,23 +34,24 @@
 .progress-row {
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
   gap: var(--ccp-space-sm);
   min-width: 0;
 }
 
 .progress-label {
   color: rgb(var(--ccp-text-muted));
-  flex: none;
+  flex: 1 1 4.5rem;
   font-size: 0.8125rem;
   font-weight: 600;
-  width: 4.5rem;
+  min-width: 0;
 }
 
 .progress-track {
   background: rgb(var(--ccp-border));
   border-radius: var(--ccp-radius-pill);
   display: block;
-  flex: 1 1 auto;
+  flex: 1 1 4rem;
   height: 8px;
   min-width: 3rem;
   overflow: hidden;
@@ -75,10 +76,11 @@
 
 .progress-value {
   color: rgb(var(--ccp-text));
-  flex: none;
+  flex: 0 0 auto;
   font-size: 0.8125rem;
   font-variant-numeric: tabular-nums;
   font-weight: 600;
+  margin-left: auto;
   text-align: right;
 }
 

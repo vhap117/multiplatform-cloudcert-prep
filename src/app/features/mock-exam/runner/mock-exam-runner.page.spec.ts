@@ -13,6 +13,7 @@ import { Router, provideRouter, type ActivatedRouteSnapshot, type RouterStateSna
 import { AlertController, provideIonicAngular } from '@ionic/angular';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { expectNoA11yViolations } from '../../../core/a11y/axe-scan';
 import type { Question } from '../../../core/content/question-types';
 import { correctAnswerFor } from '../../../core/exam';
 import type { AttemptRow } from '../../../core/storage/types';
@@ -262,6 +263,13 @@ describe('MockExamRunnerPage', () => {
   afterEach(() => {
     vi.useRealTimers();
     TestBed.resetTestingModule();
+  });
+
+  it('has no axe violations in either theme', async () => {
+    const { el } = await render();
+
+    await expectNoA11yViolations(el, 'light');
+    await expectNoA11yViolations(el, 'dark');
   });
 
   it('answers a single question immediately when an option is selected', async () => {

@@ -78,6 +78,7 @@
 
   --ccp-brand: 255 153 0;
   --ccp-brand-hover: 236 114 17;
+  --ccp-brand-text: 180 83 9;
   --ccp-on-brand: 22 25 31;
   --ccp-cta: 22 29 38;
   --ccp-on-cta: 255 255 255;
@@ -113,6 +114,7 @@
 
   --ccp-brand: 255 153 0;
   --ccp-brand-hover: 236 114 17;
+  --ccp-brand-text: 255 153 0;
   --ccp-on-brand: 22 25 31;
   --ccp-cta: 244 246 248;
   --ccp-on-cta: 22 25 31;
@@ -210,6 +212,34 @@
   --ion-color-warning-contrast-rgb: var(--ccp-on-brand);
   --ion-color-warning-shade: rgb(var(--ccp-warning-fill));
   --ion-color-warning-tint: color-mix(in srgb, rgb(var(--ccp-warning)) 88%, white);
+
+  --ion-tab-bar-color-selected: rgb(var(--ccp-brand-text));
+}
+
+/*
+ * Brand as text.
+ *
+ * Raw brand orange is a fill colour: as text on a light surface it reads at
+ * about 2:1. Outline and clear buttons default to the primary colour, so they
+ * use the AA-safe brand text token instead (ACC-13). Filled brand buttons keep
+ * the brand background with on-brand text.
+ */
+ion-button[fill="outline"],
+ion-button[fill="clear"] {
+  --color: rgb(var(--ccp-brand-text));
+  --border-color: rgb(var(--ccp-brand-text));
+}
+
+/*
+ * Ionic alert text defaults to a grey step and primary orange, both below AA
+ * on the light surface. Bind the alert's message and button text to the theme
+ * tokens so confirmations stay readable (ACC-13).
+ */
+ion-alert {
+  --ion-color-primary: rgb(var(--ccp-brand-text));
+  --ion-color-primary-rgb: var(--ccp-brand-text);
+  --ion-color-step-550: rgb(var(--ccp-text-muted));
+  --ion-text-color-step-450: rgb(var(--ccp-text-muted));
 }
 
 /* ------------------------------------------------------------------ *
@@ -399,7 +429,31 @@ h4 {
  * ------------------------------------------------------------------ */
 
 :focus-visible {
-  outline: 2px solid rgb(var(--ccp-brand));
+  outline: 2px solid rgb(var(--ccp-brand-text));
+  outline-offset: 2px;
+}
+
+/*
+ * Ionic components put the real control in shadow DOM, so the browser focus
+ * pseudo-class lands on the inner element and a host-level :focus-visible rule
+ * never matches. Ionic marks the keyboard-focused host with `.ion-focused`, so
+ * the ring is drawn there instead (ACC-11).
+ */
+ion-back-button.ion-focused,
+ion-button.ion-focused,
+ion-checkbox.ion-focused,
+ion-chip.ion-focused,
+ion-datetime-button.ion-focused,
+ion-fab-button.ion-focused,
+ion-input.ion-focused,
+ion-radio.ion-focused,
+ion-searchbar.ion-focused,
+ion-segment-button.ion-focused,
+ion-select.ion-focused,
+ion-tab-button.ion-focused,
+ion-textarea.ion-focused,
+ion-toggle.ion-focused {
+  outline: 2px solid rgb(var(--ccp-brand-text));
   outline-offset: 2px;
 }
 

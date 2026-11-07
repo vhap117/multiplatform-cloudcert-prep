@@ -5,7 +5,7 @@
 ion-tab-bar {
   --background: rgb(var(--ccp-header-bg));
   --color: rgb(var(--ccp-text-muted));
-  --color-selected: rgb(var(--ccp-brand));
+  --color-selected: rgb(var(--ccp-brand-text));
   --border: 1px solid rgb(var(--ccp-border));
   padding-bottom: var(--ccp-safe-bottom);
   padding-left: var(--ccp-safe-left);
@@ -16,13 +16,22 @@ ion-tab-button {
   --padding-top: var(--ccp-space-sm);
   --padding-bottom: var(--ccp-space-sm);
   min-height: var(--ccp-tap-target);
+  min-width: 0;
   transition: color var(--ccp-dur-base) var(--ccp-ease-out);
 }
 
+/*
+ * At 200 percent text the four tab labels can exceed their column. Let the
+ * label wrap inside the column instead of clipping beyond the viewport
+ * (ACC-12).
+ */
 ion-tab-button ion-label {
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.02em;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 lucide-icon {

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { provideIonicAngular } from '@ionic/angular';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { expectNoA11yViolations } from '../../core/a11y/axe-scan';
 import { loadAllQuestions } from '../../core/content/question-loader';
 import type { Question } from '../../core/content/question-types';
 import { SETTINGS_KEYS } from '../../core/settings/local-settings';
@@ -288,6 +289,15 @@ describe('HomePage resume cards', () => {
     await click(el, buttonByText(el, 'Resume Study exam'));
     expect(studySessions.resume).toHaveBeenCalledWith('clf-c02');
     expect(router.navigateByUrl).toHaveBeenCalledWith('/study-exam/clf-c02/run');
+  });
+});
+
+describe('HomePage accessibility', () => {
+  it('has no axe violations in either theme', async () => {
+    const el = await render();
+
+    await expectNoA11yViolations(el, 'light');
+    await expectNoA11yViolations(el, 'dark');
   });
 });
 
