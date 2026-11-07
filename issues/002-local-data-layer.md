@@ -61,16 +61,20 @@ Blocks: 005, 006, 007, 008, 009, 011.
 
 ### Deferred, by scope
 
-- [ ] Implement the Capacitor SQLite adapter. The database lives in the app
-      private data directory and is not world-readable. (`DATA-7`, `DATA-9`,
-      `CONT-32`)
-      **Deferred: web-only scope. Do not start this task.**
+- [x] Implement the Capacitor SQLite adapter against the shared schema and
+      repository contract. It runs the same contract suite as IndexedDB through
+      a sql.js test driver, and the Capacitor driver sits behind the platform
+      gate in `repository-provider.ts`. (`DATA-7`, `IONIC-19`, `CONT-32`,
+      `CONT-43`)
+- [ ] Verify on an Android device or emulator that the database lives in the app
+      private data directory and is not world-readable. (`DATA-9`)
+      **Deferred: the Capacitor Android platform is added separately.**
 
 ## Acceptance criteria
 
 - [x] The repository contract test suite passes against the IndexedDB adapter.
-      The same suite runs against SQLite when the native phase starts; the
-      tests are written against the interface so no rewrite is needed.
+      The same suite passes against the SQLite adapter through a sql.js driver;
+      device verification of the Capacitor driver is tracked separately.
 - [x] An injected failure mid-commit leaves no partial answer: the attempt,
       progress, mastery, and session clear are all absent afterwards.
 - [x] A forced migration failure reports `StorageMigrationError` with the from

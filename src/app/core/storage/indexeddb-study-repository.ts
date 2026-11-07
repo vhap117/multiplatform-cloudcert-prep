@@ -10,6 +10,7 @@ import {
   SCHEMA_VERSION,
   STORES,
   STUDY_STORES,
+  sessionId,
   type MigrationMap,
   type StoreName,
 } from './schema';
@@ -529,8 +530,4 @@ export class IndexedDbStudyRepository implements StudyRepository {
       throw new StorageWriteError('Could not write to the local store', cause);
     }
   }
-}
-
-export function sessionId(cert: CertCode, kind: SessionKind): string {
-  return `${cert}:${kind}`;
 }

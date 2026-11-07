@@ -1,5 +1,8 @@
 export { IndexedDbStudyRepository } from './indexeddb-study-repository';
 export type { IndexedDbOptions } from './indexeddb-study-repository';
+export { SqliteStudyRepository } from './sqlite-study-repository';
+export type { SqliteOptions } from './sqlite-study-repository';
+export type { SqliteDriver } from './sqlite-driver';
 export {
   createStudyRepository,
   provideStudyRepository,

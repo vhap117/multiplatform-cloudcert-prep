@@ -1,6 +1,9 @@
+import { Capacitor } from '@capacitor/core';
 import { InjectionToken, type Provider } from '@angular/core';
 
+import { CapacitorSqliteDriver } from './capacitor-sqlite-driver';
 import { IndexedDbStudyRepository } from './indexeddb-study-repository';
+import { SqliteStudyRepository } from './sqlite-study-repository';
 import type { StudyRepository } from './study-repository';
 
 /**
@@ -13,14 +16,16 @@ import type { StudyRepository } from './study-repository';
 export const STUDY_REPOSITORY = new InjectionToken<StudyRepository>('StudyRepository');
 
 /**
- * Selects the platform adapter.
+ * Selects the platform adapter (DATA-7).
  *
- * Current scope is web only, so IndexedDB is the only implementation. When the
- * native phase starts, this function gains a Capacitor check and returns the
- * SQLite adapter instead. No other file changes.
+ * Native devices use Capacitor SQLite in the app's private directory; the
+ * browser, including `ionic serve` and tests, uses IndexedDB. Both implement
+ * the same contract and schema (IONIC-19).
  */
 export function createStudyRepository(): StudyRepository {
-  return new IndexedDbStudyRepository();
+  return Capacitor.isNativePlatform()
+    ? new SqliteStudyRepository(new CapacitorSqliteDriver())
+    : new IndexedDbStudyRepository();
 }
 
 export function provideStudyRepository(): Provider {
