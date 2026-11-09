@@ -32,6 +32,7 @@ describe('CertSwitcherComponent (CERT-6, CERT-7)', () => {
     const el = await render();
     const button = el.querySelector('ion-button');
 
+    expect(el.getAttribute('slot')).toBe('end');
     expect(button).not.toBeNull();
     expect(button!.textContent).toContain('CLF-C02');
     expect(button!.getAttribute('aria-label')).toBe(

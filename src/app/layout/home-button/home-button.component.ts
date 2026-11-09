@@ -12,8 +12,9 @@ import { IonButton, IonButtons } from '@ionic/angular';
 @Component({
   selector: 'app-home-button',
   imports: [IonButton, IonButtons],
+  host: { slot: 'end' },
   template: `
-    <ion-buttons slot="end">
+    <ion-buttons>
       <ion-button
         fill="clear"
         (click)="goHome()"

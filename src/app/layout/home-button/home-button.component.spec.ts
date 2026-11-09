@@ -25,6 +25,7 @@ describe('HomeButtonComponent', () => {
     const el = fixture.nativeElement as HTMLElement;
     const button = el.querySelector('ion-button') as HTMLElement;
 
+    expect(el.getAttribute('slot')).toBe('end');
     expect(button.textContent?.trim()).toBe('Home');
     expect(button.getAttribute('aria-label')).toBe('Go to the homepage');
 

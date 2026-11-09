@@ -17,9 +17,10 @@ import { CertSwitcherService } from './cert-switcher.service';
 @Component({
   selector: 'app-cert-switcher',
   imports: [IonButton, IonButtons, LucideAngularModule],
+  host: { slot: 'end' },
   template: `
     @if (show()) {
-      <ion-buttons slot="end">
+      <ion-buttons>
         <ion-button fill="clear" (click)="open()" [attr.aria-label]="label()">
           {{ current()?.shortName }}
           <lucide-icon
