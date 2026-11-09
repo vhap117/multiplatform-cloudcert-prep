@@ -1,5 +1,7 @@
 {
   "name": "cloudcertprep",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular-standalone"
 }
