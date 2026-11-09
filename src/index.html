@@ -35,8 +35,223 @@
       }
     })();
   </script>
+  <style>
+    /*
+     * First-load splash. Inline so it paints before the Angular bundle and
+     * global styles, and runs on every full page load (including reloads).
+     * Colours mirror src/styles.css because the tokens may not have loaded
+     * yet on first paint.
+     */
+    .ccp-splash {
+      --ccp-splash-text: #16191f;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: grid;
+      place-items: center;
+      background: #f8f9fa;
+      color: var(--ccp-splash-text);
+      opacity: 1;
+      transition: opacity 600ms cubic-bezier(0.4, 0, 1, 1);
+    }
+
+    .theme-dark .ccp-splash {
+      --ccp-splash-text: #f4f6f8;
+      background: #16191f;
+    }
+
+    .ccp-splash.ccp-splash-exit {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .ccp-splash-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .ccp-splash-mark {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #ff9900;
+      box-shadow: 0 8px 24px -8px rgb(255 153 0 / 0.6);
+      animation: ccp-splash-pulse 1.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+
+    .ccp-splash-mark::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        105deg,
+        transparent 35%,
+        rgb(255 255 255 / 0.85) 50%,
+        transparent 65%
+      );
+      transform: translateX(-160%);
+      animation: ccp-splash-sweep 2.6s cubic-bezier(0.4, 0, 0.2, 1) 500ms infinite;
+    }
+
+    .ccp-splash-name {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+        "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: transparent;
+      background-image: linear-gradient(
+        100deg,
+        var(--ccp-splash-text) 0%,
+        var(--ccp-splash-text) 42%,
+        #ff9900 50%,
+        var(--ccp-splash-text) 58%,
+        var(--ccp-splash-text) 100%
+      );
+      background-size: 200% 100%;
+      background-position: 200% 0;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: ccp-splash-text-pulse 1.6s cubic-bezier(0.16, 1, 0.3, 1) infinite,
+        ccp-splash-shine 2.6s linear 700ms infinite,
+        ccp-splash-fade-in 520ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
+    }
+
+    @keyframes ccp-splash-pulse {
+      0%,
+      100% {
+        transform: scale(0.9);
+        opacity: 0.85;
+      }
+      50% {
+        transform: scale(1.1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes ccp-splash-text-pulse {
+      0%,
+      100% {
+        transform: scale(0.98);
+      }
+      50% {
+        transform: scale(1.02);
+      }
+    }
+
+    @keyframes ccp-splash-sweep {
+      0% {
+        transform: translateX(-160%);
+      }
+      60%,
+      100% {
+        transform: translateX(160%);
+      }
+    }
+
+    @keyframes ccp-splash-shine {
+      0% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    @keyframes ccp-splash-fade-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ccp-splash .ccp-splash-mark,
+      .ccp-splash .ccp-splash-mark::after,
+      .ccp-splash .ccp-splash-name {
+        animation: none;
+      }
+
+      .ccp-splash .ccp-splash-name {
+        background: none;
+        color: var(--ccp-splash-text);
+        -webkit-text-fill-color: currentColor;
+      }
+    }
+
+    .reduce-motion .ccp-splash .ccp-splash-mark,
+    .reduce-motion .ccp-splash .ccp-splash-mark::after,
+    .reduce-motion .ccp-splash .ccp-splash-name {
+      animation: none;
+    }
+
+    .reduce-motion .ccp-splash .ccp-splash-name {
+      background: none;
+      color: var(--ccp-splash-text);
+      -webkit-text-fill-color: currentColor;
+    }
+  </style>
 </head>
 <body>
+  <div id="ccp-splash" class="ccp-splash" role="presentation" aria-hidden="true">
+    <div class="ccp-splash-inner">
+      <div class="ccp-splash-mark"></div>
+      <p class="ccp-splash-name">CloudCert Prep</p>
+    </div>
+  </div>
   <app-root></app-root>
+  <script>
+    (function () {
+      var initial = document.getElementById('ccp-splash');
+      if (!initial) {
+        return;
+      }
+
+      var template = initial.cloneNode(true);
+      template.removeAttribute('id');
+      var active = initial;
+      var exitTimer = 0;
+
+      function dismiss(node) {
+        if (!node.isConnected) {
+          return;
+        }
+        node.classList.add('ccp-splash-exit');
+        window.setTimeout(function () {
+          node.remove();
+        }, 700);
+      }
+
+      function scheduleDismiss(node, durationMs) {
+        window.clearTimeout(exitTimer);
+        exitTimer = window.setTimeout(function () {
+          dismiss(node);
+          if (active === node) {
+            active = null;
+          }
+        }, durationMs);
+      }
+
+      window.ccpShowSplash = function (durationMs) {
+        if (active) {
+          active.remove();
+        }
+        var node = template.cloneNode(true);
+        document.body.appendChild(node);
+        active = node;
+        scheduleDismiss(node, typeof durationMs === 'number' ? durationMs : 5000);
+      };
+
+      scheduleDismiss(initial, 3000);
+    })();
+  </script>
 </body>
 </html>

@@ -4,6 +4,7 @@ import { ActionSheetController, type ActionSheetButton } from '@ionic/angular';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { SelectedCertService } from '../../core/content/selected-cert.service';
+import { SplashService } from '../../core/motion/splash.service';
 import { SETTINGS_KEYS } from '../../core/settings/local-settings';
 
 import { CertSwitcherService } from './cert-switcher.service';
@@ -16,6 +17,7 @@ interface CapturedSheet {
 
 let captured: CapturedSheet[];
 let router: { url: string; navigateByUrl: ReturnType<typeof vi.fn> };
+let splash: { show: ReturnType<typeof vi.fn> };
 
 const actionSheetStub = {
   create(options: CapturedSheet): Promise<{
@@ -35,6 +37,7 @@ function create(): { switcher: CertSwitcherService; selected: SelectedCertServic
     providers: [
       { provide: ActionSheetController, useValue: actionSheetStub },
       { provide: Router, useValue: router },
+      { provide: SplashService, useValue: splash },
     ],
   });
   return {
@@ -48,6 +51,7 @@ beforeEach(() => {
   localStorage.setItem(SETTINGS_KEYS.selectedCert, 'clf-c02');
   captured = [];
   router = { url: '/tabs/home', navigateByUrl: vi.fn().mockResolvedValue(true) };
+  splash = { show: vi.fn() };
 });
 
 afterEach(() => {
@@ -83,6 +87,7 @@ describe('CertSwitcherService switching (CERT-8, CERT-21, CERT-22)', () => {
     expect(selected.cert()?.code).toBe('aif-c01');
     expect(localStorage.getItem(SETTINGS_KEYS.selectedCert)).toBe('aif-c01');
     expect(router.navigateByUrl).not.toHaveBeenCalled();
+    expect(splash.show).toHaveBeenCalledWith(1200);
   });
 
   it('leaves a guarded runner through the router before committing the switch', async () => {
@@ -102,6 +107,7 @@ describe('CertSwitcherService switching (CERT-8, CERT-21, CERT-22)', () => {
     expect(await switcher.switchTo('aif-c01')).toBe(false);
     expect(selected.cert()?.code).toBe('clf-c02');
     expect(localStorage.getItem(SETTINGS_KEYS.selectedCert)).toBe('clf-c02');
+    expect(splash.show).not.toHaveBeenCalled();
   });
 
   it('refuses coming-soon certs and is a no-op for the current cert', async () => {
@@ -110,5 +116,6 @@ describe('CertSwitcherService switching (CERT-8, CERT-21, CERT-22)', () => {
     expect(await switcher.switchTo('saa-c03')).toBe(false);
     expect(await switcher.switchTo('clf-c02')).toBe(true);
     expect(router.navigateByUrl).not.toHaveBeenCalled();
+    expect(splash.show).not.toHaveBeenCalled();
   });
 });

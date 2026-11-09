@@ -4,6 +4,7 @@ import { ActionSheetController, type ActionSheetButton } from '@ionic/angular';
 
 import { getCert, listCerts } from '../../core/content/cert-registry';
 import { SelectedCertService } from '../../core/content/selected-cert.service';
+import { SplashService } from '../../core/motion/splash.service';
 
 /**
  * Presents the certification switcher and performs the switch (CERT-6,
@@ -21,6 +22,7 @@ export class CertSwitcherService {
   private readonly actions = inject(ActionSheetController);
   private readonly selected = inject(SelectedCertService);
   private readonly router = inject(Router);
+  private readonly splash = inject(SplashService);
 
   /** CERT-7: a single active cert needs no switcher. */
   readonly visible = computed(() => this.selected.activeCerts().length > 1);
@@ -68,7 +70,12 @@ export class CertSwitcherService {
         return false;
       }
     }
-    return this.selected.select(code);
+    const previous = this.selected.cert()?.code ?? null;
+    const switched = this.selected.select(code);
+    if (switched && previous !== code) {
+      this.splash.show(1200);
+    }
+    return switched;
   }
 
   private isGuardedRunner(): boolean {
