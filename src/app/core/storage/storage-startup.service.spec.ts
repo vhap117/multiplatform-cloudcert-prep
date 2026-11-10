@@ -28,16 +28,23 @@ describe('StorageStartupService', () => {
     expect(startup.error()).toBe('');
   });
 
-  it('keeps a failure and exposes its message', async () => {
+  it('keeps a failure and exposes its whole cause chain', async () => {
     const open = vi
       .fn()
-      .mockRejectedValue(new StorageOpenError('Could not open the local database'));
+      .mockRejectedValue(
+        new StorageOpenError(
+          'Could not open the local database',
+          new Error('Open: database not opened'),
+        ),
+      );
     const startup = create(open);
 
     await startup.start();
 
     expect(startup.state()).toBe('error');
-    expect(startup.error()).toBe('Could not open the local database');
+    expect(startup.error()).toBe(
+      'Could not open the local database. Caused by: Open: database not opened',
+    );
   });
 
   it('retries after a failure', async () => {

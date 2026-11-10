@@ -54,3 +54,30 @@ export class StorageOpenError extends Error {
     this.name = 'StorageOpenError';
   }
 }
+
+/**
+ * Flatten an error and its `cause` chain into one readable line.
+ *
+ * Typed storage errors describe what the app was doing; the root cause
+ * describes what the platform returned. Device screens show this so a failure
+ * can be diagnosed without a console. The walk is capped so a cyclic `cause`
+ * cannot hang the startup gate.
+ */
+export function describeStorageError(cause: unknown): string {
+  const parts: string[] = [];
+  let current: unknown = cause;
+  for (let depth = 0; depth < 5 && current != null; depth += 1) {
+    const message = (current instanceof Error ? current.message : String(current)).trim();
+    if (message !== '' && !parts.includes(message)) {
+      parts.push(message);
+    }
+    current = current instanceof Error ? current.cause : null;
+  }
+  if (parts.length === 0) {
+    return 'Unknown error while preparing the local database';
+  }
+  if (parts.length === 1) {
+    return parts[0];
+  }
+  return `${parts[0]}. Caused by: ${parts.slice(1).join(' Caused by: ')}`;
+}

@@ -1,5 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 
+import { describeStorageError } from './errors';
 import { STUDY_REPOSITORY } from './repository-provider';
 
 export type StorageStartupState = 'loading' | 'ready' | 'error';
@@ -28,7 +29,7 @@ export class StorageStartupService {
       await this.repository.open();
       this.state.set('ready');
     } catch (cause) {
-      this.error.set(cause instanceof Error ? cause.message : String(cause));
+      this.error.set(describeStorageError(cause));
       this.state.set('error');
     }
   }

@@ -11,6 +11,7 @@ export {
 } from './repository-provider';
 export { SCHEMA_VERSION, STORES } from './schema';
 export {
+  describeStorageError,
   StorageMigrationError,
   StorageOpenError,
   StorageReadError,

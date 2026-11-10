@@ -10,6 +10,7 @@ import {
 } from '@ionic/angular';
 
 import type { StorageDiagnostics } from '../../../core/storage/diagnostics';
+import { describeStorageError } from '../../../core/storage/errors';
 import {
   IS_NATIVE_STORAGE,
   STUDY_REPOSITORY,
@@ -217,7 +218,7 @@ export class StorageDiagnosticsPage implements OnInit {
       this.diagnostics.set(await this.repository.diagnose());
       this.state.set('ready');
     } catch (cause) {
-      this.error.set(cause instanceof Error ? cause.message : String(cause));
+      this.error.set(describeStorageError(cause));
       this.state.set('error');
     }
   }

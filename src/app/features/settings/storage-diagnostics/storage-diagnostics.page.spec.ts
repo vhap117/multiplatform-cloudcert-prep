@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { expectNoA11yViolations } from '../../../core/a11y/axe-scan';
 import type { StorageDiagnostics } from '../../../core/storage/diagnostics';
+import { StorageOpenError } from '../../../core/storage/errors';
 import {
   IS_NATIVE_STORAGE,
   STUDY_REPOSITORY,
@@ -89,13 +90,18 @@ describe('StorageDiagnosticsPage', () => {
     expect(text).toContain('1 of 2 ran');
   });
 
-  it('shows a failed check as a visible error', async () => {
-    diagnose.mockRejectedValue(new Error('Could not open the local database'));
+  it('shows a failed check with the full cause chain', async () => {
+    diagnose.mockRejectedValue(
+      new StorageOpenError(
+        'Could not open the local database',
+        new Error('Open: database not opened'),
+      ),
+    );
 
     const el = await render();
 
     expect(el.querySelector('[role="alert"]')?.textContent).toContain(
-      'Could not open the local database',
+      'Could not open the local database. Caused by: Open: database not opened',
     );
     expect(el.textContent).toContain('Try again');
   });
