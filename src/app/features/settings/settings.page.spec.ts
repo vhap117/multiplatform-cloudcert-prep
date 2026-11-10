@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { provideIonicAngular } from '@ionic/angular';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -7,15 +8,17 @@ import { AppReloader } from '../../core/backup/app-reloader';
 import { BACKUP_TRANSPORT } from '../../core/backup/backup-transport';
 import { SETTINGS_KEYS } from '../../core/settings/local-settings';
 import { SCHEMA_VERSION } from '../../core/storage/schema';
-import { STUDY_REPOSITORY } from '../../core/storage/repository-provider';
+import { IS_NATIVE_STORAGE, STUDY_REPOSITORY } from '../../core/storage/repository-provider';
 
 import { SettingsPage } from './settings.page';
 
-async function render(): Promise<HTMLElement> {
+async function render(isNative = false): Promise<HTMLElement> {
   await TestBed.configureTestingModule({
     imports: [SettingsPage],
     providers: [
       provideIonicAngular(),
+      provideRouter([]),
+      { provide: IS_NATIVE_STORAGE, useValue: isNative },
       { provide: STUDY_REPOSITORY, useValue: { schemaVersion: SCHEMA_VERSION } },
       {
         provide: BACKUP_TRANSPORT,
@@ -39,6 +42,7 @@ beforeEach(() => {
 afterEach(() => {
   localStorage.clear();
   document.documentElement.className = '';
+  vi.restoreAllMocks();
   TestBed.resetTestingModule();
 });
 
@@ -67,6 +71,14 @@ describe('SettingsPage (CERT-12, issue 012)', () => {
     expect(text).toContain('App version');
     expect(text).toContain('Database schema version');
     expect(text).toContain('Content versions');
+  });
+
+  it('shows the database health check on a native device', async () => {
+    expect((await render(true)).textContent).toContain('Check database health');
+  });
+
+  it('hides the database health check in the browser', async () => {
+    expect((await render(false)).textContent).not.toContain('Check database health');
   });
 
   it('has no axe violations in either theme', async () => {

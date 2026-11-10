@@ -5,6 +5,10 @@ import {
   StorageWriteError,
 } from './errors';
 import {
+  buildStorageDiagnostics,
+  type StorageDiagnostics,
+} from './diagnostics';
+import {
   ALL_STORES,
   DEFAULT_MIGRATIONS,
   SCHEMA_VERSION,
@@ -178,6 +182,24 @@ export class IndexedDbStudyRepository implements StudyRepository {
   async close(): Promise<void> {
     this.database?.close();
     this.database = null;
+  }
+
+  async diagnose(): Promise<StorageDiagnostics> {
+    await this.open();
+    const database = this.requireDatabase();
+    const present = new Set<string>();
+    for (let index = 0; index < database.objectStoreNames.length; index += 1) {
+      const name = database.objectStoreNames.item(index);
+      if (name) {
+        present.add(name);
+      }
+    }
+    return buildStorageDiagnostics(
+      'indexeddb',
+      this.schemaVersion,
+      database.version,
+      present,
+    );
   }
 
   async commitAnswers(input: CommitAnswersInput): Promise<void> {

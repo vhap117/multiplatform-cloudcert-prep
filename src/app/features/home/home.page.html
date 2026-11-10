@@ -6,6 +6,14 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content
+      pullingText="Pull to refresh"
+      refreshingSpinner="crescent"
+      refreshingText="Refreshing dashboard"
+    />
+  </ion-refresher>
+
   <div class="ccp-page">
     <div class="ccp-content">
       @if (cert(); as activeCert) {

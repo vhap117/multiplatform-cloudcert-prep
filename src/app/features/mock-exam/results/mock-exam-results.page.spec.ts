@@ -17,6 +17,7 @@ import { expectNoA11yViolations } from '../../../core/a11y/axe-scan';
 import { loadAllQuestions } from '../../../core/content/question-loader';
 import { questionType, type Question } from '../../../core/content/question-types';
 import { correctAnswerFor, encodeAnswerForDb } from '../../../core/exam';
+import type { StorageDiagnostics } from '../../../core/storage/diagnostics';
 import { STUDY_REPOSITORY } from '../../../core/storage/repository-provider';
 import type { StudyRepository } from '../../../core/storage/study-repository';
 import type {
@@ -42,6 +43,15 @@ class FakeRepository implements StudyRepository {
   }
   async close(): Promise<void> {
     return Promise.resolve();
+  }
+  async diagnose(): Promise<StorageDiagnostics> {
+    return {
+      backend: 'indexeddb',
+      expectedSchemaVersion: this.schemaVersion,
+      actualSchemaVersion: this.schemaVersion,
+      tables: [],
+      migrations: [],
+    };
   }
   async commitAnswers(): Promise<void> {
     throw new Error('not used by the results screen');

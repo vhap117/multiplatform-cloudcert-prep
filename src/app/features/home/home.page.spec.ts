@@ -196,6 +196,28 @@ describe('HomePage cert context', () => {
   });
 });
 
+describe('HomePage pull to refresh', () => {
+  it('re-reads every dashboard section and closes the refresher', async () => {
+    const el = await render();
+    const refresher = el.querySelector('ion-refresher') as HTMLElement & {
+      complete: () => Promise<void>;
+    };
+    const complete = vi.fn().mockResolvedValue(undefined);
+    refresher.complete = complete;
+
+    repository.attempts = [
+      attempt({ kind: 'mock', passed: true, scorePercent: 80 }),
+    ];
+
+    refresher.dispatchEvent(new CustomEvent('ionRefresh'));
+    await flush();
+    fixture.detectChanges();
+
+    expect(complete).toHaveBeenCalledTimes(1);
+    expect(metricValue(el, 'Pass rate')).toBe('100%');
+  });
+});
+
 describe('HomePage exam performance', () => {
   it('shows all-time exam metrics and excludes practice from them', async () => {
     repository.attempts = [

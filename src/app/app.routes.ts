@@ -46,9 +46,22 @@ export const routes: Routes = [
       },
       {
         path: 'settings',
-        loadComponent: () =>
-          import('./features/settings/settings.page').then((m) => m.SettingsPage),
-        title: 'Settings',
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/settings/settings.page').then((m) => m.SettingsPage),
+            title: 'Settings',
+          },
+          {
+            path: 'storage',
+            loadComponent: () =>
+              import(
+                './features/settings/storage-diagnostics/storage-diagnostics.page'
+              ).then((m) => m.StorageDiagnosticsPage),
+            title: 'Database health',
+          },
+        ],
       },
     ],
   },

@@ -5,6 +5,10 @@ import {
   StorageWriteError,
 } from './errors';
 import {
+  buildStorageDiagnostics,
+  type StorageDiagnostics,
+} from './diagnostics';
+import {
   DEFAULT_SQLITE_MIGRATIONS,
   SCHEMA_VERSION,
   STORES,
@@ -223,6 +227,26 @@ export class SqliteStudyRepository implements StudyRepository {
   async close(): Promise<void> {
     this.opened = false;
     await this.driver.close();
+  }
+
+  async diagnose(): Promise<StorageDiagnostics> {
+    await this.open();
+    const versionRows = await this.driver.query('PRAGMA user_version');
+    const tableRows = await this.driver.query(
+      "SELECT name FROM sqlite_master WHERE type = 'table'",
+    );
+    const present = new Set<string>();
+    for (const row of tableRows) {
+      if (typeof row[0] === 'string') {
+        present.add(row[0]);
+      }
+    }
+    return buildStorageDiagnostics(
+      'sqlite',
+      this.schemaVersion,
+      Number(versionRows[0]?.[0] ?? 0),
+      present,
+    );
   }
 
   async commitAnswers(input: CommitAnswersInput): Promise<void> {

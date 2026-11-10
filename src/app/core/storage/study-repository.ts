@@ -1,3 +1,4 @@
+import type { StorageDiagnostics } from './diagnostics';
 import type {
   AttemptFilter,
   AttemptRow,
@@ -26,6 +27,14 @@ export interface StudyRepository {
 
   open(): Promise<void>;
   close(): Promise<void>;
+
+  /**
+   * Inspect the local schema without changing study data.
+   *
+   * Opens and migrates the database first, then reports the stored schema
+   * version and whether every required table is present.
+   */
+  diagnose(): Promise<StorageDiagnostics>;
 
   /**
    * Commit one answer batch atomically (DATA-10).

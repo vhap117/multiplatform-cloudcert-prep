@@ -4,9 +4,12 @@ import {
   IonButton,
   IonContent,
   IonHeader,
+  IonRefresher,
+  IonRefresherContent,
   IonSkeletonText,
   IonTitle,
   IonToolbar,
+  type RefresherCustomEvent,
 } from '@ionic/angular';
 
 import { type Certification } from '../../core/content/cert-registry';
@@ -59,6 +62,8 @@ type SectionState = 'loading' | 'ready' | 'error';
     IonContent,
     IonButton,
     IonSkeletonText,
+    IonRefresher,
+    IonRefresherContent,
     CertSwitcherComponent,
   ],
   templateUrl: './home.page.html',
@@ -117,6 +122,18 @@ export class HomePage implements OnInit {
       this.loadDomainSection(),
       this.loadResumeSection(),
     ]);
+  }
+
+  protected async refresh(event: RefresherCustomEvent): Promise<void> {
+    try {
+      await Promise.all([
+        this.loadExamSection(),
+        this.loadDomainSection(),
+        this.loadResumeSection(),
+      ]);
+    } finally {
+      await event.target.complete();
+    }
   }
 
   protected async loadExamSection(): Promise<void> {

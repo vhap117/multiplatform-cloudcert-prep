@@ -16,6 +16,17 @@ import type { StudyRepository } from './study-repository';
 export const STUDY_REPOSITORY = new InjectionToken<StudyRepository>('StudyRepository');
 
 /**
+ * Whether the app is running on a native platform with the SQLite adapter.
+ *
+ * Feature code uses this instead of importing `@capacitor/core`, keeping the
+ * plugin confined to the storage layer (IONIC-20).
+ */
+export const IS_NATIVE_STORAGE = new InjectionToken<boolean>('IsNativeStorage', {
+  providedIn: 'root',
+  factory: () => Capacitor.isNativePlatform(),
+});
+
+/**
  * Selects the platform adapter (DATA-7).
  *
  * Native devices use Capacitor SQLite in the app's private directory; the

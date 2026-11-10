@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { StorageWriteError } from './errors';
-import type { StoreName } from './schema';
+import { ALL_STORES, type StoreName } from './schema';
 import type { StudyRepository } from './study-repository';
 import type {
   AttemptRow,
@@ -489,6 +489,16 @@ export function studyRepositoryContract(label: string, makeHarness: ContractFact
 
       it('reports the schema version it expects', async () => {
         expect(repository.schemaVersion).toBe(1);
+      });
+
+      it('reports every required table and migration as applied', async () => {
+        const report = await repository.diagnose();
+
+        expect(report.expectedSchemaVersion).toBe(repository.schemaVersion);
+        expect(report.actualSchemaVersion).toBe(repository.schemaVersion);
+        expect(report.tables.map((table) => table.name)).toEqual(ALL_STORES);
+        expect(report.tables.every((table) => table.present)).toBe(true);
+        expect(report.migrations.every((migration) => migration.applied)).toBe(true);
       });
     });
   });

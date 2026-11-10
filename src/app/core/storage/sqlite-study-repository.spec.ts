@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { SqliteStudyRepository } from './sqlite-study-repository';
 import {
   studyRepositoryContract,
@@ -33,3 +35,14 @@ const sqliteHarness: ContractFactory = async (options = {}) => {
 };
 
 studyRepositoryContract('SQLite', sqliteHarness);
+
+describe('SqliteStudyRepository diagnostics', () => {
+  it('identifies the backend as SQLite', async () => {
+    const repository = new SqliteStudyRepository(new SqlJsDriver(uniqueName()));
+
+    const report = await repository.diagnose();
+
+    expect(report.backend).toBe('sqlite');
+    await repository.close();
+  });
+});

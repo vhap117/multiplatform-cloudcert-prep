@@ -5,6 +5,7 @@ export type { SqliteOptions } from './sqlite-study-repository';
 export type { SqliteDriver } from './sqlite-driver';
 export {
   createStudyRepository,
+  IS_NATIVE_STORAGE,
   provideStudyRepository,
   STUDY_REPOSITORY,
 } from './repository-provider';
@@ -16,6 +17,12 @@ export {
   StorageWriteError,
 } from './errors';
 export type { StudyRepository } from './study-repository';
+export type {
+  StorageBackend,
+  StorageDiagnostics,
+  StorageMigrationStatus,
+  StorageTableStatus,
+} from './diagnostics';
 export type {
   AttemptFilter,
   AttemptRow,
