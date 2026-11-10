@@ -1,6 +1,6 @@
 import initSqlJs, { type Database, type SqlJsStatic, type SqlValue } from 'sql.js';
 
-import type { SqliteDriver } from '../sqlite-driver';
+import type { SqliteDriver, SqliteRow } from '../sqlite-driver';
 
 /**
  * sql.js-backed driver for the SQLite contract test leg.
@@ -52,13 +52,24 @@ export class SqlJsDriver implements SqliteDriver {
     this.requireDatabase().exec('ROLLBACK');
   }
 
+  async execute(statement: string): Promise<void> {
+    this.requireDatabase().exec(statement);
+  }
+
   async run(statement: string, values: readonly unknown[] = []): Promise<void> {
     this.requireDatabase().run(statement, values as SqlValue[]);
   }
 
-  async query(statement: string, values: readonly unknown[] = []): Promise<unknown[][]> {
+  async query(statement: string, values: readonly unknown[] = []): Promise<SqliteRow[]> {
     const [result] = this.requireDatabase().exec(statement, values as SqlValue[]);
-    return result?.values ?? [];
+    if (!result) {
+      return [];
+    }
+    // sql.js returns positional values; the driver contract returns rows keyed
+    // by column name, matching the Capacitor plugin.
+    return result.values.map((row) =>
+      Object.fromEntries(result.columns.map((column, index) => [column, row[index]])),
+    );
   }
 
   private requireDatabase(): Database {

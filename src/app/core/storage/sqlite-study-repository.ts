@@ -16,7 +16,7 @@ import {
   sessionId,
   type StoreName,
 } from './schema';
-import type { SqliteDriver } from './sqlite-driver';
+import type { SqliteDriver, SqliteRow } from './sqlite-driver';
 import type { StudyRepository } from './study-repository';
 import type {
   AttemptFilter,
@@ -164,14 +164,11 @@ function toSqlValue(value: unknown): unknown {
   return value;
 }
 
-function fromDbRow(
-  table: StoreName,
-  values: readonly unknown[],
-): Record<string, unknown> | null {
+function fromDbRow(table: StoreName, values: SqliteRow): Record<string, unknown> | null {
   const spec = TABLE_SPECS[table];
   const row: Record<string, unknown> = {};
-  for (const [index, column] of spec.columns.entries()) {
-    let value = values[index];
+  for (const column of spec.columns) {
+    let value = values[column];
     if (value === null) {
       if (spec.nullAsUndefined.includes(column)) {
         value = undefined;
@@ -237,14 +234,15 @@ export class SqliteStudyRepository implements StudyRepository {
     );
     const present = new Set<string>();
     for (const row of tableRows) {
-      if (typeof row[0] === 'string') {
-        present.add(row[0]);
+      const name = row['name'];
+      if (typeof name === 'string') {
+        present.add(name);
       }
     }
     return buildStorageDiagnostics(
       'sqlite',
       this.schemaVersion,
-      Number(versionRows[0]?.[0] ?? 0),
+      Number(versionRows[0]?.['user_version'] ?? 0),
       present,
     );
   }
@@ -449,7 +447,7 @@ export class SqliteStudyRepository implements StudyRepository {
 
   private async migrate(): Promise<void> {
     const versionRows = await this.driver.query('PRAGMA user_version');
-    const storedVersion = Number(versionRows[0]?.[0] ?? 0);
+    const storedVersion = Number(versionRows[0]?.['user_version'] ?? 0);
     const schemaRows = await this.driver.query(
       "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'meta'",
     );
@@ -480,9 +478,9 @@ export class SqliteStudyRepository implements StudyRepository {
           );
         }
         for (const statement of statements) {
-          await this.driver.run(statement);
+          await this.driver.execute(statement);
         }
-        await this.driver.run(`PRAGMA user_version = ${version}`);
+        await this.driver.execute(`PRAGMA user_version = ${version}`);
       }
       await this.driver.commit();
     } catch (cause) {

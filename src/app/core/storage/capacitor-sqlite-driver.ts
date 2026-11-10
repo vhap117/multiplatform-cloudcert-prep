@@ -5,7 +5,7 @@ import {
 } from '@capacitor-community/sqlite';
 
 import { SCHEMA_VERSION } from './schema';
-import type { SqliteDriver } from './sqlite-driver';
+import type { SqliteDriver, SqliteRow } from './sqlite-driver';
 
 /**
  * Native SQLite driver backed by `@capacitor-community/sqlite`.
@@ -61,14 +61,21 @@ export class CapacitorSqliteDriver implements SqliteDriver {
     await this.requireDatabase().rollbackTransaction();
   }
 
+  async execute(statement: string): Promise<void> {
+    // transaction=false: the repository controls the transaction boundary.
+    // execute maps to execSQL, which is the documented path for DDL and PRAGMA.
+    await this.requireDatabase().execute(statement, false);
+  }
+
   async run(statement: string, values: readonly unknown[] = []): Promise<void> {
     // transaction=false: the repository controls the transaction boundary.
     await this.requireDatabase().run(statement, [...values], false);
   }
 
-  async query(statement: string, values: readonly unknown[] = []): Promise<unknown[][]> {
+  async query(statement: string, values: readonly unknown[] = []): Promise<SqliteRow[]> {
+    // The plugin returns rows as objects keyed by column name.
     const result = await this.requireDatabase().query(statement, [...values]);
-    return result.values ?? [];
+    return (result.values ?? []) as SqliteRow[];
   }
 
   private requireDatabase(): SQLiteDBConnection {
