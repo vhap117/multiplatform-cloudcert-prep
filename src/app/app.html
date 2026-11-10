@@ -1,7 +1,21 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
-</ion-app>
+  @if (startup.state() === 'ready') {
+    <ion-router-outlet></ion-router-outlet>
+  } @else if (startup.state() === 'error') {
+    <main class="startup-gate" aria-labelledby="startup-error-heading">
+      <h1 id="startup-error-heading" class="ccp-display">
+        Could not prepare the local database
+      </h1>
+      <p class="ccp-body" role="alert">{{ startup.error() }}</p>
+      <ion-button (click)="retry()">Try again</ion-button>
+    </main>
+  } @else {
+    <main class="startup-gate">
+      <p class="ccp-body" role="status">Preparing the local database...</p>
+    </main>
+  }
 
-<p class="ccp-visually-hidden" aria-live="polite" aria-atomic="true">
-  {{ announcer.announcement() }}
-</p>
+  <p class="ccp-visually-hidden" aria-live="polite" aria-atomic="true">
+    {{ announcer.announcement() }}
+  </p>
+</ion-app>
