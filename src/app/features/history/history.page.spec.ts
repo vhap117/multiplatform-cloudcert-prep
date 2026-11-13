@@ -83,6 +83,7 @@ async function render(): Promise<HTMLElement> {
     ],
   }).compileComponents();
   fixture = TestBed.createComponent(HistoryPage);
+  await fixture.componentInstance.ionViewWillEnter();
   fixture.detectChanges();
   await fixture.whenStable();
   fixture.detectChanges();

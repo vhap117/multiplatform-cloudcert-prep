@@ -1,5 +1,5 @@
-import { Component, OnInit, computed, effect, inject, signal } from '@angular/core';
-import { IonButton, IonContent, IonHeader, IonSkeletonText, IonTitle, IonToolbar } from '@ionic/angular';
+import { Component, computed, effect, inject, signal } from '@angular/core';
+import { IonButton, IonContent, IonHeader, IonSkeletonText, IonTitle, IonToolbar, ViewWillEnter } from '@ionic/angular';
 
 import { loadAllQuestions } from '../../core/content/question-loader';
 import { SelectedCertService } from '../../core/content/selected-cert.service';
@@ -48,7 +48,7 @@ const PAGE_SIZE = 10;
   templateUrl: './history.page.html',
   styleUrl: './history.page.css',
 })
-export class HistoryPage implements OnInit {
+export class HistoryPage implements ViewWillEnter {
   private readonly repository = inject(STUDY_REPOSITORY);
   private readonly selectedCert = inject(SelectedCertService);
 
@@ -102,7 +102,7 @@ export class HistoryPage implements OnInit {
 
   /**
    * Re-scope history and statistics when the selected cert changes (CERT-21).
-   * The first effect run is skipped because `ngOnInit` owns the initial load.
+   * The first effect run is skipped because `ionViewWillEnter` owns the initial load.
    */
   private loadedCode: string | null | undefined = undefined;
   private readonly certChange = effect(() => {
@@ -118,7 +118,7 @@ export class HistoryPage implements OnInit {
     void Promise.all([this.loadHistory(), this.loadStatistics()]);
   });
 
-  async ngOnInit(): Promise<void> {
+  async ionViewWillEnter(): Promise<void> {
     await Promise.all([this.loadHistory(), this.loadStatistics()]);
   }
 
