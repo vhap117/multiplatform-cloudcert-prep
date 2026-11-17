@@ -40,15 +40,15 @@ module.exports = defineConfig([
   },
   {
     /*
-     * Storage boundary (IONIC-20, DATA-15).
+     * Storage and backup platform boundaries (IONIC-20, DATA-15, CERT-36).
      *
-     * Feature code depends on the StudyRepository interface only. Reaching for
-     * the IndexedDB implementation, a Capacitor SQLite plugin, or a network API
-     * from anywhere outside the storage layer is a defect, so it fails lint
-     * instead of relying on review.
+     * Feature code depends on the StudyRepository interface and the backup
+     * transport interface only. Reaching for the IndexedDB implementation, a
+     * Capacitor plugin, or a network API from anywhere outside those platform
+     * adapters is a defect, so it fails lint instead of relying on review.
      */
     files: ['src/app/**/*.ts'],
-    ignores: ['src/app/core/storage/**'],
+    ignores: ['src/app/core/storage/**', 'src/app/core/backup/**'],
     rules: {
       'no-restricted-imports': [
         'error',

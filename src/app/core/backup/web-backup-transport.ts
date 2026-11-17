@@ -1,6 +1,4 @@
-import { type Provider } from '@angular/core';
-
-import { BACKUP_TRANSPORT, BackupTransport, BackupTransportError } from './backup-transport';
+import { BackupTransport, BackupTransportError } from './backup-transport';
 
 /**
  * Web backup transport (DATA-26, CERT-36).
@@ -68,9 +66,4 @@ export class WebBackupTransport implements BackupTransport {
       input.click();
     });
   }
-}
-
-/** Binds the web transport to the shared token. */
-export function provideBackupTransport(): Provider {
-  return { provide: BACKUP_TRANSPORT, useClass: WebBackupTransport };
 }

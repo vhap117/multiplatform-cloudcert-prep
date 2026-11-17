@@ -8,7 +8,7 @@ import {
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideIonicAngular } from '@ionic/angular';
 
-import { provideBackupTransport } from './core/backup/web-backup-transport';
+import { provideBackupTransport } from './core/backup/backup-transport.provider';
 import { SelectedTabService } from './core/navigation/selected-tab.service';
 import { provideStudyRepository } from './core/storage/repository-provider';
 import { StorageStartupService } from './core/storage/storage-startup.service';
