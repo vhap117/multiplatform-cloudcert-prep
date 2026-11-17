@@ -26,6 +26,7 @@ import type {
   CommitAnswersInput,
   QuestionMasteryRow,
   QuestionResultRow,
+  RemediationDismissalRow,
   SessionKind,
   SessionRow,
   StudyRows,
@@ -35,6 +36,7 @@ import {
   isCertProgressRow,
   isQuestionMasteryRow,
   isQuestionResultRow,
+  isRemediationDismissalRow,
   isSessionRow,
 } from './validation';
 
@@ -140,6 +142,12 @@ const TABLE_SPECS: Record<StoreName, TableSpec> = {
       'updatedAt',
     ],
     json: ['questionOrder', 'answers', 'feedbackShown', 'flagged', 'optionKeyMaps'],
+    boolean: [],
+    nullAsUndefined: [],
+  },
+  remediation_dismissals: {
+    columns: ['id', 'cert', 'questionId', 'dismissedAt'],
+    json: [],
     boolean: [],
     nullAsUndefined: [],
   },
@@ -372,13 +380,44 @@ export class SqliteStudyRepository implements StudyRepository {
     });
   }
 
+  async listRemediationDismissals(cert: CertCode): Promise<RemediationDismissalRow[]> {
+    await this.open();
+    const rows = await this.readAll(
+      STORES.remediationDismissals,
+      isRemediationDismissalRow,
+    );
+    return rows
+      .filter((row) => row.cert === cert)
+      .sort((a, b) => a.questionId.localeCompare(b.questionId));
+  }
+
+  async listAllRemediationDismissals(): Promise<RemediationDismissalRow[]> {
+    await this.open();
+    const rows = await this.readAll(
+      STORES.remediationDismissals,
+      isRemediationDismissalRow,
+    );
+    return rows.sort((a, b) => a.id.localeCompare(b.id));
+  }
+
+  async putRemediationDismissal(row: RemediationDismissalRow): Promise<void> {
+    if (!isRemediationDismissalRow(row)) {
+      throw new StorageWriteError('Could not save the remediation removal.');
+    }
+    await this.open();
+    await this.transact('Could not save the remediation removal', async () => {
+      await this.put(STORES.remediationDismissals, row);
+    });
+  }
+
   async replaceAll(rows: StudyRows): Promise<void> {
     if (
       !rows.attempts.every(isAttemptRow) ||
       !rows.questionResults.every(isQuestionResultRow) ||
       !rows.certProgress.every(isCertProgressRow) ||
       !rows.questionMastery.every(isQuestionMasteryRow) ||
-      !rows.sessions.every(isSessionRow)
+      !rows.sessions.every(isSessionRow) ||
+      !rows.remediationDismissals.every(isRemediationDismissalRow)
     ) {
       throw new StorageWriteError(
         'Could not restore the backup. The study data is unchanged.',
@@ -406,6 +445,9 @@ export class SqliteStudyRepository implements StudyRepository {
         }
         for (const row of rows.sessions) {
           await this.put(STORES.sessions, row);
+        }
+        for (const row of rows.remediationDismissals) {
+          await this.put(STORES.remediationDismissals, row);
         }
       },
       true,

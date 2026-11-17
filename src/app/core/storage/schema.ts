@@ -10,7 +10,7 @@
  * leaves the previous version intact (DATA-11, DATA-12).
  */
 
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 
 export const STORES = {
   attempts: 'attempts',
@@ -18,6 +18,7 @@ export const STORES = {
   certProgress: 'cert_progress',
   questionMastery: 'question_mastery',
   sessions: 'sessions',
+  remediationDismissals: 'remediation_dismissals',
   meta: 'meta',
 } as const;
 
@@ -29,6 +30,7 @@ export const ALL_STORES: readonly StoreName[] = [
   STORES.certProgress,
   STORES.questionMastery,
   STORES.sessions,
+  STORES.remediationDismissals,
   STORES.meta,
 ];
 
@@ -39,6 +41,7 @@ export const STUDY_STORES: readonly StoreName[] = [
   STORES.certProgress,
   STORES.questionMastery,
   STORES.sessions,
+  STORES.remediationDismissals,
 ];
 
 export type Migration = (database: IDBDatabase, transaction: IDBTransaction) => void;
@@ -65,8 +68,17 @@ export const MIGRATION_V1: Migration = (database) => {
   database.createObjectStore(STORES.meta, { keyPath: 'key' });
 };
 
+/**
+ * Version 2: domain-practice remediation dismissals.
+ */
+export const MIGRATION_V2: Migration = (database) => {
+  const dismissals = database.createObjectStore(STORES.remediationDismissals, { keyPath: 'id' });
+  dismissals.createIndex('by_cert', 'cert', { unique: false });
+};
+
 export const DEFAULT_MIGRATIONS: MigrationMap = {
   1: MIGRATION_V1,
+  2: MIGRATION_V2,
 };
 
 /**
@@ -146,6 +158,17 @@ export const SQLITE_MIGRATION_V1: readonly string[] = [
   'CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value)',
 ];
 
+export const SQLITE_MIGRATION_V2: readonly string[] = [
+  `CREATE TABLE IF NOT EXISTS remediation_dismissals (
+    id TEXT PRIMARY KEY,
+    cert TEXT,
+    questionId TEXT,
+    dismissedAt INTEGER
+  )`,
+  'CREATE INDEX IF NOT EXISTS remediation_dismissals_by_cert ON remediation_dismissals(cert)',
+];
+
 export const DEFAULT_SQLITE_MIGRATIONS: Readonly<Record<number, readonly string[]>> = {
   1: SQLITE_MIGRATION_V1,
+  2: SQLITE_MIGRATION_V2,
 };

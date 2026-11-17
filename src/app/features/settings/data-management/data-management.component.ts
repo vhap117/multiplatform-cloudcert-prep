@@ -280,9 +280,9 @@ export class DataManagementComponent {
         preview.exportedAt,
       )}: ${counts.attempts} exam attempts, ${counts.questionResults} question results, ${
         counts.certProgress
-      } domain progress rows, ${counts.questionMastery} mastery rows, and ${
+      } domain progress rows, ${counts.questionMastery} mastery rows, ${
         counts.sessions
-      } in-progress sessions. Settings in the backup are applied too.${skipped} This cannot be undone.`,
+      } in-progress sessions, and ${counts.remediationDismissals} remediation removals. Settings in the backup are applied too.${skipped} This cannot be undone.`,
       confirmText: 'Replace everything',
     });
   }

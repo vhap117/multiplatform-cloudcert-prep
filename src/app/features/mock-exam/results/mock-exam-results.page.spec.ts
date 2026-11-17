@@ -25,6 +25,7 @@ import type {
   CertProgressRow,
   QuestionMasteryRow,
   QuestionResultRow,
+  RemediationDismissalRow,
   SessionRow,
 } from '../../../core/storage/types';
 
@@ -93,6 +94,15 @@ class FakeRepository implements StudyRepository {
     throw new Error('not used by the results screen');
   }
   async deleteSession(): Promise<void> {
+    return Promise.resolve();
+  }
+  async listRemediationDismissals(): Promise<RemediationDismissalRow[]> {
+    return [];
+  }
+  async listAllRemediationDismissals(): Promise<RemediationDismissalRow[]> {
+    return [];
+  }
+  async putRemediationDismissal(): Promise<void> {
     return Promise.resolve();
   }
   async resetCert(): Promise<void> {

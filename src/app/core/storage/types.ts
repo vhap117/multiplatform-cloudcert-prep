@@ -58,6 +58,20 @@ export interface QuestionResultRow {
   answeredAt: number;
 }
 
+/**
+ * A domain practice wrong answer the student removed from remediation.
+ *
+ * A question reappears in remediation when a later wrong practice answer has an
+ * `answeredAt` after this `dismissedAt`.
+ */
+export interface RemediationDismissalRow {
+  /** `${cert}:${questionId}` */
+  id: string;
+  cert: CertCode;
+  questionId: string;
+  dismissedAt: number;
+}
+
 /** Per-domain aggregate (DATA-19). */
 export interface CertProgressRow {
   /** `${cert}:${domainId}` */
@@ -166,4 +180,5 @@ export interface StudyRows {
   certProgress: CertProgressRow[];
   questionMastery: QuestionMasteryRow[];
   sessions: SessionRow[];
+  remediationDismissals: RemediationDismissalRow[];
 }

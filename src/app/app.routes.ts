@@ -156,6 +156,12 @@ export const routes: Routes = [
   },
   ...devRoutes,
   {
+    path: 'remediation/:certCode',
+    loadComponent: () =>
+      import('./features/remediation/remediation.page').then((m) => m.RemediationPage),
+    title: 'Remediation session',
+  },
+  {
     path: '**',
     redirectTo: () => selectedTabRedirect(),
   },

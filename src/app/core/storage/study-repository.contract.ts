@@ -1,13 +1,14 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { StorageWriteError } from './errors';
-import { ALL_STORES, type StoreName } from './schema';
+import { ALL_STORES, SCHEMA_VERSION, type StoreName } from './schema';
 import type { StudyRepository } from './study-repository';
 import type {
   AttemptRow,
   CertProgressRow,
   QuestionMasteryRow,
   QuestionResultRow,
+  RemediationDismissalRow,
   SessionRow,
   StudyRows,
 } from './types';
@@ -98,8 +99,7 @@ export function mastery(overrides: Partial<QuestionMasteryRow> = {}): QuestionMa
   };
 }
 
-export function session(overrides: Partial<SessionRow> = {}): SessionRow {
-  return {
+export function session(overrides: Partial<SessionRow> = {}): SessionRow {  return {
     id: 'clf-c02:study',
     cert: 'clf-c02',
     kind: 'study',
@@ -115,6 +115,18 @@ export function session(overrides: Partial<SessionRow> = {}): SessionRow {
     correctCount: 1,
     wrongCount: 0,
     updatedAt: 1_200,
+    ...overrides,
+  };
+}
+
+export function dismissal(
+  overrides: Partial<RemediationDismissalRow> = {},
+): RemediationDismissalRow {
+  return {
+    id: 'clf-c02:q001',
+    cert: 'clf-c02',
+    questionId: 'q001',
+    dismissedAt: 3_000,
     ...overrides,
   };
 }
@@ -345,6 +357,32 @@ export function studyRepositoryContract(label: string, makeHarness: ContractFact
       });
     });
 
+    describe('remediation dismissals', () => {
+      it('saves and lists dismissals per cert', async () => {
+        await repository.putRemediationDismissal(dismissal());
+        await repository.putRemediationDismissal(
+          dismissal({ id: 'clf-c02:q002', questionId: 'q002' }),
+        );
+        await repository.putRemediationDismissal(
+          dismissal({ id: 'aif-c01:q001', cert: 'aif-c01' }),
+        );
+
+        expect((await repository.listRemediationDismissals('clf-c02')).map((row) => row.questionId))
+          .toEqual(['q001', 'q002']);
+        expect(await repository.listAllRemediationDismissals()).toHaveLength(3);
+      });
+
+      it('replaces a dismissal on re-put rather than duplicating it', async () => {
+        await repository.putRemediationDismissal(dismissal());
+
+        await repository.putRemediationDismissal(dismissal({ dismissedAt: 5_000 }));
+
+        const rows = await repository.listRemediationDismissals('clf-c02');
+        expect(rows).toHaveLength(1);
+        expect(rows[0].dismissedAt).toBe(5_000);
+      });
+    });
+
     describe('atomicity', () => {
       it('writes nothing when the commit fails part way through', async () => {
         await repository.close();
@@ -442,6 +480,10 @@ export function studyRepositoryContract(label: string, makeHarness: ContractFact
         });
         await repository.putSession(session());
         await repository.putSession(session({ id: 'aif-c01:study', cert: 'aif-c01' }));
+        await repository.putRemediationDismissal(dismissal());
+        await repository.putRemediationDismissal(
+          dismissal({ id: 'aif-c01:q001', cert: 'aif-c01' }),
+        );
       });
 
       it('removes only the selected cert', async () => {
@@ -451,10 +493,12 @@ export function studyRepositoryContract(label: string, makeHarness: ContractFact
         expect(await repository.getCertProgress('clf-c02')).toHaveLength(0);
         expect(await repository.getQuestionMastery('clf-c02')).toHaveLength(0);
         expect(await repository.getSession('clf-c02', 'study')).toBeNull();
+        expect(await repository.listRemediationDismissals('clf-c02')).toHaveLength(0);
 
         expect(await repository.getAttempt('aif-1')).not.toBeNull();
         expect(await repository.getCertProgress('aif-c01')).toHaveLength(1);
         expect(await repository.getSession('aif-c01', 'study')).not.toBeNull();
+        expect(await repository.listRemediationDismissals('aif-c01')).toHaveLength(1);
       });
 
       it('removes everything on resetAll', async () => {
@@ -464,6 +508,7 @@ export function studyRepositoryContract(label: string, makeHarness: ContractFact
         expect(await repository.listSessions()).toHaveLength(0);
         expect(await repository.getCertProgress('clf-c02')).toHaveLength(0);
         expect(await repository.getQuestionMastery('aif-c01')).toHaveLength(0);
+        expect(await repository.listAllRemediationDismissals()).toHaveLength(0);
       });
     });
 
@@ -488,7 +533,7 @@ export function studyRepositoryContract(label: string, makeHarness: ContractFact
       });
 
       it('reports the schema version it expects', async () => {
-        expect(repository.schemaVersion).toBe(1);
+        expect(repository.schemaVersion).toBe(SCHEMA_VERSION);
       });
 
       it('reports every required table and migration as applied', async () => {
@@ -547,6 +592,7 @@ export function studyRepositoryContract(label: string, makeHarness: ContractFact
         certProgress: [progress({ id: 'aif-c01:1', cert: 'aif-c01' })],
         questionMastery: [mastery({ id: 'aif-c01:q001', cert: 'aif-c01' })],
         sessions: [session({ id: 'aif-c01:study', cert: 'aif-c01' })],
+        remediationDismissals: [dismissal({ id: 'aif-c01:q001', cert: 'aif-c01' })],
       };
 
       await repository.replaceAll(replacement);
@@ -564,6 +610,9 @@ export function studyRepositoryContract(label: string, makeHarness: ContractFact
       ]);
       expect((await repository.listSessions()).map((row) => row.id)).toEqual([
         'aif-c01:study',
+      ]);
+      expect((await repository.listAllRemediationDismissals()).map((row) => row.id)).toEqual([
+        'aif-c01:q001',
       ]);
       await repository.close();
     });
@@ -584,6 +633,7 @@ export function studyRepositoryContract(label: string, makeHarness: ContractFact
         certProgress: [],
         questionMastery: [],
         sessions: [],
+        remediationDismissals: [],
       };
 
       await expect(repository.replaceAll(invalid)).rejects.toBeInstanceOf(StorageWriteError);
@@ -611,6 +661,7 @@ export function studyRepositoryContract(label: string, makeHarness: ContractFact
           certProgress: [],
           questionMastery: [],
           sessions: [],
+          remediationDismissals: [],
         }),
       ).rejects.toBeInstanceOf(StorageWriteError);
       await failing.repository.close();

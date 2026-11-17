@@ -22,6 +22,8 @@ import { mockExamStartPath, mockExamRunPath } from '../mock-exam/mock-exam.route
 import { MockExamSessionService } from '../mock-exam/session/mock-exam-session.service';
 import { practiceConfigPath, practiceRunPath } from '../practice/practice.routes';
 import { PracticeSessionService } from '../practice/session/practice-session.service';
+import { remediationPath } from '../remediation/remediation.routes';
+import { buildRemediationItems } from '../remediation/remediation-view.model';
 import { studyExamRunPath, studyExamStartPath } from '../study-exam/study-exam.routes';
 import { StudyExamSessionService } from '../study-exam/session/study-exam-session.service';
 
@@ -93,6 +95,7 @@ export class HomePage implements OnInit {
   protected readonly domainRows = signal<readonly DomainPerformanceRow[]>([]);
   protected readonly nextUp = signal<NextUpView | null>(null);
   protected readonly resumeCards = signal<readonly ResumeCardView[]>([]);
+  protected readonly remediationCount = signal(0);
 
   /**
    * Re-scope every section when the selected cert changes (CERT-21). The
@@ -164,14 +167,18 @@ export class HomePage implements OnInit {
     this.domainState.set('loading');
     this.domainError.set('');
     try {
-      const [attempts, practiceResults, bank] = await Promise.all([
+      const [attempts, practiceResults, dismissals, bank] = await Promise.all([
         this.repository.listAttempts({ cert: cert.code }),
         this.repository.listPracticeResults(cert.code),
+        this.repository.listRemediationDismissals(cert.code),
         loadAllQuestions(cert.code),
       ]);
       const rows = buildDomainPerformance(cert, practiceResults, bank, attempts);
       this.domainRows.set(rows);
       this.nextUp.set(buildNextUp(cert, rows));
+      this.remediationCount.set(
+        buildRemediationItems(practiceResults, dismissals, bank, cert).length,
+      );
       this.domainState.set('ready');
     } catch (error) {
       this.domainError.set(messageOf(error));
@@ -264,6 +271,12 @@ export class HomePage implements OnInit {
     const next = this.nextUp();
     if (this.cert() && next) {
       await this.router.navigateByUrl(practiceConfigPath(this.cert()!.code, next.domainId));
+    }
+  }
+
+  protected async goRemediation(): Promise<void> {
+    if (this.cert()) {
+      await this.router.navigateByUrl(remediationPath(this.cert()!.code));
     }
   }
 

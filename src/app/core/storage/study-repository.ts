@@ -7,6 +7,7 @@ import type {
   CommitAnswersInput,
   QuestionMasteryRow,
   QuestionResultRow,
+  RemediationDismissalRow,
   SessionKind,
   SessionRow,
   StudyRows,
@@ -63,6 +64,13 @@ export interface StudyRepository {
   listSessions(): Promise<SessionRow[]>;
   putSession(session: SessionRow): Promise<void>;
   deleteSession(cert: CertCode, kind: SessionKind): Promise<void>;
+
+  /** Wrong practice answers the student removed from remediation. */
+  listRemediationDismissals(cert: CertCode): Promise<RemediationDismissalRow[]>;
+  /** Every dismissal across certs, for backup export. */
+  listAllRemediationDismissals(): Promise<RemediationDismissalRow[]>;
+  /** Insert or replace one dismissal. Re-dismissing refreshes `dismissedAt`. */
+  putRemediationDismissal(row: RemediationDismissalRow): Promise<void>;
 
   /**
    * Replace every study row atomically (DATA-28, DATA-29).

@@ -8,6 +8,7 @@ import type {
   CertProgressRow,
   QuestionMasteryRow,
   QuestionResultRow,
+  RemediationDismissalRow,
   SessionRow,
   StudyRows,
 } from '../storage/types';
@@ -102,6 +103,7 @@ function rows(): StudyRows {
     certProgress: [progress()],
     questionMastery: [mastery()],
     sessions: [session()],
+    remediationDismissals: [],
   };
 }
 
@@ -125,6 +127,9 @@ class FakeRepository {
   }
   async listSessions(): Promise<SessionRow[]> {
     return this.stored.sessions;
+  }
+  async listAllRemediationDismissals(): Promise<RemediationDismissalRow[]> {
+    return this.stored.remediationDismissals;
   }
 }
 

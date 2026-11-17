@@ -3,6 +3,7 @@ import type {
   CertProgressRow,
   QuestionMasteryRow,
   QuestionResultRow,
+  RemediationDismissalRow,
   SessionRow,
 } from './types';
 
@@ -122,6 +123,18 @@ export function isQuestionMasteryRow(value: unknown): value is QuestionMasteryRo
     (sessionsSinceSeen === undefined ||
       (isFiniteNumber(sessionsSinceSeen) && sessionsSinceSeen >= 0)) &&
     (weight === null || isFiniteNumber(weight))
+  );
+}
+
+export function isRemediationDismissalRow(value: unknown): value is RemediationDismissalRow {
+  if (!isObject(value)) {
+    return false;
+  }
+  return (
+    isNonEmptyString(value['id']) &&
+    isNonEmptyString(value['cert']) &&
+    isNonEmptyString(value['questionId']) &&
+    isFiniteNumber(value['dismissedAt'])
   );
 }
 

@@ -27,6 +27,7 @@ import type {
   CommitAnswersInput,
   QuestionMasteryRow,
   QuestionResultRow,
+  RemediationDismissalRow,
   SessionKind,
   SessionRow,
   StudyRows,
@@ -36,6 +37,7 @@ import {
   isCertProgressRow,
   isQuestionMasteryRow,
   isQuestionResultRow,
+  isRemediationDismissalRow,
   isSessionRow,
 } from './validation';
 
@@ -206,8 +208,10 @@ export class IndexedDbStudyRepository implements StudyRepository {
     await this.open();
     const database = this.requireDatabase();
     // One transaction across every affected store is what makes the batch
-    // atomic: all rows land or none do (DATA-10).
-    const transaction = database.transaction(ALL_STORES, 'readwrite');
+    // atomic: all rows land or none do (DATA-10). Older stores are skipped so
+    // a partially migrated test schema can still commit its own tables.
+    const stores = ALL_STORES.filter((name) => database.objectStoreNames.contains(name));
+    const transaction = database.transaction(stores, 'readwrite');
     const done = transactionDone(transaction);
 
     try {
@@ -342,6 +346,28 @@ export class IndexedDbStudyRepository implements StudyRepository {
     await this.write(STORES.sessions, [session]);
   }
 
+  async listRemediationDismissals(cert: CertCode): Promise<RemediationDismissalRow[]> {
+    await this.open();
+    const rows = await this.readAll(STORES.remediationDismissals, isRemediationDismissalRow);
+    return rows
+      .filter((row) => row.cert === cert)
+      .sort((a, b) => a.questionId.localeCompare(b.questionId));
+  }
+
+  async listAllRemediationDismissals(): Promise<RemediationDismissalRow[]> {
+    await this.open();
+    const rows = await this.readAll(STORES.remediationDismissals, isRemediationDismissalRow);
+    return rows.sort((a, b) => a.id.localeCompare(b.id));
+  }
+
+  async putRemediationDismissal(row: RemediationDismissalRow): Promise<void> {
+    if (!isRemediationDismissalRow(row)) {
+      throw new StorageWriteError('Could not save the remediation removal.');
+    }
+    await this.open();
+    await this.write(STORES.remediationDismissals, [row]);
+  }
+
   async deleteSession(cert: CertCode, kind: SessionKind): Promise<void> {
     await this.open();
     const database = this.requireDatabase();
@@ -361,7 +387,8 @@ export class IndexedDbStudyRepository implements StudyRepository {
       !rows.questionResults.every(isQuestionResultRow) ||
       !rows.certProgress.every(isCertProgressRow) ||
       !rows.questionMastery.every(isQuestionMasteryRow) ||
-      !rows.sessions.every(isSessionRow)
+      !rows.sessions.every(isSessionRow) ||
+      !rows.remediationDismissals.every(isRemediationDismissalRow)
     ) {
       throw new StorageWriteError(
         'Could not restore the backup. The study data is unchanged.',
@@ -396,6 +423,10 @@ export class IndexedDbStudyRepository implements StudyRepository {
       const sessions = transaction.objectStore(STORES.sessions);
       for (const row of rows.sessions) {
         sessions.put(row);
+      }
+      const dismissed = transaction.objectStore(STORES.remediationDismissals);
+      for (const row of rows.remediationDismissals) {
+        dismissed.put(row);
       }
 
       this.hooks?.beforeCommit?.();

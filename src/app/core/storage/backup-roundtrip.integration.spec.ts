@@ -139,6 +139,7 @@ async function snapshot(repository: IndexedDbStudyRepository): Promise<StudyRows
     certProgress: await repository.listAllCertProgress(),
     questionMastery: await repository.listAllQuestionMastery(),
     sessions: await repository.listSessions(),
+    remediationDismissals: await repository.listAllRemediationDismissals(),
   };
 }
 

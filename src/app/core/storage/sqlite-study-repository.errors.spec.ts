@@ -78,7 +78,7 @@ describe('SQLite adapter failure semantics', () => {
 
   it('reports a missing migration for the target version', async () => {
     const repository = new SqliteStudyRepository(new SqlJsDriver('missing-migration'), {
-      version: 2,
+      version: 3,
       migrations: DEFAULT_SQLITE_MIGRATIONS,
     });
 

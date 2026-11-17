@@ -55,6 +55,7 @@ function preview(): ImportPreview {
       certProgress: 2,
       questionMastery: 8,
       sessions: 1,
+      remediationDismissals: 2,
     },
     skipped: {
       attempts: 0,
@@ -62,6 +63,7 @@ function preview(): ImportPreview {
       certProgress: 0,
       questionMastery: 0,
       sessions: 0,
+      remediationDismissals: 0,
     },
     skippedRows: 0,
     certCodes: ['clf-c02'],
@@ -77,6 +79,7 @@ function emptyRows() {
     certProgress: [],
     questionMastery: [],
     sessions: [],
+    remediationDismissals: [],
   };
 }
 

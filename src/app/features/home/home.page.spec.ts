@@ -11,11 +11,13 @@ import { STUDY_REPOSITORY } from '../../core/storage/repository-provider';
 import type {
   AttemptRow,
   QuestionResultRow,
+  RemediationDismissalRow,
   SessionRow,
 } from '../../core/storage/types';
 import { mockExamStartPath } from '../mock-exam/mock-exam.routes';
 import { MockExamSessionService } from '../mock-exam/session/mock-exam-session.service';
 import { practiceConfigPath } from '../practice/practice.routes';
+import { remediationPath } from '../remediation/remediation.routes';
 import { PracticeSessionService } from '../practice/session/practice-session.service';
 import { StudyExamSessionService } from '../study-exam/session/study-exam-session.service';
 
@@ -85,6 +87,7 @@ function practiceResult(question: Question, isCorrect = true): QuestionResultRow
 class FakeRepository {
   attempts: AttemptRow[] = [];
   practiceResults: QuestionResultRow[] = [];
+  remediationDismissals: RemediationDismissalRow[] = [];
   sessions: SessionRow[] = [];
   failAttempts = false;
 
@@ -97,6 +100,10 @@ class FakeRepository {
 
   async listPracticeResults(): Promise<QuestionResultRow[]> {
     return this.practiceResults;
+  }
+
+  async listRemediationDismissals(): Promise<RemediationDismissalRow[]> {
+    return this.remediationDismissals;
   }
 
   async listSessions(): Promise<SessionRow[]> {
@@ -193,6 +200,16 @@ describe('HomePage cert context', () => {
 
     await click(el, buttonByText(el, 'Study exam'));
     expect(router.navigateByUrl).toHaveBeenCalledWith('/study-exam/clf-c02');
+  });
+
+  it('opens the remediation session with its pending count', async () => {
+    const wrong = bank.find((question) => question.domainId === 1)!;
+    repository.practiceResults = [practiceResult(wrong, false)];
+    const el = await render();
+
+    expect(textOf(el)).toContain('Remediation session (1)');
+    await click(el, buttonByText(el, 'Remediation session (1)'));
+    expect(router.navigateByUrl).toHaveBeenCalledWith(remediationPath('clf-c02'));
   });
 });
 

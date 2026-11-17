@@ -5,6 +5,7 @@ import type {
   CertProgressRow,
   QuestionMasteryRow,
   QuestionResultRow,
+  RemediationDismissalRow,
   SessionRow,
   StudyRows,
 } from '../storage/types';
@@ -13,6 +14,7 @@ import {
   isCertProgressRow,
   isQuestionMasteryRow,
   isQuestionResultRow,
+  isRemediationDismissalRow,
   isSessionRow,
 } from '../storage/validation';
 
@@ -43,6 +45,7 @@ export interface BackupFile {
   certProgress: CertProgressRow[];
   questionMastery: QuestionMasteryRow[];
   sessions: SessionRow[];
+  remediationDismissals: RemediationDismissalRow[];
 }
 
 /** Rows skipped per section because they failed validation (OFF-31). */
@@ -52,6 +55,7 @@ export interface BackupSkipped {
   certProgress: number;
   questionMastery: number;
   sessions: number;
+  remediationDismissals: number;
 }
 
 export type BackupErrorReason =
@@ -108,7 +112,7 @@ function section<T>(
   return { rows, skipped };
 }
 
-/** Assemble a v1 backup from repository rows and local settings. */
+/** Assemble a backup from repository rows and local settings. */
 export function buildBackup(input: BuildBackupInput): BackupFile {
   return {
     format: BACKUP_FORMAT,
@@ -121,6 +125,7 @@ export function buildBackup(input: BuildBackupInput): BackupFile {
     certProgress: [...input.rows.certProgress],
     questionMastery: [...input.rows.questionMastery],
     sessions: [...input.rows.sessions],
+    remediationDismissals: [...input.rows.remediationDismissals],
   };
 }
 
@@ -155,7 +160,7 @@ export function parseBackup(raw: string): BackupParseResult {
   if (typeof schemaVersion !== 'number' || !Number.isFinite(schemaVersion)) {
     return fail('malformed', 'The backup has no usable schema version.');
   }
-  if (schemaVersion !== SCHEMA_VERSION) {
+  if (schemaVersion !== SCHEMA_VERSION && schemaVersion !== 1) {
     return fail(
       'incompatible-schema',
       `This backup uses schema version ${schemaVersion}, but this app reads version ${SCHEMA_VERSION}. Nothing was imported.`,
@@ -185,7 +190,18 @@ export function parseBackup(raw: string): BackupParseResult {
   const certProgress = section(value['certProgress'], isCertProgressRow);
   const questionMastery = section(value['questionMastery'], isQuestionMasteryRow);
   const sessions = section(value['sessions'], isSessionRow);
-  if (!attempts || !questionResults || !certProgress || !questionMastery || !sessions) {
+  const remediationDismissals =
+    value['remediationDismissals'] === undefined
+      ? { rows: [] as RemediationDismissalRow[], skipped: 0 }
+      : section(value['remediationDismissals'], isRemediationDismissalRow);
+  if (
+    !attempts ||
+    !questionResults ||
+    !certProgress ||
+    !questionMastery ||
+    !sessions ||
+    !remediationDismissals
+  ) {
     return fail('malformed', 'The backup is missing one of its data sections.');
   }
 
@@ -202,6 +218,7 @@ export function parseBackup(raw: string): BackupParseResult {
       certProgress: certProgress.rows,
       questionMastery: questionMastery.rows,
       sessions: sessions.rows,
+      remediationDismissals: remediationDismissals.rows,
     },
     skipped: {
       attempts: attempts.skipped,
@@ -209,6 +226,7 @@ export function parseBackup(raw: string): BackupParseResult {
       certProgress: certProgress.skipped,
       questionMastery: questionMastery.skipped,
       sessions: sessions.skipped,
+      remediationDismissals: remediationDismissals.skipped,
     },
   };
 }
@@ -221,6 +239,7 @@ export function backupToRows(backup: BackupFile): StudyRows {
     certProgress: backup.certProgress,
     questionMastery: backup.questionMastery,
     sessions: backup.sessions,
+    remediationDismissals: backup.remediationDismissals,
   };
 }
 
@@ -230,6 +249,7 @@ export function skippedTotal(skipped: BackupSkipped): number {
     skipped.questionResults +
     skipped.certProgress +
     skipped.questionMastery +
-    skipped.sessions
+    skipped.sessions +
+    skipped.remediationDismissals
   );
 }

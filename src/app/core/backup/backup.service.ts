@@ -23,6 +23,7 @@ export interface BackupCounts {
   certProgress: number;
   questionMastery: number;
   sessions: number;
+  remediationDismissals: number;
 }
 
 export interface ExportSummary extends BackupCounts {
@@ -75,6 +76,7 @@ export class BackupService {
       certProgress: await this.repository.listAllCertProgress(),
       questionMastery: await this.repository.listAllQuestionMastery(),
       sessions: await this.repository.listSessions(),
+      remediationDismissals: await this.repository.listAllRemediationDismissals(),
     };
     const backup = buildBackup({ rows, settings: readAllSettings() });
     const fileName = backupFileName(new Date());
@@ -134,6 +136,7 @@ function countsOf(backup: BackupFile): BackupCounts {
     certProgress: backup.certProgress.length,
     questionMastery: backup.questionMastery.length,
     sessions: backup.sessions.length,
+    remediationDismissals: backup.remediationDismissals.length,
   };
 }
 

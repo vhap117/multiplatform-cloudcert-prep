@@ -1,0 +1,206 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/home" text="Exit"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Remediation session</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="ccp-page">
+    <div class="ccp-content">
+      @switch (state()) {
+        @case ('loading') {
+          <p class="ccp-kicker">Remediation</p>
+          <h1 class="ccp-display">Loading your wrong answers</h1>
+          <p class="ccp-body ccp-muted">Reading practice history on this device.</p>
+        }
+        @case ('error') {
+          <p class="ccp-kicker">Remediation</p>
+          <h1 class="ccp-display">Remediation could not load</h1>
+          <p class="action-error" role="alert">{{ error() }}</p>
+          <div class="action-row">
+            <button type="button" class="ccp-button" (click)="load()">Try again</button>
+            <button type="button" class="ccp-button" (click)="leave()">Back to home</button>
+          </div>
+        }
+        @case ('ready') {
+          @if (current(); as item) {
+            <p class="ccp-kicker">Remediation</p>
+            <p class="ccp-small ccp-muted">
+              Question {{ index() + 1 }} of {{ items().length }} · {{ item.domainName }}
+            </p>
+
+            @if (item.question.taskStatement; as task) {
+              <p class="task-statement">{{ task }}</p>
+            }
+            <h1 class="question-text">{{ item.question.question }}</h1>
+
+            @switch (typeOf(item.question)) {
+              @case ('single') {
+                <fieldset class="options">
+                  <legend>Your recorded answer.</legend>
+                  @for (option of optionEntries(item.question); track option.key) {
+                    <ion-item
+                      class="option-item"
+                      [class.selected]="selectedKeys(item).includes(option.key)"
+                      [class.recorded]="selectedKeys(item).includes(option.key)"
+                    >
+                      <ion-label class="ion-text-wrap option-text">{{ option.text }}</ion-label>
+                      @if (selectedKeys(item).includes(option.key)) {
+                        <span slot="end" class="option-marker">Your answer</span>
+                      }
+                    </ion-item>
+                  }
+                </fieldset>
+              }
+              @case ('multi') {
+                <fieldset class="options">
+                  <legend>Your recorded answer.</legend>
+                  @for (option of optionEntries(item.question); track option.key) {
+                    <label
+                      class="option"
+                      [class.selected]="selectedKeys(item).includes(option.key)"
+                      [class.recorded]="selectedKeys(item).includes(option.key)"
+                    >
+                      <input
+                        type="checkbox"
+                        [checked]="selectedKeys(item).includes(option.key)"
+                        disabled
+                      />
+                      <span class="option-text">{{ option.text }}</span>
+                      @if (selectedKeys(item).includes(option.key)) {
+                        <span class="option-marker">Your answer</span>
+                      }
+                    </label>
+                  }
+                </fieldset>
+              }
+              @case ('ordering') {
+                <p class="hint">Your recorded order.</p>
+                <ol class="ordering">
+                  @for (key of orderingKeys(item); track key; let i = $index) {
+                    <li class="ordering-row">
+                      <span class="ordering-position">{{ i + 1 }}.</span>
+                      <span class="ordering-text">{{ optionText(item.question, key) }}</span>
+                    </li>
+                  }
+                </ol>
+              }
+              @case ('matching') {
+                <p class="hint">Your recorded matches.</p>
+                <ul class="match-results">
+                  @for (pair of recordedMatching(item); track pair.left.key) {
+                    <li class="match-result">
+                      <span class="match-left">{{ pair.left.text }}</span>
+                      <span class="match-target">{{ pair.targetText }}</span>
+                    </li>
+                  }
+                </ul>
+              }
+            }
+
+            <section
+              class="feedback"
+              [class.correct]="item.feedback.isCorrect"
+              [class.incorrect]="!item.feedback.isCorrect"
+              aria-labelledby="remediation-feedback-heading"
+            >
+              <h2 class="feedback-heading" id="remediation-feedback-heading">Feedback</h2>
+              <p class="feedback-verdict">
+                {{ item.feedback.isCorrect ? 'Correct answer.' : 'Incorrect answer.' }}
+              </p>
+              <p class="feedback-summary">{{ item.feedback.summary }}</p>
+              @if (!item.feedback.isCorrect) {
+                @if (entriesOfKind(item.feedback, 'chosen-wrong').length > 0) {
+                  <div class="feedback-group">
+                    <h3>Wrong options you chose</h3>
+                    <ul>
+                      @for (entry of entriesOfKind(item.feedback, 'chosen-wrong'); track entry.key) {
+                        <li>
+                          <span class="feedback-key">{{ entry.key }}.</span>
+                          {{ optionText(item.question, entry.key) }}: {{ entry.text }}
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+                @if (entriesOfKind(item.feedback, 'missed-correct').length > 0) {
+                  <div class="feedback-group">
+                    <h3>Correct options you missed</h3>
+                    <ul>
+                      @for (entry of entriesOfKind(item.feedback, 'missed-correct'); track entry.key) {
+                        <li>
+                          <span class="feedback-key">{{ entry.key }}.</span>
+                          {{ optionText(item.question, entry.key) }}: {{ entry.text }}
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+                @if (entriesOfKind(item.feedback, 'correct-chosen').length > 0) {
+                  <div class="feedback-group">
+                    <h3>Options you chose correctly</h3>
+                    <ul>
+                      @for (entry of entriesOfKind(item.feedback, 'correct-chosen'); track entry.key) {
+                        <li>
+                          <span class="feedback-key">{{ entry.key }}.</span>
+                          {{ optionText(item.question, entry.key) }}: {{ entry.text }}
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+              }
+            </section>
+
+            @if (error(); as message) {
+              <p class="action-error" role="alert">{{ message }}</p>
+            }
+
+            <div class="remediation-actions">
+              <button
+                type="button"
+                class="ccp-button"
+                [disabled]="index() === 0 || removing()"
+                (click)="previous()"
+              >
+                Previous
+              </button>
+              <button
+                type="button"
+                class="ccp-button"
+                [disabled]="index() >= items().length - 1 || removing()"
+                (click)="next()"
+              >
+                Next
+              </button>
+              <ion-button
+                expand="block"
+                fill="outline"
+                color="danger"
+                [disabled]="removing()"
+                (click)="remove(item)"
+              >
+                Remove from remediation
+              </ion-button>
+            </div>
+          } @else {
+            <p class="ccp-kicker">Remediation</p>
+            <h1 class="ccp-display">Nothing to remediate</h1>
+            <p class="ccp-body ccp-muted">
+              Wrong answers from domain practice appear here. Removed questions return only when
+              you answer them wrong again.
+            </p>
+            <div class="action-row">
+              <button type="button" class="ccp-button" (click)="leave()">Back to home</button>
+            </div>
+          }
+        }
+      }
+
+      <p class="visually-hidden" role="status">{{ announcing() }}</p>
+    </div>
+  </div>
+</ion-content>

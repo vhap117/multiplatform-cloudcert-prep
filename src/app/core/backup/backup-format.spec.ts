@@ -6,6 +6,7 @@ import type {
   CertProgressRow,
   QuestionMasteryRow,
   QuestionResultRow,
+  RemediationDismissalRow,
   SessionRow,
   StudyRows,
 } from '../storage/types';
@@ -107,6 +108,17 @@ function rows(): StudyRows {
     certProgress: [progress()],
     questionMastery: [mastery()],
     sessions: [session()],
+    remediationDismissals: [dismissal()],
+  };
+}
+
+function dismissal(overrides: Partial<RemediationDismissalRow> = {}): RemediationDismissalRow {
+  return {
+    id: 'clf-c02:q001',
+    cert: 'clf-c02',
+    questionId: 'q001',
+    dismissedAt: 7,
+    ...overrides,
   };
 }
 
@@ -136,6 +148,7 @@ describe('backup format (DATA-24, DATA-25)', () => {
       certProgress: 0,
       questionMastery: 0,
       sessions: 0,
+      remediationDismissals: 0,
     });
   });
 
@@ -150,6 +163,7 @@ describe('backup format (DATA-24, DATA-25)', () => {
       'format',
       'questionMastery',
       'questionResults',
+      'remediationDismissals',
       'schemaVersion',
       'sessions',
       'settings',
@@ -185,6 +199,23 @@ describe('backup validation (DATA-27, DATA-29, OFF-31)', () => {
     expect(parsed.ok).toBe(false);
     if (!parsed.ok) {
       expect(parsed.reason).toBe('incompatible-schema');
+    }
+  });
+
+  it('imports a version 1 backup with no remediation dismissals', () => {
+    const backup = buildBackup({ rows: rows(), settings: {} });
+    const withoutDismissals: Record<string, unknown> = {
+      ...backup,
+      schemaVersion: 1,
+    };
+    delete withoutDismissals['remediationDismissals'];
+
+    const parsed = parseBackup(JSON.stringify(withoutDismissals));
+
+    expect(parsed.ok).toBe(true);
+    if (parsed.ok) {
+      expect(parsed.backup.remediationDismissals).toEqual([]);
+      expect(parsed.skipped.remediationDismissals).toBe(0);
     }
   });
 

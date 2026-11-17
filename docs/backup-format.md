@@ -8,7 +8,7 @@ format. Export and import are fully local (DATA-24 to DATA-30, OFF-14 to OFF-20)
 ```json
 {
   "format": "cloudcertprep-backup",
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "appVersion": "0.0.0",
   "exportedAt": 1730000000000,
   "settings": {
@@ -21,7 +21,8 @@ format. Export and import are fully local (DATA-24 to DATA-30, OFF-14 to OFF-20)
   "questionResults": [],
   "certProgress": [],
   "questionMastery": [],
-  "sessions": []
+  "sessions": [],
+  "remediationDismissals": []
 }
 ```
 
@@ -37,6 +38,7 @@ format. Export and import are fully local (DATA-24 to DATA-30, OFF-14 to OFF-20)
 | `certProgress` | array | Per-domain aggregates (DATA-19). |
 | `questionMastery` | array | Per-question mastery state (DATA-20). |
 | `sessions` | array | In-progress session state for resume (DATA-21). |
+| `remediationDismissals` | array | Wrong practice answers the student removed from remediation. A question returns after a newer wrong practice answer. |
 
 The row shapes match the storage contract in
 `src/app/core/storage/types.ts`. The format is stable across app versions that
@@ -53,8 +55,9 @@ OFF-20); the student chooses where the file goes.
 
 - **Structural problems reject the whole file, nothing is written:** invalid
   JSON, a missing or unexpected `format`, a missing `schemaVersion`, a
-  `schemaVersion` other than the one this app reads, non-object settings, or a
-  missing data section (DATA-27, DATA-29).
+  `schemaVersion` this app cannot read, non-object settings, or a missing data
+  section (DATA-27, DATA-29). A version 1 file has no
+  `remediationDismissals` section and imports it as an empty list.
 - **Row-level problems are quarantined:** a row that does not match its
   expected shape is counted and skipped, and the compatible subset imports. The
   confirmation shows how many rows will be skipped (DATA-23, OFF-31).
