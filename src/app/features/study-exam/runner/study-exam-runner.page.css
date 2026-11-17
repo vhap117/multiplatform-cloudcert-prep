@@ -150,6 +150,43 @@
   cursor: default;
 }
 
+ion-item-sliding {
+  background: rgb(var(--ccp-bg-card));
+  border-radius: var(--ccp-radius-input);
+  display: block;
+  overflow: hidden;
+}
+
+.option-item {
+  --background: rgb(var(--ccp-bg-card));
+  --border-color: rgb(var(--ccp-border));
+  --border-radius: var(--ccp-radius-input);
+  --border-style: solid;
+  --border-width: 1px;
+  --inner-border-width: 0;
+  --min-height: var(--ccp-tap-target);
+  --padding-bottom: var(--ccp-space-md);
+  --padding-end: var(--ccp-space-md);
+  --padding-start: var(--ccp-space-md);
+  --padding-top: var(--ccp-space-md);
+}
+
+ion-item-options {
+  background: rgb(var(--ccp-bg-card));
+}
+
+ion-item-option {
+  --background: rgb(var(--ccp-bg-card));
+  --border-radius: var(--ccp-radius-input);
+  --color: rgb(var(--ccp-text));
+  min-width: 5rem;
+}
+
+.option-item.selected,
+.option-item.recorded {
+  --border-color: rgb(var(--ccp-brand));
+}
+
 .option-text {
   flex: 1;
   line-height: 1.45;

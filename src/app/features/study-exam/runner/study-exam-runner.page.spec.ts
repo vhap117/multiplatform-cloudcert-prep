@@ -159,7 +159,12 @@ class StubSessionService {
       } else {
         this.stored.set(id, next);
       }
-      if (question && questionType(question) === 'single' && typeof next === 'string' && next !== '') {
+      if (
+        question &&
+        questionType(question) === 'single' &&
+        typeof next === 'string' &&
+        next !== ''
+      ) {
         this.gradedIds.set([...this.gradedIds(), id].sort());
       }
       return Promise.resolve();
@@ -327,11 +332,9 @@ async function answerSingle(
   el: HTMLElement,
   key: string,
 ): Promise<void> {
-  const radio = el.querySelector<HTMLInputElement>(
-    `input[type="radio"][name="answer-q-single"][value="${key}"]`,
-  );
-  expect(radio).not.toBeNull();
-  radio!.click();
+  const option = el.querySelector(`ion-item-sliding[data-option-key="${key}"] ion-item-option`);
+  expect(option).not.toBeNull();
+  (option as HTMLElement).click();
   await flush();
   fixture.detectChanges();
 }
@@ -502,20 +505,20 @@ describe('StudyExamRunnerPage', () => {
     await goTo(fixture, 1);
     await goTo(fixture, 0);
 
-    const radios = [...el.querySelectorAll<HTMLInputElement>('input[type="radio"]')];
-    expect(radios).toHaveLength(4);
-    for (const radio of radios) {
-      expect(radio.disabled).toBe(true);
+    const buttons = [...el.querySelectorAll('ion-item-sliding')];
+    expect(buttons).toHaveLength(4);
+    for (const button of buttons) {
+      expect((button as HTMLElement & { disabled: boolean }).disabled).toBe(true);
     }
-    expect(el.querySelector<HTMLInputElement>('input[type="radio"][value="B"]')?.checked).toBe(
-      true,
-    );
+    expect(
+      el.querySelector('ion-item-sliding[data-option-key="B"] .option-item.recorded'),
+    ).not.toBeNull();
     expect(el.textContent).toContain('Your answer');
     expect(el.querySelector('.feedback')).not.toBeNull();
 
     // A graded question never accepts a new answer (S5).
     const calls = stub.answer.mock.calls.length;
-    radios[2]!.click();
+    (buttons[2] as HTMLElement).click();
     await flush();
     expect(stub.answer.mock.calls.length).toBe(calls);
   });

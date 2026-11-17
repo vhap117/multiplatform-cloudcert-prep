@@ -23,15 +23,7 @@
  * (PRACT-26, PRACT-33, PRACT-39).
  */
 
-import {
-  Component,
-  OnInit,
-  computed,
-  effect,
-  inject,
-  input,
-  signal,
-} from '@angular/core';
+import { Component, OnInit, computed, effect, inject, input, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   AlertController,
@@ -39,6 +31,11 @@ import {
   IonButtons,
   IonContent,
   IonHeader,
+  IonItem,
+  IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
+  IonLabel,
   IonTitle,
   IonToolbar,
 } from '@ionic/angular';
@@ -67,7 +64,19 @@ interface CompletionSummary {
 
 @Component({
   selector: 'app-practice-runner',
-  imports: [IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar],
+  imports: [
+    IonBackButton,
+    IonButtons,
+    IonContent,
+    IonHeader,
+    IonItem,
+    IonItemOption,
+    IonItemOptions,
+    IonItemSliding,
+    IonLabel,
+    IonTitle,
+    IonToolbar,
+  ],
   templateUrl: './practice-runner.page.html',
   styleUrl: './practice-runner.page.css',
 })
@@ -153,9 +162,7 @@ export class PracticeRunnerPage implements OnInit, PracticeLeaveAware {
 
   readonly backHref = computed(() => {
     const cert = this.certCode();
-    return cert !== undefined && cert !== ''
-      ? practiceConfigPath(cert)
-      : '/tabs/practice';
+    return cert !== undefined && cert !== '' ? practiceConfigPath(cert) : '/tabs/practice';
   });
 
   private loadDrafts(question: Question): void {
@@ -245,6 +252,12 @@ export class PracticeRunnerPage implements OnInit, PracticeLeaveAware {
     }
   }
 
+  protected closeSliding(event: Event): void {
+    const sliding = (event.target as HTMLElement | null)?.closest('ion-item-sliding') as
+      (HTMLElement & { close?: () => Promise<void> }) | null;
+    void sliding?.close?.();
+  }
+
   async toggleMulti(questionId: string, key: string): Promise<void> {
     if (this.session.isGraded(questionId)) {
       return;
@@ -281,7 +294,9 @@ export class PracticeRunnerPage implements OnInit, PracticeLeaveAware {
       await this.session.answer(questionId, draft);
       const result = await this.session.submitAnswer(questionId);
       if (result === 'incomplete') {
-        this.warning.set('Your response is not complete yet. Choose every required answer, then confirm again.');
+        this.warning.set(
+          'Your response is not complete yet. Choose every required answer, then confirm again.',
+        );
       }
     } catch {
       this.actionError.set('The answer could not be graded. Confirm again to retry.');
@@ -394,13 +409,9 @@ export class PracticeRunnerPage implements OnInit, PracticeLeaveAware {
     () => `color-mix(in srgb, rgb(74 222 128) ${this.accuracyPercent()}%, rgb(249 115 22))`,
   );
 
-  readonly correctPercentOfTotal = computed(() =>
-    this.percentOfTotal(this.session.correctCount()),
-  );
+  readonly correctPercentOfTotal = computed(() => this.percentOfTotal(this.session.correctCount()));
 
-  readonly wrongPercentOfTotal = computed(() =>
-    this.percentOfTotal(this.session.wrongCount()),
-  );
+  readonly wrongPercentOfTotal = computed(() => this.percentOfTotal(this.session.wrongCount()));
 
   private percentOfTotal(count: number): number {
     const total = this.session.totalQuestions();

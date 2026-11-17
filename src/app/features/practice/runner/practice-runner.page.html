@@ -35,8 +35,9 @@
             ></span>
           </span>
           <span class="progress-value">
-            {{ session.answeredCount() }} of {{ session.totalQuestions() }}
-            ({{ session.answeredPercent() }}%)
+            {{ session.answeredCount() }} of {{ session.totalQuestions() }} ({{
+              session.answeredPercent()
+            }}%)
           </span>
         </div>
         <div class="progress-row">
@@ -50,10 +51,7 @@
             [attr.aria-valuemax]="session.totalQuestions()"
             [attr.aria-valuetext]="correctValueText()"
           >
-            <span
-              class="progress-fill correct"
-              [style.width.%]="correctPercentOfTotal()"
-            ></span>
+            <span class="progress-fill correct" [style.width.%]="correctPercentOfTotal()"></span>
           </span>
           <span class="progress-value">{{ session.correctCount() }}</span>
         </div>
@@ -114,8 +112,8 @@
         <p class="ccp-kicker">Domain practice</p>
         <h1 class="ccp-display">No practice session running</h1>
         <p class="ccp-body ccp-muted">
-          There is no active practice session on this device. Start or resume one from the
-          Practice tab.
+          There is no active practice session on this device. Start or resume one from the Practice
+          tab.
         </p>
         <div class="action-row">
           <button type="button" class="ccp-button" (click)="retryInitialise()">Try again</button>
@@ -134,36 +132,51 @@
           @case ('single') {
             <fieldset class="options">
               <legend>
-                {{ session.isGraded(question.id) ? 'Your recorded answer.' : 'Choose one answer. It grades as soon as you select it.' }}
+                {{
+                  session.isGraded(question.id)
+                    ? 'Your recorded answer.'
+                    : 'Slide an option right to select it. It grades as soon as you select it.'
+                }}
               </legend>
               @for (option of optionEntries(question); track option.key) {
-                <label
-                  class="option"
-                  [class.selected]="singleSelection() === option.key"
-                  [class.recorded]="
-                    session.isGraded(question.id) && singleSelection() === option.key
-                  "
+                <ion-item-sliding
+                  [disabled]="session.isGraded(question.id)"
+                  [attr.data-option-key]="option.key"
                 >
-                  <input
-                    type="radio"
-                    [name]="'answer-' + question.id"
-                    [value]="option.key"
-                    [checked]="singleSelection() === option.key"
-                    [disabled]="session.isGraded(question.id)"
-                    (change)="selectSingle(question.id, option.key)"
-                  />
-                  <span class="option-text">{{ option.text }}</span>
-                  @if (session.isGraded(question.id) && singleSelection() === option.key) {
-                    <span class="option-marker">Your answer</span>
-                  }
-                </label>
+                  <ion-item
+                    class="option-item"
+                    [class.selected]="singleSelection() === option.key"
+                    [class.recorded]="
+                      session.isGraded(question.id) && singleSelection() === option.key
+                    "
+                  >
+                    <ion-label class="ion-text-wrap option-text">{{ option.text }}</ion-label>
+                    @if (session.isGraded(question.id) && singleSelection() === option.key) {
+                      <span slot="end" class="option-marker">Your answer</span>
+                    }
+                  </ion-item>
+                  <ion-item-options
+                    side="start"
+                    (ionSwipe)="selectSingle(question.id, option.key); closeSliding($event)"
+                  >
+                    <ion-item-option
+                      [disabled]="session.isGraded(question.id)"
+                      (click)="selectSingle(question.id, option.key); closeSliding($event)"
+                      >Are you sure ?</ion-item-option
+                    >
+                  </ion-item-options>
+                </ion-item-sliding>
               }
             </fieldset>
           }
           @case ('multi') {
             <fieldset class="options">
               <legend>
-                {{ session.isGraded(question.id) ? 'Your recorded answer.' : 'Choose up to ' + maxMulti + ' answers, then confirm to grade.' }}
+                {{
+                  session.isGraded(question.id)
+                    ? 'Your recorded answer.'
+                    : 'Choose up to ' + maxMulti + ' answers, then confirm to grade.'
+                }}
               </legend>
               @for (option of optionEntries(question); track option.key) {
                 <label
@@ -203,7 +216,11 @@
           }
           @case ('ordering') {
             <p class="hint" [id]="'ordering-hint-' + question.id">
-              {{ session.isGraded(question.id) ? 'Your recorded order.' : 'Place each step in the right position with the up and down buttons, then confirm to grade.' }}
+              {{
+                session.isGraded(question.id)
+                  ? 'Your recorded order.'
+                  : 'Place each step in the right position with the up and down buttons, then confirm to grade.'
+              }}
             </p>
             <ol class="ordering" [attr.aria-describedby]="'ordering-hint-' + question.id">
               @for (

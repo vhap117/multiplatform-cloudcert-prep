@@ -135,7 +135,12 @@ class StubSessionService {
       } else {
         this.stored.set(id, next);
       }
-      if (question && questionType(question) === 'single' && typeof next === 'string' && next !== '') {
+      if (
+        question &&
+        questionType(question) === 'single' &&
+        typeof next === 'string' &&
+        next !== ''
+      ) {
         this.markGraded(id);
       }
       return Promise.resolve();
@@ -292,11 +297,9 @@ async function answerSingle(
   el: HTMLElement,
   key: string,
 ): Promise<void> {
-  const radio = el.querySelector<HTMLInputElement>(
-    `input[type="radio"][name="answer-q-single"][value="${key}"]`,
-  );
-  expect(radio).not.toBeNull();
-  radio!.click();
+  const option = el.querySelector(`ion-item-sliding[data-option-key="${key}"] ion-item-option`);
+  expect(option).not.toBeNull();
+  (option as HTMLElement).click();
   await flush();
   fixture.detectChanges();
 }
@@ -429,13 +432,20 @@ describe('PracticeRunnerPage question flow (PRACT-9 to PRACT-15)', () => {
     await goTo(fixture, 1);
     await goTo(fixture, 0);
 
-    const radios = [...el.querySelectorAll<HTMLInputElement>('input[type="radio"]')];
-    expect(radios.every((radio) => radio.disabled)).toBe(true);
-    expect(el.querySelector<HTMLInputElement>('input[type="radio"][value="B"]')?.checked).toBe(true);
+    const buttons = [...el.querySelectorAll('ion-item-sliding')];
+    expect(buttons).toHaveLength(4);
+    expect(
+      buttons.every((button) => (button as HTMLElement & { disabled: boolean }).disabled),
+    ).toBe(true);
+    expect(
+      el.querySelector('ion-item-sliding[data-option-key="B"] .option-item.recorded'),
+    ).not.toBeNull();
     expect(el.querySelector('.feedback')).not.toBeNull();
 
     const calls = stub.answer.mock.calls.length;
-    radios[2]!.click();
+    (
+      el.querySelector('ion-item-sliding[data-option-key="C"] ion-item-option') as HTMLElement
+    ).click();
     await flush();
     expect(stub.answer.mock.calls.length).toBe(calls);
   });

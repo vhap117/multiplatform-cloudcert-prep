@@ -9,7 +9,12 @@
 
 import { computed, signal } from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
-import { Router, provideRouter, type ActivatedRouteSnapshot, type RouterStateSnapshot } from '@angular/router';
+import {
+  Router,
+  provideRouter,
+  type ActivatedRouteSnapshot,
+  type RouterStateSnapshot,
+} from '@angular/router';
 import { AlertController, provideIonicAngular } from '@ionic/angular';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -272,14 +277,12 @@ describe('MockExamRunnerPage', () => {
     await expectNoA11yViolations(el, 'dark');
   });
 
-  it('answers a single question immediately when an option is selected', async () => {
+  it('answers a single question immediately when an option is swiped', async () => {
     const { el } = await render();
-    const radio = el.querySelector<HTMLInputElement>(
-      'input[type="radio"][name="answer-q-single"][value="C"]',
-    );
-    expect(radio).not.toBeNull();
+    const option = el.querySelector('ion-item-sliding[data-option-key="C"] ion-item-option');
+    expect(option).not.toBeNull();
 
-    radio!.click();
+    (option as HTMLElement).click();
     await flush();
 
     expect(stub.answer).toHaveBeenCalledWith('q-single', 'C');

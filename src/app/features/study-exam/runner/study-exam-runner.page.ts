@@ -47,6 +47,11 @@ import {
   IonButtons,
   IonContent,
   IonHeader,
+  IonItem,
+  IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
+  IonLabel,
   IonTitle,
   IonToolbar,
 } from '@ionic/angular';
@@ -84,7 +89,20 @@ interface CompletionSummary {
 
 @Component({
   selector: 'app-study-exam-runner',
-  imports: [IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar],
+  imports: [
+    IonBackButton,
+    IonButton,
+    IonButtons,
+    IonContent,
+    IonHeader,
+    IonItem,
+    IonItemOption,
+    IonItemOptions,
+    IonItemSliding,
+    IonLabel,
+    IonTitle,
+    IonToolbar,
+  ],
   templateUrl: './study-exam-runner.page.html',
   styleUrl: './study-exam-runner.page.css',
 })
@@ -332,6 +350,12 @@ export class StudyExamRunnerPage implements OnInit {
     }
   }
 
+  protected closeSliding(event: Event): void {
+    const sliding = (event.target as HTMLElement | null)?.closest('ion-item-sliding') as
+      (HTMLElement & { close?: () => Promise<void> }) | null;
+    void sliding?.close?.();
+  }
+
   /** Multi toggles edit the draft and persist it; the limit caps new selections (S3). */
   async toggleMulti(questionId: string, key: string): Promise<void> {
     if (this.session.isGraded(questionId)) {
@@ -489,9 +513,7 @@ export class StudyExamRunnerPage implements OnInit {
     () => `color-mix(in srgb, rgb(74 222 128) ${this.accuracyPercent()}%, rgb(249 115 22))`,
   );
 
-  readonly correctPercentOfTotal = computed(() =>
-    this.percentOfTotal(this.session.correctCount()),
-  );
+  readonly correctPercentOfTotal = computed(() => this.percentOfTotal(this.session.correctCount()));
 
   readonly wrongPercentOfTotal = computed(() => this.percentOfTotal(this.session.wrongCount()));
 

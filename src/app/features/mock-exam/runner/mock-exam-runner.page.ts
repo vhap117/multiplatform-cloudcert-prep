@@ -45,6 +45,11 @@ import {
   IonButtons,
   IonContent,
   IonHeader,
+  IonItem,
+  IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
+  IonLabel,
   IonTitle,
   IonToolbar,
 } from '@ionic/angular';
@@ -61,7 +66,20 @@ interface OptionEntry {
 
 @Component({
   selector: 'app-mock-exam-runner',
-  imports: [IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar],
+  imports: [
+    IonBackButton,
+    IonButton,
+    IonButtons,
+    IonContent,
+    IonHeader,
+    IonItem,
+    IonItemOption,
+    IonItemOptions,
+    IonItemSliding,
+    IonLabel,
+    IonTitle,
+    IonToolbar,
+  ],
   templateUrl: './mock-exam-runner.page.html',
   styleUrl: './mock-exam-runner.page.css',
   host: {
@@ -366,6 +384,12 @@ export class MockExamRunnerPage implements OnInit, OnDestroy {
       }
       this.actionError.set('The answer could not be saved. Select the option again to retry.');
     }
+  }
+
+  protected closeSliding(event: Event): void {
+    const sliding = (event.target as HTMLElement | null)?.closest('ion-item-sliding') as
+      (HTMLElement & { close?: () => Promise<void> }) | null;
+    void sliding?.close?.();
   }
 
   /** Multi toggles only edit the draft; the limit caps new selections (S3). */

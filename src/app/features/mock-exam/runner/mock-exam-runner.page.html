@@ -10,7 +10,11 @@
     <ion-title>{{ session.result() ? 'Exam result' : 'Mock exam' }}</ion-title>
     @if (!session.result() && !unavailable()) {
       <ion-buttons slot="end">
-        <ion-button [disabled]="submitting()" aria-label="Submit the exam" (click)="requestSubmit()">
+        <ion-button
+          [disabled]="submitting()"
+          aria-label="Submit the exam"
+          (click)="requestSubmit()"
+        >
           Submit
         </ion-button>
       </ion-buttons>
@@ -55,7 +59,9 @@
           </div>
           <div class="result-row">
             <dt>Correct</dt>
-            <dd>{{ examResult.attempt.correctCount }} of {{ examResult.attempt.totalQuestions }}</dd>
+            <dd>
+              {{ examResult.attempt.correctCount }} of {{ examResult.attempt.totalQuestions }}
+            </dd>
           </div>
           <div class="result-row">
             <dt>Time taken</dt>
@@ -96,18 +102,24 @@
         @switch (typeOf(question)) {
           @case ('single') {
             <fieldset class="options">
-              <legend>Choose one answer.</legend>
+              <legend>
+                Slide an option right to select it. It saves as soon as you select it.
+              </legend>
               @for (option of optionEntries(question); track option.key) {
-                <label class="option" [class.selected]="singleSelection() === option.key">
-                  <input
-                    type="radio"
-                    [name]="'answer-' + question.id"
-                    [value]="option.key"
-                    [checked]="singleSelection() === option.key"
-                    (change)="selectSingle(question.id, option.key)"
-                  />
-                  <span class="option-text">{{ option.text }}</span>
-                </label>
+                <ion-item-sliding [attr.data-option-key]="option.key">
+                  <ion-item class="option-item" [class.selected]="singleSelection() === option.key">
+                    <ion-label class="ion-text-wrap option-text">{{ option.text }}</ion-label>
+                  </ion-item>
+                  <ion-item-options
+                    side="start"
+                    (ionSwipe)="selectSingle(question.id, option.key); closeSliding($event)"
+                  >
+                    <ion-item-option
+                      (click)="selectSingle(question.id, option.key); closeSliding($event)"
+                      >Are you sure ?</ion-item-option
+                    >
+                  </ion-item-options>
+                </ion-item-sliding>
               }
             </fieldset>
           }
