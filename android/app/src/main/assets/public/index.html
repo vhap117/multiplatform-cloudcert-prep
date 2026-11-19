@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en" data-beasties-container>
+<head>
+  <meta charset="utf-8">
+  <title>CloudCertPrep</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f8f9fa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#16191f" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script>
+    /*
+     * Runs before first paint so the stored theme is already on the root
+     * element. This is what prevents a flash of the wrong theme (ACC-17).
+     * ThemeService re-applies the same class afterwards and keeps it in sync.
+     */
+    (function () {
+      var root = document.documentElement;
+      try {
+        var storedTheme = localStorage.getItem('ccp.theme');
+        var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = storedTheme === 'light' || storedTheme === 'dark'
+          ? storedTheme
+          : (systemDark ? 'dark' : 'light');
+        root.classList.add('theme-' + theme);
+
+        var storedMotion = localStorage.getItem('ccp.motion');
+        var systemReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var reduce = storedMotion === 'reduce' || (storedMotion !== 'full' && systemReduce);
+        if (reduce) {
+          root.classList.add('reduce-motion');
+        }
+      } catch (error) {
+        root.classList.add('theme-light');
+      }
+    })();
+  </script>
+  <style>
+    /*
+     * First-load splash. Inline so it paints before the Angular bundle and
+     * global styles, and runs on every full page load (including reloads).
+     * Colours mirror src/styles.css because the tokens may not have loaded
+     * yet on first paint.
+     */
+    .ccp-splash {
+      --ccp-splash-text: #16191f;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: grid;
+      place-items: center;
+      background: #f8f9fa;
+      color: var(--ccp-splash-text);
+      opacity: 1;
+      transition: opacity 600ms cubic-bezier(0.4, 0, 1, 1);
+    }
+
+    .theme-dark .ccp-splash {
+      --ccp-splash-text: #f4f6f8;
+      background: #16191f;
+    }
+
+    .ccp-splash.ccp-splash-exit {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .ccp-splash-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .ccp-splash-mark {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #ff9900;
+      box-shadow: 0 8px 24px -8px rgb(255 153 0 / 0.6);
+      animation: ccp-splash-pulse 1.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+
+    .ccp-splash-mark::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        105deg,
+        transparent 35%,
+        rgb(255 255 255 / 0.85) 50%,
+        transparent 65%
+      );
+      transform: translateX(-160%);
+      animation: ccp-splash-sweep 2.6s cubic-bezier(0.4, 0, 0.2, 1) 500ms infinite;
+    }
+
+    .ccp-splash-name {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+        "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: transparent;
+      background-image: linear-gradient(
+        100deg,
+        var(--ccp-splash-text) 0%,
+        var(--ccp-splash-text) 42%,
+        #ff9900 50%,
+        var(--ccp-splash-text) 58%,
+        var(--ccp-splash-text) 100%
+      );
+      background-size: 200% 100%;
+      background-position: 200% 0;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: ccp-splash-text-pulse 1.6s cubic-bezier(0.16, 1, 0.3, 1) infinite,
+        ccp-splash-shine 2.6s linear 700ms infinite,
+        ccp-splash-fade-in 520ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
+    }
+
+    @keyframes ccp-splash-pulse {
+      0%,
+      100% {
+        transform: scale(0.9);
+        opacity: 0.85;
+      }
+      50% {
+        transform: scale(1.1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes ccp-splash-text-pulse {
+      0%,
+      100% {
+        transform: scale(0.98);
+      }
+      50% {
+        transform: scale(1.02);
+      }
+    }
+
+    @keyframes ccp-splash-sweep {
+      0% {
+        transform: translateX(-160%);
+      }
+      60%,
+      100% {
+        transform: translateX(160%);
+      }
+    }
+
+    @keyframes ccp-splash-shine {
+      0% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    @keyframes ccp-splash-fade-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ccp-splash .ccp-splash-mark,
+      .ccp-splash .ccp-splash-mark::after,
+      .ccp-splash .ccp-splash-name {
+        animation: none;
+      }
+
+      .ccp-splash .ccp-splash-name {
+        background: none;
+        color: var(--ccp-splash-text);
+        -webkit-text-fill-color: currentColor;
+      }
+    }
+
+    .reduce-motion .ccp-splash .ccp-splash-mark,
+    .reduce-motion .ccp-splash .ccp-splash-mark::after,
+    .reduce-motion .ccp-splash .ccp-splash-name {
+      animation: none;
+    }
+
+    .reduce-motion .ccp-splash .ccp-splash-name {
+      background: none;
+      color: var(--ccp-splash-text);
+      -webkit-text-fill-color: currentColor;
+    }
+  </style>
+<style>:root{--ion-color-primary:#0054e9;--ion-color-primary-rgb:0, 84, 233;--ion-color-primary-contrast:#fff;--ion-color-primary-contrast-rgb:255, 255, 255;--ion-color-primary-shade:#004acd;--ion-color-primary-tint:#1a65eb;--ion-color-secondary:#0163aa;--ion-color-secondary-rgb:1, 99, 170;--ion-color-secondary-contrast:#fff;--ion-color-secondary-contrast-rgb:255, 255, 255;--ion-color-secondary-shade:#015796;--ion-color-secondary-tint:#1a73b3;--ion-color-tertiary:#6030ff;--ion-color-tertiary-rgb:96, 48, 255;--ion-color-tertiary-contrast:#fff;--ion-color-tertiary-contrast-rgb:255, 255, 255;--ion-color-tertiary-shade:#542ae0;--ion-color-tertiary-tint:#7045ff;--ion-color-success:#2dd55b;--ion-color-success-rgb:45, 213, 91;--ion-color-success-contrast:#000;--ion-color-success-contrast-rgb:0, 0, 0;--ion-color-success-shade:#28bb50;--ion-color-success-tint:#42d96b;--ion-color-warning:#ffc409;--ion-color-warning-rgb:255, 196, 9;--ion-color-warning-contrast:#000;--ion-color-warning-contrast-rgb:0, 0, 0;--ion-color-warning-shade:#e0ac08;--ion-color-warning-tint:#ffca22;--ion-color-danger:#c5000f;--ion-color-danger-rgb:197, 0, 15;--ion-color-danger-contrast:#fff;--ion-color-danger-contrast-rgb:255, 255, 255;--ion-color-danger-shade:#ad000d;--ion-color-danger-tint:#cb1a27;--ion-color-light:#f4f5f8;--ion-color-light-rgb:244, 245, 248;--ion-color-light-contrast:#000;--ion-color-light-contrast-rgb:0, 0, 0;--ion-color-light-shade:#d7d8da;--ion-color-light-tint:#f5f6f9;--ion-color-medium:#636469;--ion-color-medium-rgb:99, 100, 105;--ion-color-medium-contrast:#fff;--ion-color-medium-contrast-rgb:255, 255, 255;--ion-color-medium-shade:#57585c;--ion-color-medium-tint:#737478;--ion-color-dark:#222428;--ion-color-dark-rgb:34, 36, 40;--ion-color-dark-contrast:#fff;--ion-color-dark-contrast-rgb:255, 255, 255;--ion-color-dark-shade:#1e2023;--ion-color-dark-tint:#383a3e}html{--ion-dynamic-font:-apple-system-body;--ion-font-family:var(--ion-default-font)}body{background:var(--ion-background-color);color:var(--ion-text-color)}@supports (padding-top: 20px){html{--ion-safe-area-top:var(--ion-statusbar-padding)}}@supports (padding-top: env(safe-area-inset-top)){html{--ion-safe-area-top:var(--safe-area-inset-top, env(safe-area-inset-top));--ion-safe-area-bottom:var(--safe-area-inset-bottom, env(safe-area-inset-bottom));--ion-safe-area-left:var(--safe-area-inset-left, env(safe-area-inset-left));--ion-safe-area-right:var(--safe-area-inset-right, env(safe-area-inset-right))}}*{box-sizing:border-box;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}html{width:100%;height:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}body{-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;margin:0;padding:0;position:fixed;width:100%;max-width:100%;height:100%;max-height:100%;transform:translateZ(0);text-rendering:optimizeLegibility;overflow:hidden;touch-action:manipulation;-webkit-user-drag:none;-ms-content-zooming:none;word-wrap:break-word;overscroll-behavior-y:none;-webkit-text-size-adjust:none;text-size-adjust:none}html{font-family:var(--ion-font-family)}@supports (-webkit-touch-callout: none){html{font:var(--ion-dynamic-font, 16px var(--ion-font-family))}}:root{--ccp-font-sans:-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;--ccp-font-mono:ui-monospace, SFMono-Regular, Menlo, monospace;--ccp-space-xs:4px;--ccp-space-sm:8px;--ccp-space-md:12px;--ccp-space-base:16px;--ccp-space-lg:24px;--ccp-space-xl:32px;--ccp-space-2xl:48px;--ccp-space-3xl:64px;--ccp-radius-card:16px;--ccp-radius-input:12px;--ccp-radius-inner:8px;--ccp-radius-pill:999px;--ccp-ease-out:cubic-bezier(.16, 1, .3, 1);--ccp-ease-inout:cubic-bezier(.45, 0, .15, 1);--ccp-ease-press:cubic-bezier(.2, 0, 0, 1);--ccp-ease-exit:cubic-bezier(.4, 0, 1, 1);--ccp-dur-press:90ms;--ccp-dur-fast:.18s;--ccp-dur-base:.2s;--ccp-dur-gentle:.25s;--ccp-dur-slow:.35s;--ccp-dur-reveal:.52s;--ccp-dur-settle:.6s;--ccp-gutter:var(--ccp-space-base);--ccp-content-max:720px;--ccp-tap-target:44px;--ccp-safe-top:env(safe-area-inset-top, 0px);--ccp-safe-right:env(safe-area-inset-right, 0px);--ccp-safe-bottom:env(safe-area-inset-bottom, 0px);--ccp-safe-left:env(safe-area-inset-left, 0px)}:root{color-scheme:light;--ccp-brand:255 153 0;--ccp-brand-hover:236 114 17;--ccp-brand-text:180 83 9;--ccp-on-brand:22 25 31;--ccp-cta:22 29 38;--ccp-on-cta:255 255 255;--ccp-bg:248 249 250;--ccp-bg-card:255 255 255;--ccp-bg-card-hover:250 251 252;--ccp-header-bg:255 255 255;--ccp-on-header:22 25 31;--ccp-border:233 235 237;--ccp-link:0 115 187;--ccp-success:22 101 52;--ccp-danger:185 28 28;--ccp-on-danger:255 255 255;--ccp-warning:154 69 9;--ccp-warning-fill:217 119 6;--ccp-text:22 25 31;--ccp-text-muted:84 91 100;--ccp-shadow-card:0 1px 3px rgb(15 25 35 / .06), 0 1px 2px rgb(15 25 35 / .04);--ccp-shadow-card-hover:0 8px 24px -8px rgb(15 25 35 / .14), 0 2px 8px -2px rgb(15 25 35 / .08);--ccp-shadow-overlay:0 24px 64px -16px rgb(15 25 35 / .24);--ccp-card-border:0}:root{--ion-font-family:var(--ccp-font-sans);--ion-background-color:rgb(var(--ccp-bg));--ion-background-color-rgb:var(--ccp-bg);--ion-text-color:rgb(var(--ccp-text));--ion-text-color-rgb:var(--ccp-text);--ion-toolbar-background:rgb(var(--ccp-header-bg));--ion-toolbar-color:rgb(var(--ccp-on-header));--ion-border-color:rgb(var(--ccp-border));--ion-color-primary:rgb(var(--ccp-brand));--ion-color-primary-rgb:var(--ccp-brand);--ion-color-primary-contrast:rgb(var(--ccp-on-brand));--ion-color-primary-contrast-rgb:var(--ccp-on-brand);--ion-color-primary-shade:rgb(var(--ccp-brand-hover));--ion-color-primary-tint:color-mix(in srgb, rgb(var(--ccp-brand)) 90%, white);--ion-color-secondary:rgb(var(--ccp-cta));--ion-color-secondary-rgb:var(--ccp-cta);--ion-color-secondary-contrast:rgb(var(--ccp-on-cta));--ion-color-secondary-contrast-rgb:var(--ccp-on-cta);--ion-color-secondary-shade:color-mix(in srgb, rgb(var(--ccp-cta)) 88%, black);--ion-color-secondary-tint:color-mix(in srgb, rgb(var(--ccp-cta)) 88%, white);--ion-color-light:rgb(var(--ccp-bg-card));--ion-color-light-rgb:var(--ccp-bg-card);--ion-color-light-contrast:rgb(var(--ccp-text));--ion-color-light-contrast-rgb:var(--ccp-text);--ion-color-light-shade:rgb(var(--ccp-bg-card-hover));--ion-color-light-tint:color-mix(in srgb, rgb(var(--ccp-bg-card)) 92%, white);--ion-color-medium:rgb(var(--ccp-text-muted));--ion-color-medium-rgb:var(--ccp-text-muted);--ion-color-medium-contrast:rgb(var(--ccp-text));--ion-color-medium-contrast-rgb:var(--ccp-text);--ion-color-medium-shade:color-mix(in srgb, rgb(var(--ccp-text-muted)) 88%, black);--ion-color-medium-tint:color-mix(in srgb, rgb(var(--ccp-text-muted)) 88%, white);--ion-color-success:rgb(var(--ccp-success));--ion-color-success-rgb:var(--ccp-success);--ion-color-success-contrast:rgb(var(--ccp-bg-card));--ion-color-success-contrast-rgb:var(--ccp-bg-card);--ion-color-success-shade:color-mix(in srgb, rgb(var(--ccp-success)) 88%, black);--ion-color-success-tint:color-mix(in srgb, rgb(var(--ccp-success)) 88%, white);--ion-color-danger:rgb(var(--ccp-danger));--ion-color-danger-rgb:var(--ccp-danger);--ion-color-danger-contrast:rgb(var(--ccp-on-danger));--ion-color-danger-contrast-rgb:var(--ccp-on-danger);--ion-color-danger-shade:color-mix(in srgb, rgb(var(--ccp-danger)) 88%, black);--ion-color-danger-tint:color-mix(in srgb, rgb(var(--ccp-danger)) 88%, white);--ion-color-warning:rgb(var(--ccp-warning));--ion-color-warning-rgb:var(--ccp-warning);--ion-color-warning-contrast:rgb(var(--ccp-on-brand));--ion-color-warning-contrast-rgb:var(--ccp-on-brand);--ion-color-warning-shade:rgb(var(--ccp-warning-fill));--ion-color-warning-tint:color-mix(in srgb, rgb(var(--ccp-warning)) 88%, white);--ion-tab-bar-color-selected:rgb(var(--ccp-brand-text))}html,body{font-family:var(--ccp-font-sans);background:rgb(var(--ccp-bg));color:rgb(var(--ccp-text))}body{margin:0}@media(min-width:768px){:root{--ccp-gutter:var(--ccp-space-lg)}}@media(prefers-reduced-motion:reduce){:root{--ccp-dur-press:1ms;--ccp-dur-fast:1ms;--ccp-dur-base:1ms;--ccp-dur-gentle:1ms;--ccp-dur-slow:1ms;--ccp-dur-reveal:1ms;--ccp-dur-settle:1ms}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important}}</style><link rel="stylesheet" href="styles-BFGVUJIH.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles-BFGVUJIH.css"></noscript></head>
+<body>
+  <div id="ccp-splash" class="ccp-splash" role="presentation" aria-hidden="true">
+    <div class="ccp-splash-inner">
+      <div class="ccp-splash-mark"></div>
+      <p class="ccp-splash-name">CloudCert Prep</p>
+    </div>
+  </div>
+  <app-root></app-root>
+  <script>
+    (function () {
+      var initial = document.getElementById('ccp-splash');
+      if (!initial) {
+        return;
+      }
+
+      var template = initial.cloneNode(true);
+      template.removeAttribute('id');
+      var active = initial;
+      var exitTimer = 0;
+
+      function dismiss(node) {
+        if (!node.isConnected) {
+          return;
+        }
+        node.classList.add('ccp-splash-exit');
+        window.setTimeout(function () {
+          node.remove();
+        }, 700);
+      }
+
+      function scheduleDismiss(node, durationMs) {
+        window.clearTimeout(exitTimer);
+        exitTimer = window.setTimeout(function () {
+          dismiss(node);
+          if (active === node) {
+            active = null;
+          }
+        }, durationMs);
+      }
+
+      window.ccpShowSplash = function (durationMs) {
+        if (active) {
+          active.remove();
+        }
+        var node = template.cloneNode(true);
+        document.body.appendChild(node);
+        active = node;
+        scheduleDismiss(node, typeof durationMs === 'number' ? durationMs : 5000);
+      };
+
+      scheduleDismiss(initial, 3000);
+    })();
+  </script>
+<link rel="modulepreload" href="chunk-ZW4UD5UL.js"><link rel="modulepreload" href="chunk-FAH66IKO.js"><link rel="modulepreload" href="chunk-TSSKGEWX.js"><link rel="modulepreload" href="chunk-WNQ4N7RJ.js"><link rel="modulepreload" href="chunk-UWEXHFWI.js"><link rel="modulepreload" href="chunk-3WRSE22Y.js"><link rel="modulepreload" href="chunk-XDLBSBVM.js"><link rel="modulepreload" href="chunk-6EHKB5AW.js"><link rel="modulepreload" href="chunk-TT77GDBI.js"><link rel="modulepreload" href="chunk-MWHKXSHV.js"><script src="polyfills-LVNOU2XZ.js" type="module"></script><script src="main-2ILQJORI.js" type="module"></script></body>
+</html>

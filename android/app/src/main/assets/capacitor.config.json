@@ -1,0 +1,11 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "cloudcertprep",
+	"webDir": "dist/cloudcertprep/browser",
+	"plugins": {
+		"CapacitorSQLite": {
+			"androidIsEncryption": false,
+			"iosIsEncryption": false
+		}
+	}
+}
